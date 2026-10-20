@@ -33,7 +33,7 @@ export function recommendSetup(base, requested={}) {
   const humanGroups=s.profile.filter(g=>g.count>0),activeCount=humanGroups.filter(g=>g.id!=='light').reduce((a,g)=>a+g.count,0);
   if(!humanGroups.length&&!s.technical.count)errors.push('Add at least one developer or server agent.');
   if(o.requireTeam&&mix&&!mix.rows.every(([id])=>MODEL[id].glm))errors.push('GLM Team requires a GLM model mix.');
-  if(o.keepCodex&&(activeCount<2||activeCount>200))errors.push('Codex Business needs 2–200 power and regular users. Change the profile or turn off Keep Codex.');
+  if(o.keepCodex&&activeCount<2)errors.push('Codex Business needs at least 2 power and regular users. Change the profile or turn off Keep Codex.');
   if(errors.length)return {valid:false,errors,options:o};
   const fixed=[];
   if(o.keepCodex){const l=recommendationLine('active','subscription','oai-business',[['sol',100]],s,o);l.profileShare=10;l.coverageMode='unknown';fixed.push(l);}

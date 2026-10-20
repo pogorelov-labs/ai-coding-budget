@@ -80,8 +80,8 @@ test('team alternatives preserve mix/tokens and active audience follows profile'
  const s=sc.settings;s.profile[0].count=4;s.team=19;const r=forecast(sc,s);assert.deepEqual(r.regular.lines.map(x=>x.line.users),[9,10,9,1]);
  const l=sc.lines[0],before=calculateLine(l,s);setAudience(l,'manual',s);near(calculateLine(l,s).api,before.api);near(calculateLine(l,s).quota.weekly,((4*17885.4+5*5961.8)/9));
 });
-test('team seat minima, combined Business ceiling and GLM same-tier rule enforced',()=>{
- const s=initialState().settings,a=newLine('subscription','oai-business',100),b=newLine('subscription','oai-premium',100);assert.equal(calculateScenario({lines:[a,b]},s).valid,true);b.seats=b.users=101;assert.equal(calculateScenario({lines:[a,b]},s).valid,false);
+test('verified team seat rules reject caps without inventing an OpenAI maximum',()=>{
+ const s=initialState().settings,a=newLine('subscription','oai-business',100),b=newLine('subscription','oai-premium',100);assert.equal(calculateScenario({lines:[a,b]},s).valid,true);b.seats=b.users=101;assert.equal(calculateScenario({lines:[a,b]},s).valid,true);const claude=newLine('subscription','claude-team',151);assert.equal(calculateScenario({lines:[claude]},s).valid,false);
  const g=newLine('subscription','glm-team-standard',300);assert.equal(calculateScenario({lines:[g]},s).valid,true);g.users=g.seats=1;assert.equal(calculateScenario({lines:[g]},s).valid,false);const h=newLine('subscription','glm-team-premium',2);assert.equal(calculateScenario({lines:[g,h]},s).valid,false);
  const x=initialState();x.scenarios.push(teamStandardPreset(x.settings));assert.doesNotThrow(()=>parseImport(JSON.stringify(x)));x.scenarios.at(-1).lines[0].profileShare=101;assert.throws(()=>validateState(x));
 });

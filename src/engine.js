@@ -2,6 +2,7 @@ import {GATEWAY_PROVIDERS} from './gateway-catalog.js';
 import {gatewayAccessCost} from './gateway-billing.js';
 import {MODEL,PLAN,ROUTES,CHECKED} from './catalog.js';
 import {budgetErrors} from './budget-limit.js';
+import {analyzeWorkspaces,workspaceName} from './workspace-seats.js';
 export const uid=()=>globalThis.crypto?.randomUUID?.()||('x'+Date.now()+Math.random().toString(36).slice(2));
 export const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
@@ -140,6 +141,7 @@ export function lineErrors(l,s){
  if(l.apiRuntime!==undefined&&!['own','claude-action'].includes(l.apiRuntime))errs.push('Неизвестная API-интеграция');
  if(l.scheduleOverride)errs.push(...technicalErrors(l.scheduleOverride));
  if(l.spareSeats!==undefined&&(!Number.isInteger(l.spareSeats)||l.spareSeats<0||l.spareSeats>10000))errs.push('Неиспользуемое количество должно быть целым и неотрицательным');
+ if(l.memberGroup!==undefined&&(typeof l.memberGroup!=='string'||l.memberGroup.length>100))errs.push('Member group must be a name of at most 100 characters.');
  if(!['api','subscription','openrouter'].includes(l.kind))errs.push('Неизвестный тип позиции');
  for(const [key,min,max] of [['users',1,10000],['seats',1,10000],['input',0,1e8],['output',0,1e8],['discount',0,100],['intro',0,100],['coverage',0,100],['creditUsd',0,100],['extraUsd',0,1e9],['extraCredits',0,1e9],['topups',1,10000],['byokPrior',0,1e12],['providerDiscount',0,100],['startupGrant',0,3000],['grantOnce',0,1e9],['monthlyCredit',0,1e9],['bundle50',0,100000],['bundle250',0,100000],['bundle1000',0,100000]]){
   const lower=['users','seats'].includes(key)&&(profileLinked(l)||key==='users'&&l.spareSeats===l.seats)?0:min;
@@ -264,13 +266,58 @@ function finalize(r,s){
  r.rubLow=r.low*num(s.fx);r.rubHigh=r.high*num(s.fx);return r;
 }
 // Independent low/high balance ledgers preserve uncertainty without spending the same credit twice.
-const groupOf=r=>r.plan.team?'team:'+(r.line.org||'main'):'personal:'+r.line.id;
+const groupOf=r=>r.plan.team?'team:'+workspaceName(r.line.org):'personal:'+r.line.id;
 function creditLot(map,key,amount,expires){if(!amount)return;if(!map.has(key))map.set(key,[]);map.get(key).push({low:amount,high:amount,expires});}
 function spend(map,key,low,high,date){let usedLow=0,usedHigh=0;const lots=(map.get(key)||[]).filter(x=>x.expires>date).sort((a,b)=>a.expires.localeCompare(b.expires));map.set(key,lots);for(const x of lots){const a=Math.min(x.low,low-usedLow),b=Math.min(x.high,high-usedHigh);x.low-=a;x.high-=b;usedLow+=a;usedHigh+=b;}return [usedLow,usedHigh];}
 const ledgerNew=()=>({bundles:new Map(),grants:new Map(),startup:new Map()});
+export function workspaceAnalysis(scenario,s){
+ s=scenarioSettings(scenario,s);
+ return analyzeWorkspaces(scenario.lines.map(l=>effectiveLine(l,s)));
+}
+function settleWorkspaceSeats(lines,membership,s){
+ const byId=new Map(lines.map(r=>[r.line.id,r]));
+ for(const r of lines){
+  const a=membership.allocations[r.line.id];
+  if(!a||!r.valid||r.inactive)continue;
+  const scale=r.line.seats?a.billedSeats/r.line.seats:0;
+  for(const k of ['seat','term','introSaving','cashSeat'])r[k]*=scale;
+  r.billedSeats=a.billedSeats;r.seatGroups=a.groups;r.sharedSeats=a.shared;
+  if(a.shared)r.notes.push('These workload items share one seat purchase. Seat fees are allocated across items; usage is added together.');
+ }
+ for(const w of membership.workspaces){
+  if(w.family!=='glm'||w.issues.length)continue;
+  for(const member of w.members){
+   if(member.lines.length<2)continue;
+   const parts=member.lines.map(l=>byId.get(l.id)).filter(r=>r?.valid&&!r.inactive);
+   const quotas=parts.map(r=>r.quota.groups?.find(g=>g.id===member.id)||{...r.quota,id:member.id,count:r.line.users,api:r.api});
+   const weekly=quotas.reduce((n,q)=>n+q.weekly,0),five=quotas.reduce((n,q)=>n+q.five,0),p=parts[0]?.plan;
+   if(!p)continue;
+   const fraction=Math.min(1,weekly?p.qw/weekly:1,five?p.q5/five:1);
+   parts.forEach((r,i)=>{
+    r.quota.groups??=[{...quotas[i]}];
+    const group=r.quota.groups.find(g=>g.id===member.id);
+    Object.assign(group,{weekly,five,fraction});
+    r.notes.push('GLM quota is checked against the combined workload of the same members in this workspace.');
+   });
+  }
+  for(const l of w.lines){
+   const r=byId.get(l.id);if(!r?.valid||r.inactive||!r.quota.groups)continue;
+   const groups=r.quota.groups;
+   Object.assign(r.quota,{weekly:Math.max(0,...groups.map(g=>g.weekly)),five:Math.max(0,...groups.map(g=>g.five)),fraction:Math.min(1,...groups.map(g=>g.fraction))});
+   const exceeded=r.quota.fraction<1-1e-9;
+   r.covered=!exceeded||(l.overflow==='payg'&&!(l.extraCredits>0));
+   r.usageLow=r.usageHigh=l.overflow==='payg'?groups.reduce((n,g)=>n+g.api*(1-g.fraction),0)*(l.glmOveragePromo ? .9 : 1):0;
+   r.rawLow=r.usageLow;r.rawHigh=r.usageHigh;
+   if(exceeded&&l.overflow!=='payg')r.notes.push('Combined member usage exceeds the shared seat quota. Enable paid fallback or reduce usage.');
+  }
+ }
+ for(const r of lines)if(r.valid&&!r.inactive){r.notes=[...new Set(r.notes)];finalize(r,s);}
+}
 export function calculateScenario(scenario,s,{first=false,date=scenarioSettings(scenario,s).date,month=0,ledger=ledgerNew()}={}){
  s=scenarioSettings(scenario,s);
  const lines=scenario.lines.map(l=>calculateLine(l,s,{first,date,month}));const errors=lines.flatMap((r,i)=>r.errors.map(e=>'Позиция '+(i+1)+': '+e));
+ const membership=analyzeWorkspaces(lines.filter(r=>r.valid&&!r.inactive).map(r=>r.line));
+ errors.push(...membership.errors);settleWorkspaceSeats(lines,membership,s);
  const bonusPools=new Map(),byokGroups=new Map(),bonusTo=new Map(),bonusFrom=new Map(),bundlePurchased=new Map();
  for(const r of lines){if(!r.valid||r.inactive)continue;const l=r.line;
   if(r.bundleFace){const key=groupOf(r);creditLot(ledger.bundles,key,r.bundleFace,addMonths(date,l.bundleMonths??1));bundlePurchased.set(key,(bundlePurchased.get(key)||0)+r.bundleFace);}
@@ -290,12 +337,12 @@ export function calculateScenario(scenario,s,{first=false,date=scenarioSettings(
   if(r.line.apiRuntime==='claude-action'){r.notes.push('Monthly Claude API bonus не применяется к официальному Claude Code GitHub Action.');continue;}
   const source=lines.find(x=>x.line.id===r.line.bonusSource&&x.valid&&!x.inactive&&x.plan?.family==='anthropic'&&x.plan.bonus);
   if(!source){errors.push('Claude API bonus: подходящая подписка-источник отсутствует.');continue;}
-  const group=source.plan.team?'team:'+(source.line.org||'main'):'personal:'+(source.line.org||source.line.id),target=r.line.org||'main';
+  const group=source.plan.team?'team:'+workspaceName(source.line.org):'personal:'+(source.line.org||source.line.id),target=r.line.org||'main';
   if((bonusTo.has(group)&&bonusTo.get(group)!==target)||(bonusFrom.has(target)&&bonusFrom.get(target)!==group)){errors.push('Claude API bonus: один план/Team связывается с одним Console org, и один Console org — с одним источником.');continue;}
   bonusTo.set(group,target);bonusFrom.set(target,group);
   if(!bonusPools.has(group)){
-   const sources=lines.filter(x=>x.valid&&x.plan?.family==='anthropic'&&x.plan.bonus&&(source.plan.team?x.plan.team&&(x.line.org||'main')===(source.line.org||'main'):!x.plan.team&&(x.line.org||x.line.id)===(source.line.org||source.line.id)));
-   bonusPools.set(group,source.plan.team?Math.min(500,sources.reduce((a,x)=>a+x.plan.bonus*x.line.seats,0)):Math.max(...sources.map(x=>x.plan.bonus)));
+   const sources=lines.filter(x=>x.valid&&x.plan?.family==='anthropic'&&x.plan.bonus&&(source.plan.team?x.plan.team&&workspaceName(x.line.org)===workspaceName(source.line.org):!x.plan.team&&(x.line.org||x.line.id)===(source.line.org||source.line.id)));
+   bonusPools.set(group,source.plan.team?Math.min(500,sources.reduce((a,x)=>a+x.plan.bonus*(x.billedSeats??x.line.seats),0)):Math.max(...sources.map(x=>x.plan.bonus)));
   }
   const eligible=r.rows.filter(x=>x.model.provider==='anthropic').reduce((a,x)=>a+x.cost,0),used=Math.min(bonusPools.get(group),eligible,r.usageLow);
   r.usageLow-=used;r.usageHigh-=used;r.bonusUsed=used;bonusPools.set(group,bonusPools.get(group)-used);
@@ -325,10 +372,8 @@ export function calculateScenario(scenario,s,{first=false,date=scenarioSettings(
   for(const r of list){r.feeLow=(r.platformFeeLow||0)+(low?fee(low)*demand(r,'Low')/low:0);r.feeHigh=(r.platformFeeHigh||0)+(high?fee(high)*demand(r,'High')/high:0);finalize(r,s);}
  }
  const vsegptGroups=new Set();for(const r of lines)if(r.valid&&!r.inactive&&r.line.apiProvider==='vsegpt'){const key=r.line.org||'main';if(vsegptGroups.has(key))errors.push('Use one VseGPT line per access-account group, with all its models in that line. A separate purchase needs a different account-group name.');vsegptGroups.add(key);}
- const groups=new Map();for(const r of lines){if(!r.valid||r.inactive||!r.plan?.team)continue;const key=r.plan.family+':'+(r.line.org||'main');if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r);}
- for(const list of groups.values()){const count=list.reduce((a,r)=>a+num(r.line.seats),0),p=list[0].plan;if(p.min&&count<p.min)errors.push(p.name+': в группе минимум '+p.min+' места');if(p.max&&count>p.max)errors.push(p.name+': превышен опубликованный максимум '+p.max);if(p.family==='glm'&&new Set(list.map(r=>r.plan.id)).size>1)errors.push('GLM: Standard и Premium нельзя смешивать в одной Team-группе.');}
  const sum=k=>lines.reduce((a,r)=>a+num(r[k]),0);
- return {lines,errors:[...new Set(errors)],valid:!errors.length,covered:lines.every(r=>r.covered),low:sum('low'),high:sum('high'),cashLow:sum('cashLow'),cashHigh:sum('cashHigh'),seat:sum('seat'),api:sum('api'),usageLow:sum('usageLow'),usageHigh:sum('usageHigh'),fees:sum('feeHigh'),extras:sum('extras')+sum('bundleCash')+lines.reduce((n,r)=>n+(r.gatewayAccess?.monthlyUsd||0),0),range:Math.abs(sum('high')-sum('low'))>.005};
+ return {lines,workspaces:membership.workspaces,errors:[...new Set(errors)],valid:!errors.length,covered:lines.every(r=>r.covered),low:sum('low'),high:sum('high'),cashLow:sum('cashLow'),cashHigh:sum('cashHigh'),seat:sum('seat'),api:sum('api'),usageLow:sum('usageLow'),usageHigh:sum('usageHigh'),fees:sum('feeHigh'),extras:sum('extras')+sum('bundleCash')+lines.reduce((n,r)=>n+(r.gatewayAccess?.monthlyUsd||0),0),range:Math.abs(sum('high')-sum('low'))>.005};
 }
 export function forecast(scenario,s){
  s=scenarioSettings(scenario,s);

@@ -15,7 +15,7 @@ export function allocateForecastMonth(result,settings,basis='cash'){
    const sum=weights.reduce((a,w)=>a+w.weight,0);if(!sum){push('manual',provider,model,amountLow,amountHigh);return;}
    for(const w of weights){const share=w.weight/sum;push(w.group,w.provider||provider,w.model||model,amountLow*share,amountHigh*share);}
   };
-  const seats=cohorts.map(g=>({group:g.id,weight:g.count}));const spare=Math.max(0,(l.seats||0)-(l.users||0));if(spare)seats.push({group:'spare',weight:spare});
+  const seats=(r.seatGroups||cohorts).map(g=>({group:g.id,weight:g.count}));const spare=Math.max(0,(l.seats||0)-(l.users||0));if(spare&&!r.seatGroups)seats.push({group:'spare',weight:spare});
   split((basis==='cash'?r.cashSeat:r.seat)||0,(basis==='cash'?r.cashSeat:r.seat)||0,seats);
   if(r.gatewayAccess){const access=basis==='cash'?r.gatewayAccess.cashUsd:r.gatewayAccess.monthlyUsd;split(access,access,seats,'shared',l.apiProvider);}
   split((r.bundleCash||0)+(r.extras||0),(r.bundleCash||0)+(r.extras||0),seats);

@@ -84,3 +84,10 @@ Plans now opens directly on people groups and a cart. Each group has Add plan, a
 An optional limit is entered on Team, or edited from Plans/Budget. Monthly limits compare with the recurring monthly equivalent; 12-month limits compare with forecast payments including prepayments, discounts and renewal schedules. Limits use USD or RUB, preserve the entered native amount across FX changes, and convert the amount when its currency selector changes. The selected period changes the comparison horizon without multiplying the entered limit. Empty means unlimited; zero is an explicit zero budget.
 
 States distinguish remaining balance, fully allocated, possible overspend and definite overspend. Uncertain costs retain their bounds. Invalid entries suppress balance feedback, while invalid budget-form drafts remain transient so they cannot corrupt saved scenarios. Limits persist per scenario through JSON/offline export, duplication and recommendations; older scenarios have no limit. The cart remains an estimate and does not charge providers.
+
+
+## Shared workspace seats and early capacity checks · 20 October 2026
+
+Team-plan shortcuts now expose Codex / ChatGPT Business, Claude Team / Claude Code and GLM Team at cart entry and in the Plan step. Workspace identity is visible rather than hidden in advanced settings. The capacity panel distinguishes unique members, paid seats and optional unused seats. Conflicting tiers/billing or a verified cap/minimum block Continue before Usage; a one-person group can explicitly purchase an unused seat.
+
+Profile groups are merged by membership within each provider/workspace. Manual member-group names explicitly declare identity; old unnamed manual rows are not inferred to be duplicates. Shared line prices are labelled as allocated costs, and the cart displays the unique paid-seat total. Monthly totals remain above expanded workspace details. The published Claude cap is enforced; GLM has an explicitly unlimited seat count; OpenAI's unverified upper bound is visibly unknown rather than invented.

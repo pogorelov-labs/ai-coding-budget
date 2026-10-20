@@ -1,6 +1,6 @@
 import {GATEWAY_PROVIDERS} from './gateway-catalog.js';
 import {MODEL,MODELS,PLAN,PLANS,ROUTES} from './catalog.js';
-import {clone,newLine,newRow,setAudience,effectiveLine,settingsErrors,lineErrors,calculateScenario} from './engine.js';
+import {clone,newLine,newRow,setAudience,effectiveLine,settingsErrors,lineErrors,calculateScenario,workspaceAnalysis} from './engine.js';
 
 export const BUILDER_PROVIDERS=[['zai','Z.ai / GLM'],['openai','OpenAI / Codex'],['anthropic','Anthropic / Claude'],['deepseek','DeepSeek'],['openrouter','OpenRouter'],...Object.values(GATEWAY_PROVIDERS).map(p=>[p.id,p.name]),['custom','Custom']];
 export function builderPlans(provider){return PLANS.filter(p=>p.family===(provider==='zai'?'glm':provider));}
@@ -9,10 +9,11 @@ export function builderModels(d){
  const p=PLAN[d.line.plan];
  return MODELS.filter(m=>d.line.kind==='subscription'?!m.gatewayOnly&&(p?.onlyLuna?m.id==='luna':p?.family==='custom'||(p?.family==='glm'?!!m.glm:m.provider===p?.family)):d.line.kind==='openrouter'?m.provider==='openrouter'&&m.gatewayOnly:m.provider===d.provider&&(!m.allowedKinds||m.allowedKinds.includes('api')));
 }
-export function createPlanDraft(s,audience){
+export function createPlanDraft(s,audience,scenario={lines:[]}){
  const group=audience||(s.team>0?'all':s.technical.count>0?'technical':'manual');
  const l=newLine(group==='technical'?'api':'subscription','glm-lite',Math.max(1,s.team));
  setAudience(l,group,s);if(l.kind==='api')l.apiProvider='deepseek';l.spareSeats=0;l.profileShare=100;l.rows=[newRow(group==='technical'?'dsflash':'flash')];
+ if(group==='manual'){let n=1;while(scenario.lines.some(x=>x.memberGroup==='Group '+n))n++;l.memberGroup='Group '+n;}
  return {step:0,provider:group==='technical'?'deepseek':'zai',line:l};
 }
 function alignDraft(d){
@@ -30,13 +31,21 @@ export function changePlanDraft(d,key,value,s){
  const l=d.line;
  if(key==='audience'){setAudience(l,value,s);if(value==='technical'&&d.step===0){l.kind='api';l.apiProvider='deepseek';d.provider='deepseek';l.rows=[newRow('dsflash')];}}
  else if(key==='method'){l.kind=value;if(!builderProviders(value).some(([id])=>id===d.provider))d.provider='zai';if(value==='subscription'){l.plan=builderPlans(d.provider)[0].id;l.unitPrice=null;}else if(d.provider==='openrouter')l.kind='openrouter';alignDraft(d);}
- else if(key==='provider'){d.provider=value;if(l.kind==='subscription'){l.plan=builderPlans(value)[0].id;l.unitPrice=null;}else l.kind=value==='openrouter'?'openrouter':'api';alignDraft(d);}
+ else if(key==='provider'){d.provider=value;if(l.kind==='subscription'){const team=PLAN[l.plan]?.team;l.plan=(team&&builderPlans(value).find(p=>p.team)||builderPlans(value)[0]).id;l.unitPrice=null;}else l.kind=value==='openrouter'?'openrouter':'api';alignDraft(d);}
  else if(key==='plan'){l.plan=value;l.unitPrice=null;alignDraft(d);}
- else if(key==='quantity'){l.users=value;l.seats=value;}
+ else if(key==='quantity'){l.users=value;l.seats=value===null?null:value+(l.spareSeats||0);}
+ else if(key==='spareSeats'){l.spareSeats=value;if(l.audience==='manual')l.seats=(l.users||0)+(value||0);}
  else if(key.startsWith('row.')){const [,index,field]=key.split('.'),r=l.rows[Number(index)];if(field==='model'){Object.assign(r,{...newRow(value,r.share),id:r.id,cache:MODEL[value]?.rates[2]===null?0:r.cache});}else{r[field]=value;if(field==='route'){r.customRates=null;const route=(ROUTES[r.model]||[]).find(x=>x.id===value);if(route?.cacheWriteKnown===false)r.writes=0;}}}
  else if(key.startsWith('rate.')){const [,index,bucket]=key.split('.'),r=l.rows[Number(index)];r.customRates??=[null,null,null,null];r.customRates[Number(bucket)]=value;}
  else l[key]=value;
  return d;
+}
+export function chooseTeamPlan(d,id,s){
+ const p=PLAN[id];if(!p?.team)return d;
+ const provider=p.family==='glm'?'zai':p.family,changed=provider!==d.provider;
+ d.line.kind='subscription';d.provider=provider;d.line.plan=id;d.line.unitPrice=null;
+ if(changed)d.line.rows=[newRow(provider==='openai'?'sol':provider==='anthropic'?'sonnet':'flash')];
+ alignDraft(d);return d;
 }
 export function draftScenario(d,sc){return {...sc,lines:[...sc.lines,d.line]};}
 export function planDraftErrors(d,s,sc={lines:[]},step=d.step){
@@ -48,6 +57,9 @@ export function planDraftErrors(d,s,sc={lines:[]},step=d.step){
   if(!builderPlans(d.provider).some(p=>p.id===l.plan))errors.push('Choose a subscription.');
   if(!['monthly','quarterly','annual'].includes(l.billing)||(l.billing!=='monthly'&&PLAN[l.plan]?.[l.billing]==null))errors.push('Choose a supported billing period.');
   if(PLAN[l.plan]?.family==='custom'&&(!Number.isFinite(l.unitPrice)||l.unitPrice<0))errors.push('Enter a nonnegative monthly seat price.');
+  if(l.spareSeats!==undefined&&(!Number.isInteger(l.spareSeats)||l.spareSeats<0||l.spareSeats>10000))errors.push('Enter a nonnegative whole number of unused seats.');
+  if(l.memberGroup!==undefined&&(typeof l.memberGroup!=='string'||l.memberGroup.length>100))errors.push('Member group must be a name of at most 100 characters.');
+  if(PLAN[l.plan]?.team)errors.push(...workspaceAnalysis(draftScenario(d,sc),s).errors);
  }
  if(step<2)return errors;
  for(const k of (l.audience==='manual'?['input','output']:['profileShare']))if(!Number.isFinite(l[k]))errors.push('Complete the usage fields.');

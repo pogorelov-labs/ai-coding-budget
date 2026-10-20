@@ -5,7 +5,8 @@
 Compare AI coding subscriptions and API spending for a team. Describe power, regular and light users plus server agents. On **Plans**, choose a people group and add a subscription or API to its cart. Each group can have several plans with split workload shares. A recommendation can fill a new cart for you. Manual setup follows **People → Plan → Usage → Review → Add to cart**. Inspect monthly costs and a 12-month forecast on Budget.
 
 - English/Russian interface, research notes and provider conditions.
-- Personal and team subscriptions, direct APIs and OpenRouter routes.
+- Personal and team subscriptions, direct APIs and OpenRouter routes. Codex, Claude and GLM team plans are directly visible.
+- Shared workspace seats are billed once across workload items, with early capacity checks and dated provider rules.
 - Per-model input/output tokens, cache assumptions, workload allocation and scheduling.
 - Billing periods, credits, overage, confirmed promotions and editable USD/RUB conversion (default 95).
 - Live monthly and 12-month USD/RUB estimates during setup, a totals-first Budget page, inline scenario comparison, and expandable charts/assumptions.
@@ -44,6 +45,7 @@ Set **Settings → Pages → Build and deployment → Source** to **GitHub Actio
 | `src/gateway-billing.js` | Access plans and 30-day renewal accounting |
 | `src/budget-limit.js` / `src/budget-limit-ui.js` | Scenario spending limits, remaining balances and uncertainty states |
 | `src/plans-ui.js` / `src/plan-cart.css` | People-first plan cart and guided item setup |
+| `src/workspace-seats.js` / `src/workspace-ui.js` | Unique workspace members, shared purchases and verified capacity checks |
 | `src/running-cost.js` | Validated live plan and setup estimates |
 | `src/engine.js` | Token pricing, quotas, fees, credits and forecast ledger |
 | `src/recommendations.js` | Comparable-model setup recommendations |
@@ -63,3 +65,5 @@ The original implementation notes are retained in [docs/DEVELOPMENT-NOTES.md](do
 Russian gateway tariffs stay in native RUB; USD uses the scenario exchange rate. Provider repricing is separate from this display conversion. ProxyAPI prices include published 5% VAT; Polza VAT inclusion is unconfirmed. Unknown token categories cannot silently become free usage. VseGPT requires manually confirmed per-token rates because public billing units conflict; its access subscription is additional to usage.
 
 Gateway selections are explicit manual choices. The existing recommendation search keeps its verified direct-provider/subscription scope, so discounted, asynchronous or quantized routes are never silently substituted. See the [gateway research index](research/README.md).
+
+[Workspace membership and verified seat limits](research/team-limits-2026-10-20.md) explain how profile groups, manual member groups and shared billing are handled.

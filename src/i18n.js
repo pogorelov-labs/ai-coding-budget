@@ -125,6 +125,10 @@ OpenAI / Claude subscriptions may be cheaper if they cover your workload. Their 
 Team management is required; direct API may cost less.|Выбрано командное управление; прямой API может быть дешевле.
 Direct API is already the lowest priced eligible option.|Прямой API уже является самым дешёвым подходящим вариантом.
 Start with a setup|Выберите начальный набор
+Unique members|Уникальные участники
+Unused seats|Неиспользуемые места
+Unused seats for this tier|Неиспользуемые места этого уровня
+Reuse a member-group name only for the same people. Choose a profile group to reuse its members.|Повторяйте имя группы только для тех же людей. Для участников профиля выберите соответствующую группу.
 Team subscriptions|Командные подписки
 GLM Team for developers, Codex for power and regular users. Server agents use API.|GLM Team разработчикам, Codex — активным. Серверные агенты используют API.
 Lower-cost hybrid|Экономный гибрид
@@ -810,12 +814,63 @@ including this item|с учётом этой позиции
 Some usage is not covered by this estimate.|Часть нагрузки не покрыта этой оценкой.
 Monthly equivalent; upfront payments may be higher.|В пересчёте на месяц; предоплата может быть выше.
 add plans to your cart for each group. Split a group’s workload across plans when needed.|добавьте планы в корзину для каждой группы. При необходимости распределите нагрузку группы между планами.
+Unique members|Уникальные участники
+Unused seats|Неиспользуемые места
+Unused seats for this tier|Неиспользуемые места этого уровня
+Reuse a member-group name only for the same people. Choose a profile group to reuse its members.|Повторяйте имя группы только для тех же людей. Для участников профиля выберите соответствующую группу.
+Team subscriptions|Командные подписки
+Codex / ChatGPT Business|Codex / ChatGPT Business
+Claude Team · Claude Code|Claude Team · Claude Code
+Workspace & members|Пространство и участники
+Workspace seats|Места в пространствах
+minimum seats|минимум мест
+maximum|максимум
+paid seats|оплаченных мест
+unique members|уникальных участников
+unused seats|неиспользуемых мест
+No upper seat limit|Без верхнего предела мест
+Upper limit unverified|Верхний предел не подтверждён
+Confirm workspace capacity with OpenAI before purchase.|Подтвердите вместимость пространства у OpenAI перед покупкой.
+Shared members are charged once; their usage is combined.|Места одних и тех же участников оплачиваются один раз; их нагрузка суммируется.
+Shared seat purchase|Общая покупка мест
+Allocated item cost / month|Доля стоимости позиции / месяц
+Shared seats are charged once in the cart.|Общие места оплачиваются в корзине один раз.
+Member group · same people|Группа участников · те же люди
+Separate group unless named|Без имени — отдельная группа
+Reuse a member-group name only for the same people. Different names mean separate members.|Одно имя группы — одни и те же люди. Разные имена означают разных участников.
+Profile groups identify the same people across items in this workspace.|Группы профиля обозначают одних и тех же людей в разных позициях этого пространства.
+Additional unused seats|Дополнительные неиспользуемые места
+Add unused seats|Добавить пустые места
+Change people|Изменить участников
+Provider seat rules|Правила мест у провайдера
+Member group must be a name of at most 100 characters.|Имя группы участников должно содержать не более 100 символов.
+Enter a nonnegative whole number of unused seats.|Укажите целое неотрицательное число неиспользуемых мест.
+GLM Standard and Premium cannot be mixed.|GLM Standard и Premium нельзя смешивать.
+The same members cannot hold different team tiers. Use disjoint member groups.|Одним участникам нельзя назначить разные уровни команды. Выберите непересекающиеся группы.
+Shared seats must use the same billing period, seat price and discounts.|У общих мест должны совпадать период оплаты, цена места и скидки.
+A reused manual member group must have the same number of people.|Для одной ручной группы участников должно совпадать количество людей.
+Check member allocation.|Проверьте распределение участников.
+These workload items share one seat purchase. Seat fees are allocated across items; usage is added together.|Эти позиции используют одну покупку мест. Плата за места распределяется между позициями, а нагрузка суммируется.
+GLM quota is checked against the combined workload of the same members in this workspace.|Квота GLM проверяется по суммарной нагрузке одних и тех же участников пространства.
+Combined member usage exceeds the shared seat quota. Enable paid fallback or reduce usage.|Суммарная нагрузка участников превышает квоту общих мест. Включите платный резерв или уменьшите нагрузку.
+Codex Business needs at least 2 power and regular users. Change the profile or turn off Keep Codex.|Для Codex Business нужны минимум 2 активных разработчика. Измените профиль или отключите Codex.
+Business · seat minimum; upper limit unverified|Business · минимум мест; верхний предел не подтверждён
 `.trim().split('\n').map(line=>line.split('|')));
 Object.assign(UI_TRANSLATIONS,RESEARCH_TRANSLATIONS);
 const UI_REVERSE=Object.fromEntries(Object.entries(UI_TRANSLATIONS).map(([en,ru])=>[ru,en]));
 export function translateUI(text,language='en'){
  const raw=String(text),trim=raw.trim();if(!trim)return raw;
  let translated=language==='ru'?UI_TRANSLATIONS[trim]:(RESEARCH_EN[trim]??UI_REVERSE[trim]);
+ if(translated===undefined){
+  const prefix=trim.match(/^Workspace "(.+)": (.+)$/);
+  if(prefix)translated=language==='ru'?'Рабочее пространство «'+prefix[1]+'»: '+translateUI(prefix[2],language):trim;
+  const reverse=trim.match(/^Рабочее пространство «(.+)»: (.+)$/);
+  if(reverse)translated=language==='en'?'Workspace "'+reverse[1]+'": '+translateUI(reverse[2],language):trim;
+  const cap=trim.match(/^(\d+) paid seats; limit (\d+); (\d+) over\. Reduce seats or choose Enterprise\/API\.$/);
+  if(cap&&language==='ru')translated=cap[1]+' оплаченных мест; лимит '+cap[2]+'; превышение на '+cap[3]+'. Уменьшите число мест или выберите Enterprise/API.';
+  const min=trim.match(/^(\d+) paid seats; minimum (\d+); add (\d+) seats\.$/);
+  if(min&&language==='ru')translated=min[1]+' оплаченных мест; минимум '+min[2]+'; добавьте '+min[3]+'.';
+ }
  if(translated===undefined)translated=translateResearchTemplate(trim,language);
  if(translated===undefined){
   for(const [en,ru] of [['Import rejected: ','Импорт отклонён: '],['Saved scenario could not be loaded: ','Не удалось загрузить сценарий: ']]){const prefix=trim.startsWith(en)?en:trim.startsWith(ru)?ru:null;if(prefix){translated=(language==='en'?en:ru)+translateUI(trim.slice(prefix.length),language);break;}}

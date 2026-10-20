@@ -1230,6 +1230,7 @@ const RESEARCH_TEMPLATES=[
  ["From {0} seats · up to {1}","От {0} мест · до {1}"],
  ["From {0} seats · no upper seat limit","От {0} мест · без верхнего предела мест"],
  ["From {0} seats · upper limit not published","От {0} мест · верхний предел не опубликован"],
+ ["From {0} seats · upper limit unverified","От {0} мест · верхний предел не подтверждён"],
  ["From {0} seats","От {0} мест"],
  ["Server workload: {0} days/month, {1} days/week; parallel processes per account: {2}. Usage includes all processes: concurrency does not multiply volume or allowance.","Техническая нагрузка: {0} дней/месяц, {1} дней/неделю; {2} параллельных процессов на учётку. Расход включает все процессы: параллелизм не умножает объём или квоту."],
  ["Subscription coverage of {0}% is entered by the user, not a published allowance.","Покрытие подпиской {0}% задано пользователем, не является опубликованной квотой."],

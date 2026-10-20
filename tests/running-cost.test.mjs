@@ -61,7 +61,7 @@ test('workspace minima and mixed team tiers invalidate the quote until the compl
  const existing=newLine('subscription','glm-team-standard',1);existing.audience='manual';sc.lines.push(existing);
  const combined=runningPlanCost(d,s,sc);assert.equal(combined.valid,true);assert.equal(combined.hasExisting,true);assert.ok(combined.setup.high>combined.draft.high);
  existing.plan='glm-team-premium';
- const mixed=runningPlanCost(d,s,sc);assert.equal(mixed.valid,false);assert.equal(mixed.draft,null);assert.ok(mixed.errors.some(x=>x.includes('смешивать')));
+ const mixed=runningPlanCost(d,s,sc);assert.equal(mixed.valid,false);assert.equal(mixed.draft,null);assert.ok(mixed.errors.some(x=>x.includes('cannot be mixed')));
 });
 test('combined running quote includes existing subscriptions, API funding fees and tax',()=>{
  const {d,s,sc}=fixture();changePlanDraft(d,'method','api',s);changePlanDraft(d,'provider','openrouter',s);changePlanDraft(d,'period','team-month',s);changePlanDraft(d,'input',.001,s);changePlanDraft(d,'output',.0001,s);

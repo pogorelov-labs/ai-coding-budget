@@ -54,3 +54,10 @@ Budget → totals + remaining / over-budget amount
 Budget belongs to each scenario, accepts an explicit zero, and compares monthly equivalents or actual 12-month forecast payments. Ranges distinguish possible from definite overspend; incomplete coverage remains visible. Adding to a cart saves an estimate only. Preserve existing saved scenarios and manual workloads.
 
 Verification and critique: removed the old two-path entry cards and the sticky back-only footer, corrected default h4 margins, and kept recommendations as a secondary action. Added a compact mobile cart link so totals are visible before scrolling through groups. No new decorative icons, motion or colors were introduced. Tested group additions, repeated billing edits, limit changes, removal/undo, recommendations and EN/RU. The 354px cart and draft views have no horizontal overflow. Manual contrast/keyboard checks passed; local LCP 92ms, CLS 0, with INP/field p75 unmeasured.
+
+
+## Workspace purchase identity · 20 October 2026
+
+Reuse forest, slate and amber tokens and native labelled controls. Considered a separate workspace dashboard, a modal seat manager, and an inline capacity panel. Chose the inline panel: membership, billing and capacity are visible at the point where a plan is selected. Three compact provider shortcuts solve the discovery problem without another catalogue page. Shared seat totals are explicit in the cart; the same-member workload items remain independently editable.
+
+Visual critique moved workspace detail below monetary totals and retained concise source links. Desktop and 354px checks confirmed visible error feedback and disabled Continue, with keyboard recovery to People. Existing touch targets, focus styling and contrast tokens are retained. There is no added motion. The local probe measured LCP 104ms and CLS 0; INP and field p75 are unmeasured.

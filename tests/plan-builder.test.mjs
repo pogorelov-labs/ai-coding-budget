@@ -33,10 +33,10 @@ test('step validation rejects missing quantities, out-of-range shares and incomp
 });
 test('review enforces combined team minima and rejects mixed GLM tiers',()=>{
  const {s,sc}=fixture(),d=createPlanDraft(s,'manual');changePlanDraft(d,'quantity',1,s);changePlanDraft(d,'plan','glm-team-standard',s);
- assert.ok(planDraftErrors(d,s,sc,3).some(x=>x.includes('минимум')));
+ assert.ok(planDraftErrors(d,s,sc,3).some(x=>x.includes('minimum')));
  const existing=newLine('subscription','glm-team-standard',1);existing.audience='manual';sc.lines.push(existing);
  assert.deepEqual(planDraftErrors(d,s,sc,3),[]);
- sc.lines[0].plan='glm-team-premium';assert.ok(planDraftErrors(d,s,sc,3).some(x=>x.includes('смешивать')));
+ sc.lines[0].plan='glm-team-premium';assert.ok(planDraftErrors(d,s,sc,3).some(x=>x.includes('cannot be mixed')));
  sc.lines[0].users=2;sc.lines[0].seats=2;changePlanDraft(d,'quantity',2,s);changePlanDraft(d,'org','separate-team',s);assert.deepEqual(planDraftErrors(d,s,sc,3),[]);
 });
 test('OpenRouter only offers catalogue routes and model mixtures retain exact token shares',()=>{
