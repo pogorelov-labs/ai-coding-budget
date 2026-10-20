@@ -30,15 +30,42 @@ function wizardUsageHTML(d){
  const l=d.line,models=builderModels(d),manual=l.audience==='manual';
  return `<h3>Set the workload</h3><div class="wizard-fields">${manual?wizSelect('period','Token period',l.period,[['person-day','Per person / day'],['person-month','Per person / month'],['team-month','Whole line / month']])+wizInput('input','Input, M tokens',l.input)+wizInput('output','Output, M tokens',l.output):wizInput('profileShare','Share of this group’s workload, %',l.profileShare,{max:100})}</div>${!manual?'<p class="inline-help">Token estimates come from your team profile.</p>':''}<div class="wizard-models">${l.rows.map((r,i)=>`<div class="wizard-model"><div class="wizard-model-fields">${wizSelect('row.'+i+'.model','Model',r.model,models.map(m=>[m.id,m.name]))}${wizInput('row.'+i+'.share','Share, %',r.share,{max:100})}${wizInput('row.'+i+'.cache','Cached input, %',r.cache,{max:100})}${l.rows.length>1?`<button class="btn quiet" data-action="wizard-remove-model" data-index="${i}" aria-label="${tr('Remove model')} ${i+1}">×</button>`:''}</div>${r.model==='custom'?`<div class="grid four">${['Input $/M','Cache write $/M','Cache read $/M','Output $/M'].map((title,j)=>wizInput('rate.'+i+'.'+j,title,r.customRates?.[j])).join('')}</div>`:''}</div>`).join('')}</div><button class="btn quiet" data-action="wizard-add-model" ${l.rows.length>=50?'disabled':''}>Add model</button><p class="inline-help">Model shares must total 100%. All token volumes are in millions.</p>${l.kind==='subscription'&&PLAN[l.plan]?.family==='glm'?wizSelect('overflow','When the quota runs out',l.overflow,[['stop','Stop · no paid fallback'],['payg',PLAN[l.plan].team?'Paid Team overage':'Separate PAYG fallback']]):''}<p class="inline-help">Advanced rates and discounts are available after adding the plan.</p>`;
 }
+function wizardSelectionsHTML(d){
+ if(d.step===0)return '';
+ const l=d.line,e=effectiveLine(l,settings()),p=PLAN[l.plan];
+ const selected=(step,title,body)=>`<div class="wizard-selection"><dt>${tr(title)}</dt><dd class="selection-value">${body}</dd><dd class="selection-action"><button type="button" class="btn quiet" data-action="wizard-edit-step" data-step="${step}" aria-label="${tr('Edit '+title.toLowerCase())}">Edit</button></dd></div>`;
+ const count=nf.format(e.users),people=esc(tr(audienceName(l.audience)))+' · '+count+' '+esc(tr(l.audience==='technical'||l.consumerType==='technical'?'agent accounts':l.audience==='manual'?'people / accounts':'people'));
+ let rows=selected(0,'People',people);
+ if(d.step>1){
+  const provider=builderProviders('api').find(([id])=>id===d.provider)?.[1]||d.provider;
+  let plan=l.kind==='subscription'?esc(tr(p?.name||'Subscription')):esc(tr('API')+' · '+tr(provider));
+  if(l.kind==='subscription'){
+   const period=p?.metered?'Metered workspace credits':l.billing==='annual'?'Annual · paid upfront':l.billing==='quarterly'?'Quarterly':'Monthly';
+   plan+=`<small>${esc(tr(period))}${l.unitPrice!=null?' · '+USD.format(l.unitPrice)+' '+esc(tr('/ person / month')):''}</small>`;
+   if(p?.team)plan+=`<small><span>${tr('Workspace')}</span>: <span data-user-content>${esc(l.org||'main')}</span></small>`;
+  }
+  rows+=selected(1,'Plan',plan);
+ }
+ if(d.step>2){
+  const manual=l.audience==='manual';
+  let usage=manual?`${nf.format(l.input)}M <span>${tr('Input')}</span> · ${nf.format(l.output)}M <span>${tr('Output')}</span><small>${tr({'person-day':'Per person / day','person-month':'Per person / month','team-month':'Whole line / month'}[l.period])}</small>`:`${nf.format(l.profileShare??100)}% <span>${tr('of group workload')}</span>`;
+  const model=(r,withRates=false)=>`<span class="selection-model">${esc(tr(MODEL[r.model]?.name||r.model))} ${nf.format(r.share)}% · <span>${tr('Cache')}</span> ${nf.format(r.cache)}%${withRates&&r.customRates?`<small>${['Input $/M','Cache write $/M','Cache read $/M','Output $/M'].map((label,i)=>esc(tr(label))+': '+nf.format(r.customRates[i])).join(' · ')}</small>`:''}</span>`;
+  usage+=`<div class="selection-models">${l.rows.slice(0,2).map(r=>model(r)).join('')}</div>`;
+  if(l.rows.length>2||l.rows.some(r=>r.customRates))usage+=`<details class="selection-model-details"><summary>${tr('All model details')} (${l.rows.length})</summary>${l.rows.map(r=>model(r,true)).join('')}</details>`;
+  if(l.kind==='subscription'&&p?.family==='glm')usage+=`<small>${tr(l.overflow==='stop'?'Stop · no paid fallback':p.team?'Paid Team overage':'Separate PAYG fallback')}</small>`;
+  rows+=selected(2,'Usage',usage);
+ }
+ return `<section class="wizard-selections" aria-label="${tr('Your choices')}"><h3>Your choices</h3><dl>${rows}</dl></section>`;
+}
 function wizardReviewHTML(d){
- const l=d.line,s=settings(),p=PLAN[l.plan],e=effectiveLine(l,s),f=previewPlanDraft(d,s,active()),r=f.regular;
+ const l=d.line,s=settings(),p=PLAN[l.plan],f=previewPlanDraft(d,s,active()),r=f.regular;
  const issues=planDraftErrors(d,s,active(),3);const overlaps=coverageNotes(draftScenario(d,active())).filter(n=>n.includes('This counts some usage more than once.'));
- return `<h3>Review this plan</h3><dl class="wizard-review"><div><dt>Plan</dt><dd>${esc(tr(l.kind==='subscription'?p.name:l.kind==='openrouter'?'OpenRouter':'Direct API'))}</dd></div><div><dt>Who uses this?</dt><dd>${esc(tr(audienceName(l.audience)))} · ${e.users}</dd></div><div><dt>Models</dt><dd>${l.rows.map(r=>`${esc(tr(MODEL[r.model].name))} ${nf.format(r.share)}%`).join(' · ')}</dd></div>${l.kind==='subscription'?`<div><dt>Billing period</dt><dd>${tr(l.billing==='annual'?'Annual · paid upfront':l.billing==='quarterly'?'Quarterly':'Monthly')}</dd></div>`:''}</dl>${r.valid?`<div class="wizard-cost"><span>Estimated monthly cost</span><strong>${priceRange(r.low,r.high)}</strong><span>${priceRange(r.low,r.high,'rub')}</span><p><span>First payment</span> <b>${priceRange(f.first.cashLow,f.first.cashHigh)}</b></p></div>`:''}${issues.length?`<div class="callout bad" role="alert">${issues.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>`:''}${r.valid&&!r.covered?'<p class="callout warn">This plan does not cover all entered usage. Go back and enable paid fallback or choose a larger plan.</p>':''}${r.valid&&r.high-r.low>.005?'<p class="callout warn">Included quota is unknown; this is a cost range.</p>':''}${overlaps.length?'<p class="callout warn">Some workload is counted more than once. Adjust each plan’s workload share.</p>':''}${l.kind==='subscription'&&p?.family==='glm'&&!p.team&&l.overflow==='payg'?'<p class="inline-help">Personal GLM fallback needs a separate API key and manual switching.</p>':''}${automationCallout(l)}${detail('wizard-detail','Quota and provider details',lineResultHTML(r,f.first))}`;
+ return `<h3>Review this plan</h3>${r.valid?`<div class="wizard-cost"><span>Estimated monthly cost</span><strong>${priceRange(r.low,r.high)}</strong><span>${priceRange(r.low,r.high,'rub')}</span><p><span>First payment</span> <b>${priceRange(f.first.cashLow,f.first.cashHigh)}</b></p></div>`:''}${issues.length?`<div class="callout bad" role="alert">${issues.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>`:''}${r.valid&&!r.covered?'<p class="callout warn">This plan does not cover all entered usage. Go back and enable paid fallback or choose a larger plan.</p>':''}${r.valid&&r.high-r.low>.005?'<p class="callout warn">Included quota is unknown; this is a cost range.</p>':''}${overlaps.length?'<p class="callout warn">Some workload is counted more than once. Adjust each plan’s workload share.</p>':''}${l.kind==='subscription'&&p?.family==='glm'&&!p.team&&l.overflow==='payg'?'<p class="inline-help">Personal GLM fallback needs a separate API key and manual switching.</p>':''}${automationCallout(l)}${detail('wizard-detail','Quota and provider details',lineResultHTML(r,f.first))}`;
 }
 function planWizardHTML(){
  const j=planJourney(),d=j.draft;if(!d)return plansChoiceHTML();
  const steps=['People','Plan','Usage','Review'];
- return `${heading('Step 2 of 3','Build your setup','')}<ol class="wizard-progress" aria-label="${tr('Plan setup steps')}">${steps.map((name,i)=>`<li ${i===d.step?'aria-current="step"':''} class="${i<d.step?'complete':''}"><span aria-hidden="true">${i+1}</span>${tr(name)}</li>`).join('')}</ol><section class="plan-wizard"><div id="wizard-errors" class="callout bad" role="alert" tabindex="-1" ${j.errors.length?'':'hidden'}>${j.errors.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>${[wizardAudienceHTML,wizardPlanHTML,wizardUsageHTML,wizardReviewHTML][d.step](d)}</section><div class="step-footer wizard-footer"><button class="btn quiet" data-action="${d.step?'wizard-back':'wizard-cancel'}">${d.step?'Back':'Cancel'}</button><button class="btn primary" data-action="${d.step===3?'wizard-save':'wizard-next'}" ${d.step===3&&planDraftErrors(d,settings(),active(),3).length?'disabled':''}>${d.step===3?'Add plan':'Continue'}</button></div>`;
+ return `${heading('Step 2 of 3','Build your setup','')}<ol class="wizard-progress" aria-label="${tr('Plan setup steps')}">${steps.map((name,i)=>`<li ${i===d.step?'aria-current="step"':''} class="${i<d.step?'complete':''}"><span aria-hidden="true">${i+1}</span>${tr(name)}</li>`).join('')}</ol>${wizardSelectionsHTML(d)}<section class="plan-wizard"><div id="wizard-errors" class="callout bad" role="alert" tabindex="-1" ${j.errors.length?'':'hidden'}>${j.errors.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>${[wizardAudienceHTML,wizardPlanHTML,wizardUsageHTML,wizardReviewHTML][d.step](d)}</section><div class="step-footer wizard-footer"><button class="btn quiet" data-action="${d.step?'wizard-back':'wizard-cancel'}">${d.step?'Back':'Cancel'}</button><button class="btn primary" data-action="${d.step===3?'wizard-save':'wizard-next'}" ${d.step===3&&planDraftErrors(d,settings(),active(),3).length?'disabled':''}>${d.step===3?'Add plan':'Continue'}</button></div>`;
 }
 function plansAction(b){
  const act=b.dataset.action,j=planJourney();
@@ -48,6 +75,7 @@ function plansAction(b){
  else if(act==='plan-edit'){j.mode='edit';}
  else if(act==='plan-manual'){startManualPlan();return true;}
  else if(act==='wizard-cancel'){j.draft=null;j.errors=[];j.mode='choice';}
+ else if(act==='wizard-edit-step'){const step=Number(b.dataset.step);if(!j.draft||!Number.isInteger(step)||step<0||step>=j.draft.step)return true;j.draft.step=step;j.errors=[];}
  else if(act==='wizard-back'){j.draft.step=Math.max(0,j.draft.step-1);j.errors=[];}
  else if(act==='wizard-next'){
   j.errors=planDraftErrors(j.draft,settings(),active());

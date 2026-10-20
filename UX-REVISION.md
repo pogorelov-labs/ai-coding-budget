@@ -57,3 +57,8 @@ Recommendation summaries show the cost, first payment and one short reason per g
 The manual flow has four stages: People, Plan, Usage, Review. It supports subscriptions, direct API and OpenRouter; model choices follow the provider and plan. Billing periods, multiple model shares, caching, manual token inputs, custom rates, GLM fallback and optional team/workspace grouping are available where applicable. The review uses the same scenario calculation as the final budget, including router fees, shared team limits, quota gaps and uncertain allowances.
 
 Drafts are kept separately in memory per scenario. Back navigation and language changes retain them; Add plan is the only write to the saved plan list. Cancel discards the draft, and a reload does not persist unconfirmed work. Existing edits and advanced billing remain available in the saved-plan editor.
+
+
+### Previous selections
+
+From the second wizard step onward, a “Your choices” summary shows earlier selections and links back to edit them. It includes the group and count, subscription/billing or API provider, team workspace, workload share or explicit tokens and period, model shares/cache, and GLM fallback choice. Review uses the same summary without repeating these details. Editing a previous step preserves the draft and still requires the normal validation before advancing.

@@ -518,6 +518,16 @@ Codex · service account PAYG|Codex · сервисный аккаунт PAYG
 Workspace settings|Настройки рабочего пространства
 Team / workspace name|Название команды / рабочего пространства
 Use the same name for seats in one team.|Для мест одной команды используйте одинаковое название.
+Your choices|Ваш выбор
+Edit people|Изменить людей
+Edit plan|Изменить план
+Edit usage|Изменить нагрузку
+people / accounts|чел. / аккаунтов
+of group workload|нагрузки группы
+Cache|Кеш
+All model details|Все параметры моделей
+Metered workspace credits|Расход по credits рабочего пространства
+Workspace|Рабочее пространство
 `.trim().split('\n').map(line=>line.split('|')));
 Object.assign(UI_TRANSLATIONS,RESEARCH_TRANSLATIONS);
 const UI_REVERSE=Object.fromEntries(Object.entries(UI_TRANSLATIONS).map(([en,ru])=>[ru,en]));
