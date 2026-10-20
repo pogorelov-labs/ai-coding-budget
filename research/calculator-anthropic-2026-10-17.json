@@ -1,0 +1,1192 @@
+{
+  "schemaVersion": "1.0",
+  "asOf": "2026-10-17",
+  "currency": "USD",
+  "taxIncluded": false,
+  "marketPriceScope": "US public web pricing; local currency and tax can differ; not a European checkout quote",
+  "sources_reviewed_exa_search_numResults": 9,
+  "sourceAccounting": "Current Oct17 research only: Exa searches numResults=5+4; fetch calls not included.",
+  "sources": {
+    "plans": {
+      "url": "https://claude.com/pricing",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Plans, annual billing, shared limits, pricing summary"
+    },
+    "max": {
+      "url": "https://support.claude.com/en/articles/11049741-what-is-the-max-plan",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Max tiers and usage rules"
+    },
+    "team": {
+      "url": "https://support.claude.com/en/articles/9266767-what-is-the-team-plan",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Team prices, seat count, exact relative per-session limits"
+    },
+    "bonus": {
+      "url": "https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-and-team-plans",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Monthly API credits, eligibility and excluded modes"
+    },
+    "api": {
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "API token categories, tools, modifiers and tiers"
+    },
+    "cache": {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Disjoint cache accounting, TTL and cache minima"
+    },
+    "thinking": {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Thinking included in billed output"
+    },
+    "bundles": {
+      "url": "https://support.claude.com/en/articles/14246112-buy-usage-bundles",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Discounted interactive usage bundles"
+    },
+    "usageCredits": {
+      "url": "https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Interactive credits at API rates, expiry and limits"
+    },
+    "apiBilling": {
+      "url": "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-claude-api-usage",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Purchased API credits, expiry and failed calls"
+    },
+    "artifactPromo": {
+      "url": "https://support.claude.com/en/articles/17274727-artifact-usage-promotion",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Expired October artifact promotion"
+    },
+    "enterprise": {
+      "url": "https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Enterprise seats and usage billing"
+    },
+    "geo": {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/data-residency",
+      "fetchedDate": "2026-10-17",
+      "type": "primary",
+      "supports": "Only global/us inference, only US workspace geo, shared geo rate limits"
+    }
+  },
+  "anthropic": {
+    "plans": [
+      {
+        "id": "pro",
+        "label": "Pro",
+        "monthlyUSD": 20,
+        "annualUpfrontUSD": 200,
+        "annualMonthlyEquivalentUSD": 16.666666666666668,
+        "annualDiscountFraction": 0.16666666666666663,
+        "sessionAllowanceRelativeToPro": 1,
+        "monthlyApiBonusUSD": 0,
+        "sourceIds": [
+          "plans",
+          "usageCredits"
+        ],
+        "priceUnit": "per_named_person",
+        "includesClaudeCode": true,
+        "absoluteTokenAllowance": null,
+        "monthlyMonetaryIncludedInteractiveAllowanceUSD": null,
+        "usageWindowHours": 5,
+        "weeklyLimitExists": true,
+        "weeklyAllowanceRelativeToPro": null,
+        "includedUsagePoolScope": "individual_person",
+        "includedUsageTransferable": false
+      },
+      {
+        "id": "max_5x",
+        "label": "Max 5x",
+        "monthlyUSD": 100,
+        "annualUpfrontUSD": null,
+        "annualMonthlyEquivalentUSD": null,
+        "sessionAllowanceRelativeToPro": 5,
+        "monthlyApiBonusUSD": 100,
+        "sourceIds": [
+          "max",
+          "bonus"
+        ],
+        "priceUnit": "per_named_person",
+        "includesClaudeCode": true,
+        "absoluteTokenAllowance": null,
+        "monthlyMonetaryIncludedInteractiveAllowanceUSD": null,
+        "usageWindowHours": 5,
+        "weeklyLimitExists": true,
+        "weeklyAllowanceRelativeToPro": null,
+        "includedUsagePoolScope": "individual_person",
+        "includedUsageTransferable": false
+      },
+      {
+        "id": "max_20x",
+        "label": "Max 20x",
+        "monthlyUSD": 200,
+        "annualUpfrontUSD": null,
+        "annualMonthlyEquivalentUSD": null,
+        "sessionAllowanceRelativeToPro": 20,
+        "monthlyApiBonusUSD": 200,
+        "sourceIds": [
+          "max",
+          "bonus"
+        ],
+        "priceUnit": "per_named_person",
+        "includesClaudeCode": true,
+        "absoluteTokenAllowance": null,
+        "monthlyMonetaryIncludedInteractiveAllowanceUSD": null,
+        "usageWindowHours": 5,
+        "weeklyLimitExists": true,
+        "weeklyAllowanceRelativeToPro": null,
+        "includedUsagePoolScope": "individual_person",
+        "includedUsageTransferable": false
+      },
+      {
+        "id": "team_standard",
+        "label": "Team Standard",
+        "monthlyUSD": 25,
+        "annualUpfrontUSD": 240,
+        "annualMonthlyEquivalentUSD": 20,
+        "annualDiscountFraction": 0.2,
+        "sessionAllowanceRelativeToPro": 1.25,
+        "monthlyApiBonusUSD": 20,
+        "apiBonusSubjectToTeamCap": true,
+        "sourceIds": [
+          "team",
+          "bonus"
+        ],
+        "priceUnit": "per_named_person",
+        "includesClaudeCode": true,
+        "absoluteTokenAllowance": null,
+        "monthlyMonetaryIncludedInteractiveAllowanceUSD": null,
+        "usageWindowHours": 5,
+        "weeklyLimitExists": true,
+        "weeklyAllowanceRelativeToPro": null,
+        "includedUsagePoolScope": "individual_person",
+        "includedUsageTransferable": false
+      },
+      {
+        "id": "team_premium",
+        "label": "Team Premium",
+        "monthlyUSD": 125,
+        "annualUpfrontUSD": 1200,
+        "annualMonthlyEquivalentUSD": 100,
+        "annualDiscountFraction": 0.2,
+        "sessionAllowanceRelativeToPro": 6.25,
+        "monthlyApiBonusUSD": 100,
+        "apiBonusSubjectToTeamCap": true,
+        "sourceIds": [
+          "team",
+          "bonus"
+        ],
+        "priceUnit": "per_named_person",
+        "includesClaudeCode": true,
+        "absoluteTokenAllowance": null,
+        "monthlyMonetaryIncludedInteractiveAllowanceUSD": null,
+        "usageWindowHours": 5,
+        "weeklyLimitExists": true,
+        "weeklyAllowanceRelativeToPro": null,
+        "includedUsagePoolScope": "individual_person",
+        "includedUsageTransferable": false
+      }
+    ],
+    "team": {
+      "minimumSeats": 2,
+      "maximumSeats": 150,
+      "mixStandardAndPremiumAllowed": true,
+      "monthlyApiBonusCapUSD": 500,
+      "monthlyApiBonusFormula": "min(500,20*standardSeats+100*premiumSeats)",
+      "sourceIds": [
+        "team",
+        "bonus"
+      ]
+    },
+    "enterprise": {
+      "seatUSDPerMonth": 20,
+      "annualOnly": true,
+      "annualSeatUpfrontUSD": 240,
+      "minimumSelfServeSeats": 20,
+      "minimumSalesAssistedSeats": 50,
+      "includedInteractiveTokenAllowance": 0,
+      "usageBilledSeparatelyAtApiRates": true,
+      "monthlyApiBonusUSD": 0,
+      "sourceIds": [
+        "plans",
+        "enterprise",
+        "bonus"
+      ]
+    },
+    "includedSubscriptionUsage": {
+      "numericAbsoluteTokenQuotaPublished": false,
+      "estimateFromPriceOrMultiplierAllowed": false,
+      "warnings": [
+        "Per-session multiples describe relative plan capacity only. Absolute token baseline and weekly equivalents are not published.",
+        "Chat, desktop/mobile Claude and Claude Code share included usage.",
+        "Model choice, conversation/context length and tool features affect allowance consumption.",
+        "Do not calculate an exact subscription overage bill from API workload unless measured included consumption is supplied.",
+        "Additional model or other caps can change; plan price is not a throughput guarantee."
+      ],
+      "fableWeeklyShareMaximum": 0.5,
+      "fableIncludedOn": [
+        "max_5x",
+        "max_20x",
+        "team_premium"
+      ],
+      "fableProAccess": "usage_credits",
+      "sourceIds": [
+        "plans",
+        "max",
+        "team"
+      ]
+    },
+    "api": {
+      "unit": "USD per 1,000,000 billed tokens",
+      "models": [
+        {
+          "id": "fable_5_1",
+          "displayName": "Claude Fable 5.1",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 10,
+            "cacheWrite5m": 12.5,
+            "cacheWrite1h": 20,
+            "cacheRead": 0.25,
+            "output": 50
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "mythos_5_1",
+          "displayName": "Claude Mythos 5.1",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 10,
+            "cacheWrite5m": 12.5,
+            "cacheWrite1h": 20,
+            "cacheRead": 0.25,
+            "output": 50
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "limited_verification_program",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "fable_5",
+          "displayName": "Claude Fable 5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 10,
+            "cacheWrite5m": 12.5,
+            "cacheWrite1h": 20,
+            "cacheRead": 1,
+            "output": 50
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "mythos_5",
+          "displayName": "Claude Mythos 5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 10,
+            "cacheWrite5m": 12.5,
+            "cacheWrite1h": 20,
+            "cacheRead": 1,
+            "output": 50
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "limited_verification_program",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_5_5",
+          "displayName": "Claude Opus 5.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 4,
+            "cacheWrite5m": 5,
+            "cacheWrite1h": 8,
+            "cacheRead": 0.2,
+            "output": 20
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": true,
+          "fastMultiplier": 2,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_5",
+          "displayName": "Claude Opus 5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 5,
+            "cacheWrite5m": 6.25,
+            "cacheWrite1h": 10,
+            "cacheRead": 0.5,
+            "output": 25
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": true,
+          "fastMultiplier": 2,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_4_8",
+          "displayName": "Claude Opus 4.8",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 5,
+            "cacheWrite5m": 6.25,
+            "cacheWrite1h": 10,
+            "cacheRead": 0.5,
+            "output": 25
+          },
+          "promptCacheMinimumTokensFirstParty": 1024,
+          "fastAllowed": true,
+          "fastMultiplier": 2,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_4_7",
+          "displayName": "Claude Opus 4.7",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 5,
+            "cacheWrite5m": 6.25,
+            "cacheWrite1h": 10,
+            "cacheRead": 0.5,
+            "output": 25
+          },
+          "promptCacheMinimumTokensFirstParty": 2048,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_4_6",
+          "displayName": "Claude Opus 4.6",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 5,
+            "cacheWrite5m": 6.25,
+            "cacheWrite1h": 10,
+            "cacheRead": 0.5,
+            "output": 25
+          },
+          "promptCacheMinimumTokensFirstParty": 4096,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "opus_4_5",
+          "displayName": "Claude Opus 4.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 5,
+            "cacheWrite5m": 6.25,
+            "cacheWrite1h": 10,
+            "cacheRead": 0.5,
+            "output": 25
+          },
+          "promptCacheMinimumTokensFirstParty": 4096,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": false,
+          "longContextAtStandardRates": false,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "sonnet_5_5",
+          "displayName": "Claude Sonnet 5.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 2,
+            "cacheWrite5m": 2.5,
+            "cacheWrite1h": 4,
+            "cacheRead": 0.1,
+            "output": 10
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "sonnet_5",
+          "displayName": "Claude Sonnet 5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 2,
+            "cacheWrite5m": 2.5,
+            "cacheWrite1h": 4,
+            "cacheRead": 0.2,
+            "output": 10
+          },
+          "promptCacheMinimumTokensFirstParty": 1024,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "sonnet_4_6",
+          "displayName": "Claude Sonnet 4.6",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 3,
+            "cacheWrite5m": 3.75,
+            "cacheWrite1h": 6,
+            "cacheRead": 0.3,
+            "output": 15
+          },
+          "promptCacheMinimumTokensFirstParty": 1024,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": true,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "sonnet_4_5",
+          "displayName": "Claude Sonnet 4.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 3,
+            "cacheWrite5m": 3.75,
+            "cacheWrite1h": 6,
+            "cacheRead": 0.3,
+            "output": 15
+          },
+          "promptCacheMinimumTokensFirstParty": 1024,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "deprecated",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": false,
+          "longContextAtStandardRates": false,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "haiku_5_5",
+          "displayName": "Claude Haiku 5.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 0.1,
+            "cacheWrite5m": 0.125,
+            "cacheWrite1h": 0.2,
+            "cacheRead": 0.01,
+            "output": 0.5
+          },
+          "promptCacheMinimumTokensFirstParty": 512,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": {
+            "requestPromptTokensGreaterThan": 100000,
+            "promptIncludesAllInputCategories": true,
+            "allTokensInRequestUseHigherRates": true,
+            "ratesUSDPerMillionTokens": {
+              "uncachedInput": 0.5,
+              "cacheWrite5m": 0.625,
+              "cacheWrite1h": 1,
+              "cacheRead": 0.05,
+              "output": 2.5
+            }
+          },
+          "usInferenceGeoSupported": true,
+          "longContextAtStandardRates": false,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "id": "haiku_4_5",
+          "displayName": "Claude Haiku 4.5",
+          "apiModelId": null,
+          "ratesUSDPerMillionTokens": {
+            "uncachedInput": 1,
+            "cacheWrite5m": 1.25,
+            "cacheWrite1h": 2,
+            "cacheRead": 0.1,
+            "output": 5
+          },
+          "promptCacheMinimumTokensFirstParty": 4096,
+          "fastAllowed": false,
+          "fastMultiplier": null,
+          "availability": "standard_subject_to_account_access",
+          "longContextPremium": null,
+          "usInferenceGeoSupported": false,
+          "longContextAtStandardRates": false,
+          "sourceIds": [
+            "api",
+            "cache"
+          ]
+        }
+      ],
+      "defaultSuggestedModelIds": [
+        "sonnet_5_5",
+        "opus_5_5",
+        "haiku_5_5"
+      ],
+      "categoriesAreDisjoint": true,
+      "totalInputFormula": "uncachedInput+cacheWrite5m+cacheWrite1h+cacheRead",
+      "outputIncludesBilledThinking": true,
+      "tokenizerCaveat": "Claude 4.7+ tokenizer produces approximately 30% more tokens for the same text than earlier models, workload dependent. Equal token counts are not equal work or quality.",
+      "purchasedCreditExpiresAfterYears": 1,
+      "purchasedCreditRefundable": false,
+      "billing": {
+        "failedRequestsCharged": false,
+        "disconnectOnOtherwiseSuccessfulRequestMayBeCharged": true,
+        "creditsRequiredForPrepaidOrg": true,
+        "sourceIds": [
+          "apiBilling"
+        ]
+      },
+      "modifiers": {
+        "batch": {
+          "multiplier": 0.5,
+          "appliesTo": [
+            "uncachedInput",
+            "cacheWrite5m",
+            "cacheWrite1h",
+            "cacheRead",
+            "output"
+          ],
+          "asyncOnly": true,
+          "incompatibleWith": [
+            "fast",
+            "managed_agents"
+          ],
+          "sourceIds": [
+            "api"
+          ]
+        },
+        "usInferenceGeo": {
+          "multiplier": 1.1,
+          "appliesTo": [
+            "uncachedInput",
+            "cacheWrite5m",
+            "cacheWrite1h",
+            "cacheRead",
+            "output"
+          ],
+          "parameter": "inference_geo:\"us\"",
+          "defaultGlobalMultiplier": 1,
+          "unsupportedOnEarlierModelsReturns400": true,
+          "notBasedOnUserCitizenshipOrResidence": true,
+          "sourceIds": [
+            "api"
+          ]
+        },
+        "fast": {
+          "allowedModelIds": [
+            "opus_5_5",
+            "opus_5",
+            "opus_4_8"
+          ],
+          "multiplier": 2,
+          "appliesToAllTokenCategories": true,
+          "fullContext": true,
+          "incompatibleWith": [
+            "batch"
+          ],
+          "researchPreviewModelIds": [
+            "opus_5",
+            "opus_4_8"
+          ],
+          "firstParty": true,
+          "azureHostedFoundryOnlyModelIds": [
+            "opus_5_5"
+          ],
+          "claudePlatformAws": false,
+          "partnerOperatedClouds": false,
+          "sourceIds": [
+            "api"
+          ]
+        },
+        "priorityTierOrVolumeDiscount": {
+          "publicNumericalSchedule": null,
+          "negotiatedOnlyForCalculator": true,
+          "sourceIds": [
+            "api"
+          ]
+        }
+      },
+      "cache": {
+        "defaultTtlMinutes": 5,
+        "optionalTtlMinutes": 60,
+        "write5mMultiplier": 1.25,
+        "write1hMultiplier": 2,
+        "rateRatios": {
+          "defaultRead": 0.1,
+          "opus55AndSonnet55Read": 0.05,
+          "fable51AndMythos51Read": 0.025
+        },
+        "requestUsageMapping": {
+          "uncachedInput": "usage.input_tokens",
+          "cacheWrite5m": "usage.cache_creation.ephemeral_5m_input_tokens",
+          "cacheWrite1h": "usage.cache_creation.ephemeral_1h_input_tokens",
+          "cacheRead": "usage.cache_read_input_tokens",
+          "output": "usage.output_tokens",
+          "totalCacheWrite": "usage.cache_creation_input_tokens (sum of 5m+1h, do not add again)"
+        },
+        "hitRatioIsMeasuredOrAssumedNotGuaranteed": true,
+        "parallelColdRequestsWarning": "Cache becomes available after the first response begins; simultaneous cold calls do not guarantee hits.",
+        "sourceIds": [
+          "api",
+          "cache"
+        ]
+      },
+      "toolFees": {
+        "webSearch": {
+          "usdPerSuccessfulSearch": 0.01,
+          "plusTokens": true,
+          "failedSearchCharged": false
+        },
+        "webFetch": {
+          "additionalUSD": 0,
+          "plusTokens": true
+        },
+        "codeExecution": {
+          "usdPerContainerHour": 0.05,
+          "freeContainerHoursPerOrgMonth": 1550,
+          "minimumMinutes": 5,
+          "freeBeyondTokensWhenRequestIncludes": [
+            "web_search_20260209_or_later",
+            "web_fetch_20260209_or_later"
+          ],
+          "preloadedFilesAccrueRuntimeEvenIfToolNotCalled": true,
+          "sourceConflict": "Detailed API docs say 1550 free hours/org/month; marketing pricing says 50 free hours/day. Use detailed docs explicitly; verify invoice for precise allowance."
+        },
+        "managedAgents": {
+          "usdPerRunningSessionHour": 0.08,
+          "meteredToMillisecond": true,
+          "onlyStatus": "running",
+          "excludedStatuses": [
+            "idle",
+            "rescheduling",
+            "terminated"
+          ],
+          "replacesCodeExecutionContainerFee": true,
+          "batchUnavailable": true,
+          "plusTokensAndSearch": true
+        },
+        "clientToolsComputerBrowserBashEditor": {
+          "separateFixedUsdFee": 0,
+          "toolSchemaSystemPromptResultsImagesBillableAsInput": true,
+          "measuredUsageAlreadyIncludesOverhead": true
+        },
+        "sourceIds": [
+          "api"
+        ]
+      },
+      "geoNote": "First-party inference geo supports only global/us; workspace geo only us. US-only inference costs +10% of all token categories. There is no published first-party EU inference/workspace option on this page. Partner regional endpoint rules are independent.",
+      "unknowns": [
+        "Account-specific RPM/ITPM/OTPM and parallelism need Console/rate-limit checks; a paid key does not promise any fixed parallel request count.",
+        "No fixed token allowance for subscription plans.",
+        "Exact API model identifier intentionally left null; display identifiers here are calculator-local.",
+        "Private discounts and local tax/checkout prices not known."
+      ],
+      "dataResidency": {
+        "availableInferenceGeos": [
+          "global",
+          "us"
+        ],
+        "availableWorkspaceGeos": [
+          "us"
+        ],
+        "workspaceGeoChangeableAfterCreation": false,
+        "rateLimitsSharedAcrossGeos": true,
+        "euInferenceOrWorkspaceOptionPublished": false,
+        "inferenceGeoUnavailableOnOpenaiSdkCompatibilityEndpoint": true,
+        "sourceIds": [
+          "geo",
+          "api"
+        ]
+      }
+    },
+    "monthlyApiBonus": {
+      "eligiblePlanIds": [
+        "max_5x",
+        "max_20x",
+        "team_standard",
+        "team_premium"
+      ],
+      "ineligiblePlanIds": [
+        "free",
+        "pro",
+        "enterprise"
+      ],
+      "minimumDaysOnPlan": 7,
+      "activeGoodStandingRequired": true,
+      "claimRequired": true,
+      "consoleCardRequiredForBonus": false,
+      "allowedServices": [
+        "messages_api",
+        "message_batches_api",
+        "console_playground",
+        "managed_agents",
+        "agent_sdk"
+      ],
+      "allowedCodeMode": "Self-run claude -p or Agent SDK using API key from linked Console organization.",
+      "excludedModes": [
+        "interactive_claude_code_terminal",
+        "interactive_claude_code_ide",
+        "interactive_claude_code_desktop",
+        "interactive_claude_code_web",
+        "claude_extra_usage",
+        "claude_code_extra_usage",
+        "cowork_extra_usage",
+        "bedrock",
+        "vertex_ai",
+        "microsoft_foundry",
+        "claude_code_github_action_even_with_p",
+        "ide_extension_started_p",
+        "desktop_started_p"
+      ],
+      "subscriptionAuthenticatedHeadlessMode": "draws_subscription_limits_not_api_bonus",
+      "teamClaimRole": [
+        "Primary Owner",
+        "Owner"
+      ],
+      "consoleClaimRole": [
+        "Owner",
+        "Admin",
+        "Billing"
+      ],
+      "maxLinkedConsoleOrganizationsPerPlan": 1,
+      "maxLinkedPlansPerConsoleOrganization": 1,
+      "tenPersonalPlanBonusesCannotPoolInOneConsoleOrg": true,
+      "usedBeforePurchasedCredits": true,
+      "rollover": false,
+      "expires": "end_of_each_billing_cycle",
+      "annualPlansGrantMonthly": true,
+      "runsStopWithoutOtherBalanceAfterBonusExhaustion": true,
+      "automaticChargeToSubscriptionAfterExhaustion": false,
+      "currentOfferExpiry": null,
+      "offerStatus": "currently_documented_no_end_date_given",
+      "sourceIds": [
+        "bonus"
+      ]
+    },
+    "interactiveUsageCredits": {
+      "enabledFor": [
+        "pro",
+        "max_5x",
+        "max_20x",
+        "team_standard",
+        "team_premium"
+      ],
+      "metering": "standard_API_rates_after_included_limit_exhaustion",
+      "apiBonusCanPay": false,
+      "monthlySpendLimitSupported": true,
+      "prepaidOrAutoreload": true,
+      "generalExpiry": "Usually no expiry for Pro/Max; some jurisdictions such as Japan have 6-month expiry for purchases from 2026-09-10. Exact jurisdiction terms apply; Team/bundle-specific expiry not explicitly stated here.",
+      "bundles": {
+        "items": [
+          {
+            "faceValueUSD": 50,
+            "cashPriceUSD": 45,
+            "discountFraction": 0.1
+          },
+          {
+            "faceValueUSD": 250,
+            "cashPriceUSD": 200,
+            "discountFraction": 0.2
+          },
+          {
+            "faceValueUSD": 1000,
+            "cashPriceUSD": 700,
+            "discountFraction": 0.3
+          }
+        ],
+        "personalMonthlyDiscountedFaceValueCapUSD": 2000,
+        "teamMonthlyDiscountedFaceValueCapUSD": 3000,
+        "capUnit": "face_value_purchased_per_month_not_cash_paid_or_per_seat; calendar_vs_billing_month_not_explicit",
+        "appliesAcross": [
+          "Claude",
+          "Claude Desktop",
+          "Claude Mobile",
+          "Claude Code",
+          "Cowork",
+          "third_party_products_using_Claude_account"
+        ],
+        "onlyAfterIncludedLimits": true,
+        "canBuyMultiple": true,
+        "beyondCapChargedStandardRates": true,
+        "apiConsoleApplicability": null,
+        "doNotApplyToApiConsoleWithoutExplicitConfirmation": true,
+        "apiConsoleApplicabilityEvidence": "Bundle page specifies Claude account balance and named products, not Console API; do not discount API costs with this bundle.",
+        "expiryDate": null,
+        "temporaryPromotionEndDate": null,
+        "billingModel": "discrete_prepaid_purchases_track_face_credit_and_cash_separately_not_blanket_30_percent_all_usage",
+        "sourceIds": [
+          "bundles",
+          "usageCredits"
+        ]
+      },
+      "sourceIds": [
+        "usageCredits",
+        "bundles",
+        "bonus"
+      ]
+    },
+    "promotions": [
+      {
+        "id": "artifact_october_2026",
+        "status": "expired",
+        "startsOn": "2026-10-01",
+        "endsAtUTC": "2026-10-16T06:59:00Z",
+        "endsAtMoscow": "2026-10-16T09:59:00+03:00",
+        "endDisplayed": "October 15 2026 11:59 PM PT",
+        "appliesTo": "Claude/Cowork artifact creation session usage only",
+        "sessionUsageDiscount": 0.5,
+        "weeklyDiscount": false,
+        "appliesToCode": false,
+        "appliesToApi": false,
+        "appliesToExtraUsage": false,
+        "sourceIds": [
+          "artifactPromo"
+        ]
+      },
+      {
+        "id": "sonnet5_launch_rate",
+        "status": "former_introductory_rate_now_standard",
+        "formerExpiry": "2026-08-31",
+        "scheduledIncreaseCancelled": true,
+        "currentInputUSDPerMTok": 2,
+        "currentOutputUSDPerMTok": 10,
+        "sourceIds": [
+          "api"
+        ]
+      },
+      {
+        "id": "monthly_api_bonus",
+        "status": "currently_documented_no_end_date_given",
+        "temporaryEndDate": null,
+        "sourceIds": [
+          "bonus"
+        ]
+      },
+      {
+        "id": "usage_bundles",
+        "status": "currently_documented_no_end_date_given",
+        "temporaryEndDate": null,
+        "sourceIds": [
+          "bundles"
+        ]
+      }
+    ]
+  },
+  "calculatorRules": {
+    "tokenNormalization": {
+      "inputTotalIncludesCache": true,
+      "formulas": {
+        "cacheRead": "inputTotal*cacheHitRatio",
+        "cacheWriteTotal": "inputTotal*(1-cacheHitRatio)*cacheWriteShareOfMisses",
+        "uncachedInput": "inputTotal*(1-cacheHitRatio)*(1-cacheWriteShareOfMisses)",
+        "cacheWrite1h": "cacheWriteTotal*oneHourWriteShare",
+        "cacheWrite5m": "cacheWriteTotal*(1-oneHourWriteShare)"
+      },
+      "source": "calculator_assumptions_mapped_to_provider_usage_categories",
+      "billableOutputIncludesThinking": true,
+      "doNotAddThinkingTwice": true,
+      "perModelCost": "(U*pU+W5*pW5+W1*pW1+R*pR+O*pO)/1e6 * batchMultiplier * geoMultiplier * fastMultiplier + applicable tool/runtime fees",
+      "longContext": "Haiku 5.5 tier uses total prompt of each request, never daily/monthly volume; split request groups into <=100k and >100k or ask explicit long-context workload share.",
+      "ratesMustMatchEachRequestGroup": true
+    },
+    "modelMix": {
+      "simpleSharedProfile": "Specify shares of the same normalized token workload; sum shares=1. Weighted unit USD=sum(modelShare*modelUnitUSD).",
+      "categorySpecificProfiles": "For different context/output/cache ratios use per-model category volumes or category-specific shares.",
+      "requestShareNotAutomaticallyTokenShare": true,
+      "costShareNotAutomaticallyTokenShare": true,
+      "budgetEquivalent": "units=eligibleCreditBudgetUSD/weightedUnitUSD; categoryTokens=units*unitCategoryTokens",
+      "labelRussian": "Эквивалент бюджета при выбранной модели, смеси и профиле токенов; не квота подписки",
+      "noFixedSubscriptionTokensFrom5x20x": true
+    },
+    "cashAndCredits": {
+      "subscriptionCostAlwaysSeparate": true,
+      "eligibleApiCash": "max(0, eligibleApiMeteredCostUSD-monthlyApiBonusUSD) after any purchased balance accounting",
+      "interactiveCost": "seatFees + cash paid for usage credits; unknown without measured or user-assumed included-use coverage. API bonus cannot offset interactive usage.",
+      "bundles": "Track purchases by discrete bundle size, monthly face-value cap, consumption and remaining credit. A $1000 bundle costs $700 upfront even if only $100 is consumed this month.",
+      "noApiBonusAcrossTenPersonalAccountsInOneOrg": true
+    }
+  },
+  "examples": {
+    "assumptions": {
+      "developers": 10,
+      "workdaysPerMonth": 22,
+      "workSchedule": "09:00–18:00 Europe/Moscow",
+      "inputTotalIncludesCache": true,
+      "cacheHitRatio": 0.8,
+      "cacheWriteShareOfMisses": 1,
+      "writeTtlMinutes": 5,
+      "fast": false,
+      "batch": false,
+      "inferenceGeo": "global",
+      "toolFeesUSD": 0,
+      "longContextHaiku": "<=100k per request"
+    },
+    "apiCosts": [
+      {
+        "modelId": "opus_5_5",
+        "scenarios": [
+          {
+            "inputTotalMTok": 2,
+            "outputMTok": 0.1,
+            "usdPerDevDay": 4.32,
+            "usdFor10Developers22Days": 950.4000000000001
+          },
+          {
+            "inputTotalMTok": 10,
+            "outputMTok": 0.5,
+            "usdPerDevDay": 21.6,
+            "usdFor10Developers22Days": 4752
+          },
+          {
+            "inputTotalMTok": 20,
+            "outputMTok": 1,
+            "usdPerDevDay": 43.2,
+            "usdFor10Developers22Days": 9504
+          }
+        ]
+      },
+      {
+        "modelId": "sonnet_5_5",
+        "scenarios": [
+          {
+            "inputTotalMTok": 2,
+            "outputMTok": 0.1,
+            "usdPerDevDay": 2.16,
+            "usdFor10Developers22Days": 475.20000000000005
+          },
+          {
+            "inputTotalMTok": 10,
+            "outputMTok": 0.5,
+            "usdPerDevDay": 10.8,
+            "usdFor10Developers22Days": 2376
+          },
+          {
+            "inputTotalMTok": 20,
+            "outputMTok": 1,
+            "usdPerDevDay": 21.6,
+            "usdFor10Developers22Days": 4752
+          }
+        ]
+      },
+      {
+        "modelId": "sonnet_5",
+        "scenarios": [
+          {
+            "inputTotalMTok": 2,
+            "outputMTok": 0.1,
+            "usdPerDevDay": 2.3200000000000003,
+            "usdFor10Developers22Days": 510.4000000000001
+          },
+          {
+            "inputTotalMTok": 10,
+            "outputMTok": 0.5,
+            "usdPerDevDay": 11.6,
+            "usdFor10Developers22Days": 2552
+          },
+          {
+            "inputTotalMTok": 20,
+            "outputMTok": 1,
+            "usdPerDevDay": 23.2,
+            "usdFor10Developers22Days": 5104
+          }
+        ]
+      },
+      {
+        "modelId": "haiku_5_5",
+        "scenarios": [
+          {
+            "inputTotalMTok": 2,
+            "outputMTok": 0.1,
+            "usdPerDevDay": 0.116,
+            "usdFor10Developers22Days": 25.52
+          },
+          {
+            "inputTotalMTok": 10,
+            "outputMTok": 0.5,
+            "usdPerDevDay": 0.5800000000000001,
+            "usdFor10Developers22Days": 127.60000000000002
+          },
+          {
+            "inputTotalMTok": 20,
+            "outputMTok": 1,
+            "usdPerDevDay": 1.1600000000000001,
+            "usdFor10Developers22Days": 255.20000000000005
+          }
+        ]
+      }
+    ],
+    "fiftyFiftyOpus55Sonnet55": {
+      "unitInputMTok": 20,
+      "unitOutputMTok": 1,
+      "unitCostUSD": 32.4,
+      "apiBonus100UnitEquivalent": 3.0864197530864197,
+      "description": "50/50 same token profile; not equal task count and not a subscription allowance."
+    },
+    "tenSeatsMonthly": [
+      {
+        "planId": "pro",
+        "seatBillUSD": 200,
+        "annualEffectiveSeatBillUSD": 166.66666666666666,
+        "apiBonusUSD": 0
+      },
+      {
+        "planId": "max_5x",
+        "seatBillUSD": 1000,
+        "annualEffectiveSeatBillUSD": null,
+        "apiBonusUSD": 1000,
+        "apiBonusPool": "10 separate Console orgs; not one shared org"
+      },
+      {
+        "planId": "max_20x",
+        "seatBillUSD": 2000,
+        "annualEffectiveSeatBillUSD": null,
+        "apiBonusUSD": 2000,
+        "apiBonusPool": "10 separate Console orgs; not one shared org"
+      },
+      {
+        "planId": "team_standard",
+        "seatBillUSD": 250,
+        "annualEffectiveSeatBillUSD": 200,
+        "apiBonusUSD": 200,
+        "apiBonusPool": "shared org"
+      },
+      {
+        "planId": "team_premium",
+        "seatBillUSD": 1250,
+        "annualEffectiveSeatBillUSD": 1000,
+        "apiBonusUSD": 500,
+        "apiBonusPool": "shared org cap"
+      }
+    ]
+  },
+  "validationNotes": [
+    "Do not hardcode a monthly reset allocation into weekly/5h usage.",
+    "Do not present annual monthly equivalent as a monthly payment option.",
+    "Do not apply 30% bundle discount before included-limit exhaustion or to the API Console.",
+    "Do not mix cache reads into uncached input; cache writes are not an additional charge on top of base input for those same tokens.",
+    "Do not double count total cache write field plus its 5m/1h subfields.",
+    "Do not add Managed Agents runtime and code execution container time together.",
+    "Do not add model tools overhead again when using provider-reported usage.",
+    "Do not offer Fast+Batch together.",
+    "Unspecified source facts remain null, not zero."
+  ]
+}

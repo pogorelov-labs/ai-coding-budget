@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "currency": "USD",
+  "tax_included": false,
+  "research_only": true,
+  "sources": {
+    "za_individual": {
+      "url": "https://docs.z.ai/devpack/overview",
+      "verified_on": "2026-10-17"
+    },
+    "za_team": {
+      "url": "https://docs.z.ai/devpack/teamplan",
+      "verified_on": "2026-10-17"
+    },
+    "za_prices": {
+      "url": "https://z.ai/subscribe",
+      "verified_on": "2026-10-15",
+      "method": "live browser monthly/yearly Individual and Team cards",
+      "recheck_2026_10_17": "Text fetch lacks JS cards; IAB unavailable. Figures retained with stale-date label, not claimed freshly verified."
+    },
+    "za_api": {
+      "url": "https://docs.z.ai/guides/overview/pricing",
+      "verified_on": "2026-10-17"
+    },
+    "za_revision": {
+      "url": "https://docs.z.ai/devpack/notice/usage-revision",
+      "verified_on": "2026-10-17"
+    },
+    "za_referral": {
+      "url": "https://docs.z.ai/devpack/credit-campaign-rules",
+      "verified_on": "2026-10-17"
+    },
+    "za_flash_campaign": {
+      "url": "https://docs.z.ai/devpack/notice/event-glm-5.3-flash",
+      "verified_on": "2026-10-17"
+    },
+    "za_terms": {
+      "url": "https://docs.z.ai/legal-agreement/subscription-terms",
+      "verified_on": "2026-10-17"
+    },
+    "za_faq": {
+      "url": "https://docs.z.ai/devpack/faq",
+      "verified_on": "2026-10-17"
+    },
+    "za_keys": {
+      "url": "https://docs.z.ai/devpack/notice/api-key-management",
+      "verified_on": "2026-10-17",
+      "published_on": "2026-10-16"
+    },
+    "ds_prices": {
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "verified_on": "2026-10-17"
+    },
+    "ds_limits": {
+      "url": "https://api-docs.deepseek.com/quick_start/rate_limit",
+      "verified_on": "2026-10-17"
+    },
+    "ds_release": {
+      "url": "https://api-docs.deepseek.com/news/news260910",
+      "verified_on": "2026-10-17",
+      "status": "historical announcement; contradictory Pro retirement text superseded by current pricing table"
+    },
+    "za_transition": {
+      "url": "https://docs.z.ai/devpack/transition",
+      "verified_on": "2026-10-17"
+    },
+    "za_api_faq": {
+      "url": "https://docs.z.ai/help/faq",
+      "verified_on": "2026-10-17"
+    }
+  },
+  "changes_since_2026_10_15": [
+    {
+      "id": "deepseek_holidays",
+      "status": "newly_explicit_in_current_primary_page",
+      "detail": "Chinese public holidays are entirely off-peak; peak weekdays exclude them. Exact holiday calendar/timezone not specified.",
+      "sources": [
+        "ds_prices"
+      ]
+    },
+    {
+      "id": "zai_separate_key_types",
+      "status": "new_policy_effective_2026_10_16",
+      "detail": "New Standard API vs Coding Plan keys bill by key type across supported endpoints. Compatible older keys retain endpoint/history-dependent billing.",
+      "sources": [
+        "za_keys"
+      ]
+    },
+    {
+      "id": "rates_and_quotas",
+      "status": "unchanged_in_rechecked_docs",
+      "detail": "GLM credit quotas/coefficients and GLM/DeepSeek API prices match previous readings. Plan sticker prices not fully reverified in live UI on17Oct.",
+      "sources": [
+        "za_individual",
+        "za_team",
+        "za_api",
+        "ds_prices",
+        "za_prices"
+      ]
+    }
+  ],
+  "zai": {
+    "plans": [
+      {
+        "id": "lite",
+        "label": "Lite",
+        "kind": "personal",
+        "price_per_seat_usd": {
+          "monthly": 18,
+          "quarterly_invoice": 43.2,
+          "quarterly_month_equivalent": 14.4,
+          "annual_invoice": 151.2,
+          "annual_month_equivalent": 12.6
+        },
+        "price_source": "za_prices",
+        "quota": {
+          "rolling_5h_credits": 2000,
+          "weekly_credits": 10000,
+          "scope": "seat",
+          "source": "za_individual"
+        },
+        "minimum_seats": 1
+      },
+      {
+        "id": "pro",
+        "label": "Pro",
+        "kind": "personal",
+        "price_per_seat_usd": {
+          "monthly": 80,
+          "quarterly_invoice": 192.0,
+          "quarterly_month_equivalent": 64.0,
+          "annual_invoice": 672.0,
+          "annual_month_equivalent": 56.0
+        },
+        "price_source": "za_prices",
+        "quota": {
+          "rolling_5h_credits": 12000,
+          "weekly_credits": 60000,
+          "scope": "seat",
+          "source": "za_individual"
+        },
+        "minimum_seats": 1
+      },
+      {
+        "id": "max",
+        "label": "Max",
+        "kind": "personal",
+        "price_per_seat_usd": {
+          "monthly": 168,
+          "quarterly_invoice": 403.2,
+          "quarterly_month_equivalent": 134.4,
+          "annual_invoice": 1411.2,
+          "annual_month_equivalent": 117.6
+        },
+        "price_source": "za_prices",
+        "quota": {
+          "rolling_5h_credits": 28000,
+          "weekly_credits": 140000,
+          "scope": "seat",
+          "source": "za_individual"
+        },
+        "minimum_seats": 1
+      },
+      {
+        "id": "standard",
+        "label": "Team Standard",
+        "kind": "team",
+        "price_per_seat_usd": {
+          "monthly": 88,
+          "quarterly_invoice": null,
+          "quarterly_month_equivalent": null,
+          "annual_invoice": 950.4,
+          "annual_month_equivalent": 79.2
+        },
+        "price_source": "za_prices",
+        "quota": {
+          "rolling_5h_credits": 15000,
+          "weekly_credits": 66000,
+          "scope": "seat",
+          "source": "za_team"
+        },
+        "minimum_seats": 2
+      },
+      {
+        "id": "premium",
+        "label": "Team Premium",
+        "kind": "team",
+        "price_per_seat_usd": {
+          "monthly": 188,
+          "quarterly_invoice": null,
+          "quarterly_month_equivalent": null,
+          "annual_invoice": 2030.4,
+          "annual_month_equivalent": 169.2
+        },
+        "price_source": "za_prices",
+        "quota": {
+          "rolling_5h_credits": 35000,
+          "weekly_credits": 155000,
+          "scope": "seat",
+          "source": "za_team"
+        },
+        "minimum_seats": 2
+      }
+    ],
+    "supported_plan_models": [
+      "glm-5.3",
+      "glm-5.3-flash"
+    ],
+    "plan_aliases": {
+      "glm-5.2": "glm-5.3",
+      "glm-5.1": "glm-5.3",
+      "glm-4.7": "glm-5.3-flash"
+    },
+    "credit_coefficients": {
+      "glm-5.3": {
+        "uncached_input": 6.9,
+        "cached_input": 1.7,
+        "output": 24
+      },
+      "glm-5.3-flash": {
+        "uncached_input": 2.3,
+        "cached_input": 0.56,
+        "output": 8
+      }
+    },
+    "credit_divisor_tokens": 10000,
+    "plan_time_pricing": {
+      "timezone": "Asia/Singapore",
+      "utc_timezone": "UTC",
+      "peak_iso_weekdays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "peak_intervals_local": [
+        [
+          "14:00",
+          "18:00"
+        ]
+      ],
+      "peak_intervals_utc": [
+        [
+          "06:00",
+          "10:00"
+        ]
+      ],
+      "peak_intervals_moscow": [
+        [
+          "09:00",
+          "13:00"
+        ]
+      ],
+      "interval_end_exclusive": true,
+      "peak_multiplier": 1,
+      "off_peak_multiplier": 0.5,
+      "weekends": "off_peak",
+      "public_holiday_policy": null,
+      "source": [
+        "za_individual",
+        "za_team"
+      ]
+    },
+    "mcp_credits_per_call": {
+      "web_search": 1.2,
+      "web_reader": 1.2,
+      "zread": 1.2
+    },
+    "mcp_offpeak_discount_confirmed": false,
+    "window_policy": {
+      "rolling_hours": 5,
+      "weekly_reset_days": 7,
+      "weekly_anchor": "subscription activation timestamp",
+      "monthly_quota": null,
+      "pool_across_seats": false,
+      "carry_unused_to_next_week": false,
+      "carry_note": "reset, not rollover; no accumulation entitlement published",
+      "sources": [
+        "za_individual",
+        "za_team"
+      ]
+    },
+    "team_rules": {
+      "mixed_standard_premium_seats_supported": false,
+      "admin_uses_seat_by_default": false,
+      "standard_to_premium_upgrade_supported": false,
+      "seat_addition_prorated": true,
+      "source": "za_team"
+    },
+    "api_usd_per_million_tokens": {
+      "glm-5.3": {
+        "uncached_input": 1.4,
+        "cached_input": 0.26,
+        "output": 4.4
+      },
+      "glm-5.3-flash": {
+        "uncached_input": 0.15,
+        "cached_input": 0.03,
+        "output": 0.5
+      },
+      "glm-5.3-flashx": {
+        "uncached_input": 0.37,
+        "cached_input": 0.075,
+        "output": 1.25
+      }
+    },
+    "api_time_pricing": "flat published prices; do not apply Coding Plan time multiplier",
+    "api_price_source": "za_api",
+    "api_concurrency": null,
+    "cache_storage": {
+      "price": 0,
+      "status": "limited_time_free",
+      "expires_at": null,
+      "source": "za_api"
+    },
+    "api_web_search_usd_per_call": 0.01,
+    "billing_modes": {
+      "personal_automatic_paid_spillover": false,
+      "personal_separate_payg_key_possible": true,
+      "team_overage": {
+        "supported": true,
+        "must_enable_in_advance": true,
+        "per_member_budget_control": true,
+        "current_list_price_factor": 0.9,
+        "renewal_guaranteed_list_price_factor": null,
+        "expires_at": null,
+        "status": "limited_time_offer_no_public_expiry",
+        "source": "za_team"
+      },
+      "key_policy": {
+        "effective_on": "2026-10-16",
+        "new_key_billing_selector": "key_type",
+        "changing_endpoint_changes_billing_for_new_keys": false,
+        "old_compatible_keys": "endpoint_and_account_plan_history",
+        "expired_plan_auto_switch_to_payg": false,
+        "source": "za_keys"
+      }
+    },
+    "legacy": {
+      "status": "existing_eligible_subscribers_only_not_new_purchase_default",
+      "credit_conversion_supported": false,
+      "reason": "Legacy V2 uses prompt quotas; legacy Team uses different token quotas. Do not multiply current credit quota by legacy weights.",
+      "glm-5.3": {
+        "offpeak_multiplier": 1,
+        "peak_multiplier": 3
+      },
+      "glm-5.3-flash": {
+        "offpeak_multiplier": 0.4,
+        "peak_multiplier": 1.2
+      },
+      "schedule_source": "same UTC weekday06-10 window",
+      "source": "za_revision"
+    },
+    "promotions": {
+      "referral_first_order": {
+        "discount_factor": 0.9,
+        "applies_only_to_first_invoice": true,
+        "eligible": "new user or registered user with no previous paid subscription",
+        "conversion_deadline_hours": 72,
+        "renewals_eligible": false,
+        "upgrades_downgrades_eligible": false,
+        "stacking_other_first_order_promos": false,
+        "stacking_annual_quarterly_discount": null,
+        "team_applicability": null,
+        "minimum_final_invoice_usd": 0.5,
+        "end_date": null,
+        "default_calculator_enabled": false,
+        "source": "za_referral"
+      },
+      "inviter_rewards": {
+        "base_rate": 0.1,
+        "payout_threshold_invitees": 3,
+        "extra_rate_per_30_invitees": 0.1,
+        "cash_withdrawable": false,
+        "default_calculator_enabled": false,
+        "source": "za_referral"
+      },
+      "flash_overnight": {
+        "status": "expired",
+        "start_date": "2026-09-03",
+        "end_date": "2026-10-07",
+        "timezone": "Asia/Singapore",
+        "daily_window": [
+          "23:00",
+          "09:00"
+        ],
+        "model": "glm-5.3-flash",
+        "official_apps_zero_quota": [
+          "ZCode",
+          "AutoClaw"
+        ],
+        "other_supported_agents_quota_factor": 2,
+        "default_calculator_enabled": false,
+        "source": "za_flash_campaign"
+      },
+      "legacy_migration": {
+        "status": "account_specific_only",
+        "discount_factor": 0.5,
+        "eligibility_expiry": "3 months after individual legacy subscription end; user-specific",
+        "eligible_if": "legacy plan auto-renew enabled on2026-04-30",
+        "default_calculator_enabled": false,
+        "source": [
+          "za_transition",
+          "za_revision"
+        ]
+      }
+    },
+    "renewal": {
+      "current_rate_used_as_scenario_only": true,
+      "future_price_locked": false,
+      "first_invoice_discount_repeats": false,
+      "annual_or_quarterly_prices_are_upfront_commitments": true,
+      "source": "za_terms"
+    }
+  },
+  "deepseek": {
+    "api_usd_per_million_tokens": {
+      "deepseek-flash": {
+        "version": "DeepSeek-V4.1-Flash",
+        "peak": {
+          "uncached_input": 0.3,
+          "cached_input": 0.006,
+          "output": 1.2
+        },
+        "off_peak": {
+          "uncached_input": 0.15,
+          "cached_input": 0.003,
+          "output": 0.6
+        },
+        "account_concurrency": 2500
+      },
+      "deepseek-v4-pro": {
+        "version": "DeepSeek-V4-Pro-0813",
+        "peak": {
+          "uncached_input": 1.32,
+          "cached_input": 0.044,
+          "output": 3.96
+        },
+        "off_peak": {
+          "uncached_input": 0.66,
+          "cached_input": 0.022,
+          "output": 1.98
+        },
+        "account_concurrency": 500
+      }
+    },
+    "source": "ds_prices",
+    "aliases": {
+      "deepseek-v4-flash": "deepseek-flash",
+      "deepseek-v4-flash-vision-exp": "deepseek-flash"
+    },
+    "time_pricing": {
+      "timezone": "UTC",
+      "peak_iso_weekdays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "peak_intervals_utc": [
+        [
+          "01:00",
+          "04:00"
+        ],
+        [
+          "06:00",
+          "10:00"
+        ]
+      ],
+      "peak_intervals_moscow": [
+        [
+          "04:00",
+          "07:00"
+        ],
+        [
+          "09:00",
+          "13:00"
+        ]
+      ],
+      "interval_end_exclusive": true,
+      "off_peak_factor": 0.5,
+      "weekends": "off_peak",
+      "chinese_public_holidays": "off_peak_entire_day",
+      "holiday_calendar_date_timezone": null,
+      "official_holiday_date_feed": null,
+      "makeup_weekend_workday_treatment": null,
+      "implementation_advice": "Offer explicit Chinese-holiday override or supplied date calendar with timezone disclosed; do not silently apply an assumed calendar."
+    },
+    "concurrency_scope": "account_per_model_not_api_key",
+    "connection_lifetime": "request start to completed response",
+    "capacity_expansion_extra_fee_usd": 0,
+    "capacity_expansion_guaranteed": false,
+    "concurrency_source": "ds_limits",
+    "seat_subscription_verified": false,
+    "first_invoice_api_discount_verified": false,
+    "temporary_price_promo": null,
+    "published_regular_offpeak_schedule_expiry": null,
+    "historical_source_conflict": {
+      "source": "ds_release",
+      "detail": "September10 news still says Pro routes to Flash afterSept14; current pricing table continues to list Pro and separate rate/concurrency. Use current pricing table for calculator, not obsolete retirement promise."
+    }
+  },
+  "calculation_contract": {
+    "input_total_includes_cached": true,
+    "per_model_partition": "For each model m use inputTotal_m = totalInput * inputTokenShare_m and output_m = totalOutput * outputTokenShare_m. Shares in each family sum to1. Cache-hit is a fraction of model input, not total traffic.",
+    "shares_are_token_shares_not_request_shares": true,
+    "credit_formula": "sum_m((inputTotal_m*(1-cacheHit_m)*a_m + inputTotal_m*cacheHit_m*c_m + output_m*b_m)/10000 * (0.5+0.5*peakTokenFraction_m)) + mcpCredits",
+    "same_mix_shortcut": "If both input and output share s use identical timing/cache, mix coefficients =s*GLM5.3+(1-s)*Flash; consume one shared seat credit budget, never one full quota per model.",
+    "api_formula": "sum_m((inputTotal_m*(1-cacheHit_m)*priceUncached_m + inputTotal_m*cacheHit_m*priceCached_m + output_m*priceOutput_m)/1e6); apply DeepSeek temporal rates per date/hour, not Z.ai plan multipliers.",
+    "date_simulation": "Calculate both seat rolling5h usage and seat subscription-anchored7day usage; weekly and rolling budgets apply simultaneously. 22days/5 is run-rate approximation only, not monthly bank.",
+    "headroom": "user_policy_only; usableFraction0.7 means30%reserve. Do not alter published quotas.",
+    "team_overage": "Needs per-seat chronological requests/time buckets. Subscription quota is consumed once; exhausted-window requests can be charged at model API rates times current overage factor. Request-boundary behavior for a request crossing remaining credits is not publicly specified.",
+    "renewal_cost": "periodInvoice = seatCount * monthlyList * periodMonths * termDiscount. First-order referral can adjust eligible firstInvoice only after explicit confirmation. Future renewal quotes are scenarios with current rates, not provider guarantees.",
+    "sanity_fixture": {
+      "input_total_tokens_per_person_day": 20000000,
+      "output_tokens_per_person_day": 1000000,
+      "glm53_token_share": 0.5,
+      "flash_token_share": 0.5,
+      "cache_hit": 0.8,
+      "peak_token_fraction": 0.4444444444444444,
+      "expected_peak_credits": 5248,
+      "expected_mixed_credits": 3790.222222222222,
+      "expected_5day_credits": 18951.11111111111,
+      "quota_headroom_applied": false
+    }
+  },
+  "unknowns": [
+    "Fresh17Oct live subscription card prices/discounts not reverified; last primary UI check15Oct.",
+    "Referral stacking with term discounts and applicability to Team not explicit; default off.",
+    "DeepSeek holiday calendar date timezone, date feed and make-up workday handling not explicit.",
+    "Z.ai holiday exception not published; do not copy DeepSeek holiday rule.",
+    "Team overage10% discount expiry; cache storage free expiry; future renewal prices.",
+    "Request-boundary crossing of remaining quota and exact billing split; calculate smooth approximation with label or allow user measured behavior.",
+    "Actual cache-hit by tool/project/model and how input/output timing is assigned at boundary; scenarios not guarantees.",
+    "Z.ai account/model API concurrency and numerical subscription concurrency; public docs do not give fixed default."
+  ],
+  "research_metrics": {
+    "exa_search_calls": 1,
+    "exa_requested_results": 5,
+    "fresh_primary_sources_fetched": 15
+  }
+}

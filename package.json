@@ -1,0 +1,19 @@
+{
+  "name": "ai-coding-budget",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "description": "Bilingual AI coding budget calculator for team subscriptions, APIs and server agents.",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pogorelov-labs/ai-coding-budget.git"
+  },
+  "homepage": "https://pogorelov-labs.github.io/ai-coding-budget/"
+}

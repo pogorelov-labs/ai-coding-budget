@@ -1,0 +1,48 @@
+# Guided budget calculator UX revision
+
+17 October 2026. Scope: the first-time and returning-user journey, based on fresh captures of the published calculator and the existing source. The financial catalogue and calculation rules were not repriced.
+
+## Findings from the current product
+
+1. **Entry / team setup — high friction.** In `qa/ux-before-01-budget.png`, global actions, six navigation tabs, the scenario strip, two template buttons and a migration message appear before the first meaningful input. Counts and token estimates are exposed together. The existing activity groups are useful; the priority of the controls is not clear.
+2. **Plan setup — high friction.** In `qa/ux-before-02-plans.png`, the same global controls precede scenario management and six general settings. A new user cannot easily tell whether to edit a profile, a subscription, a scenario or a model first. Useful precision is presented before the user has a basic plan.
+3. **Budget interpretation — moderate risk.** Fresh DOM inspection of the calculator confirms monthly equivalents, upfront cash, yearly projections and detailed plan editing share one long page. Cost ranges are explained, but the explanation competes with configuration controls. The original screenshots above capture the entry portion; they are not evidence for sections below the viewport.
+
+![Original team entry](qa/ux-before-01-budget.png)
+![Original calculator entry](qa/ux-before-02-plans.png)
+
+## Implemented journey
+
+1. **Team — simplified.** Three developer counts and one server-account count are the initial inputs. Token assumptions, schedule/currency/tax, and agent account rules are separate disclosures. A visible primary action leads to Plans. Defaults are explicitly estimates, not provider allowances.
+2. **Plans — guided.** Empty scenarios offer three setups: team subscriptions, personal subscriptions plus API, or custom. A selected setup retains the entered people, tokens, exchange rate and calendars. Existing plans are collapsed rows. Opening one reveals its audience and billing first; model allocation and advanced financial controls are on demand. One modal adds either a subscription or an API account.
+3. **Budget — focused.** Monthly USD and RUB are primary. First-month cash, including prepayment, is distinct from the 12-month forecast. Important quota, allocation and automation warnings remain visible. A separate comparison page treats saved scenarios as alternatives, not summed expenses.
+
+The main navigation contains only Team, Plans and Budget. Scenario selection is a single dropdown; management and file operations use menus. Guide contains terminology and the original detailed research. Primary controls are English. Existing user-entered names and original Russian provider notes are retained, with the research language identified explicitly.
+
+## Preservation and implementation decisions
+
+- Storage key and version-3 JSON schema remain compatible. Fresh sessions start with one empty scenario; returning users keep their existing scenarios.
+- Import/export of the actual seven-scenario user draft was checked with deep equality: scenarios, profiles, settings, migration notes and active selection survived unchanged.
+- Migration notices move into Guide, without deleting their data.
+- No change to catalogue prices, quota rules, discounts, credit assumptions or provider endpoint rates.
+- Guided presets are a starting point, not a claim of globally optimal subscription allocation. Group allocations are checked for incomplete or duplicated workload.
+- Existing manual workloads stay manual. Original scenarios that share a legacy global profile retain that relationship and disclose it; new and duplicated scenarios get their own profile.
+- JSON, CSV, offline HTML, printing, exact model tokens, custom rates, account identities, discounts, grants, bundles, BYOK and provider references remain accessible.
+- Build validation now parses the complete combined JavaScript before replacing the deployment artifact.
+
+## Verification and limits
+
+- 43 engine tests pass, including preservation of custom profiles by guided presets and the verified 18+1 managed-team budget.
+- First-time browser flow tested: counts 3/5/10 + 1 agent → managed annual setup → $1,630.84–$1,932.68 monthly.
+- Billing changes, invalid model shares, corrected shares, collapsed summary updates, adding/removing a DeepSeek API account, and USD/RUB conversion exercised through the UI.
+- Currency conversion at 100 RUB/USD updated both summary and every budget line; restored to 95 afterward.
+- Saved JSON imported and exported through the interface; exact equality verified outside the browser.
+- Responsive flow checked at 390×844: Team, Plans, Budget and comparison; no horizontal page overflow on Team or Budget. Temporary viewport override reset.
+- Browser console showed no errors during these checks. Native disclosure elements, labelled fields, focus restoration and an Escape-close menu path are implemented. Keyboard and screen-reader compliance has not been exhaustively audited; screenshots alone do not establish WCAG compliance.
+- This revision does not validate current provider pricing or create any paid accounts or API calls.
+
+![Narrow Team screen](qa/ux-mobile-team.png)
+![Narrow Plans screen](qa/ux-mobile-plans.png)
+![Narrow Budget screen](qa/ux-mobile-budget.png)
+
+The screenshots are local QA evidence and are not included in the public web bundle. Some captures precede the final copy adjustment from “first payment” to “first month” and from “subscriptions” to “seats” for team plans.

@@ -1,0 +1,14 @@
+# OpenAI: identities для серверного Codex
+
+Проверено 17.10.2026 по официальным живым страницам; цены/доступность нельзя переносить с одного контура на другой.
+
+- [Non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode): `codex exec` предназначен для scripts/CI, поддерживает сохранённую CLI-авторизацию и явный API key. Документация рекомендует API keys как default для автоматизации. ChatGPT-managed auth на доверенном private runner описана как advanced path; работа идёт от имени владельца и использует его Codex access. Это не отдельная квота на процесс.
+- [Authentication](https://learn.chatgpt.com/docs/auth): ChatGPT login даёт subscription access, Platform API key — usage-based access, с соответствующими политиками организации. Codex access token не является универсальным Platform API key.
+- [Access tokens](https://learn.chatgpt.com/docs/enterprise/access-tokens): поддерживаются Business/Enterprise; personal token представляет человека, workspace должен разрешить создание токенов и local Codex. В общем auth overview формулировка уже (только Enterprise); для текущей доступности использована специализированная страница. Проверять наличие функции у конкретного workspace.
+- [Service accounts](https://learn.chatgpt.com/docs/enterprise/service-accounts): отдельная nonhuman ChatGPT identity для headless, создаётся owner/admin, собственные группы/роли/плагины. Доступна только на PAYG plans; CLI >=0.142.0. Нельзя продавать её как включённое дополнительное место Plus/Pro/Business. Точная долларовая цена workspace credits/фиксированная договорная плата из этой страницы не следует.
+- [WIF](https://developers.openai.com/api/docs/guides/workload-identity-federation): API Platform service account и Codex workspace principal — разные identity planes. WIF Codex в beta и требует enablement workspace. Короткоживущий токен меняет authentication, не entitlement/price/quota.
+- [API service accounts](https://developers.openai.com/api/docs/guides/terraform/service-accounts): nonhuman principal в Platform project; scopes/roles задаются отдельно, ключ выпускается вне Terraform. Подходит для общей серверной интеграции.
+
+Вывод: для общего корпоративного агента API service account или native Codex service account имеют яснее ownership, чем учётка сотрудника. Personal headless документирован, но расход и отзыв доступа связаны с владельцем. Ни несколько CLI процессов, ни новые credentials не доказывают увеличение capacity. Throughput требует фактических limits и измерения, а не числа ключей.
+
+В калькуляторе native Codex представлен как metered workspace plan: fixed fee по умолчанию 0 (допущение отсутствия отдельного recurring charge), included quota 0, весь объём × Codex credits × пользовательский USD/credit. 0.04 — прежнее редактируемое допущение, не доказанная универсальная цена. Для договорной fixed fee используется override. Platform API рассчитывается отдельной API-позицией.
