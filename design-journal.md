@@ -34,3 +34,8 @@ Verification: 72 existing tests passed; the standalone build succeeded. Browser 
 Keep the established palette and controls. Place the draft/combined monthly estimate in the wizard footer rather than adding another dashboard. At narrow widths the estimate sits above the navigation, and short viewports disable sticky positioning. Budget puts its two time horizons first and compares saved alternatives directly below; detailed assumptions and plots remain native disclosures. Gateway details belong beside provider selection and in an expandable research reference.
 
 Verification covered live input focus, missing-value states, uncertainty/coverage notices, EN/RU and 354px mobile rendering. Numeric provider prices remain native-currency data; unknown billing units are visible limitations. No new motion or external UI dependency was introduced. Existing first-load performance checks remain historical; INP and field p75 are unmeasured.
+
+
+## Annual totals while choosing plans · 20 October 2026
+
+A compact 12-month total appears below monthly costs in the manual builder, recommendations and saved-plan summaries, in USD and RUB. The builder shows the draft and combined setup separately. It uses the existing forecast payment ledger, preserving discounts, prepayments, credit balances and 30-day renewals. The layout retains the current palette and adds no controls. Browser checks covered live usage/model changes without losing focus, annual billing, EN/RU, saved setup and recommendations, plus a 354px combined-setup footer without horizontal overflow.

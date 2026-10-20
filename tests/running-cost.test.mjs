@@ -70,3 +70,38 @@ test('combined running quote includes existing subscriptions, API funding fees a
  assert.ok(q.draft.high>=.8*1.2);
  near(q.setup.high-q.draft.high,PLAN['glm-lite'].monthly*1.2);
 });
+test('12-month quote uses actual prepayments and a confirmed first-order discount',()=>{
+ const {d,s,sc}=fixture();changePlanDraft(d,'quantity',2,s);changePlanDraft(d,'period','team-month',s);changePlanDraft(d,'input',0,s);changePlanDraft(d,'output',0,s);changePlanDraft(d,'billing','annual',s);
+ Object.assign(d.line,{intro:10,introConfirmed:true});s.tax=20;
+ const q=runningPlanCost(d,s,sc);
+ assert.equal(q.draft.annual.valid,true);
+ near(q.draft.annual.high,PLAN['glm-lite'].annual*2*12*.9*1.2);
+ near(q.setup.annual.high,q.draft.annual.high);
+ assert.ok(q.draft.annual.high<q.draft.high*12);
+});
+test('annual draft and combined totals retain ranges and existing plan payments',()=>{
+ const {d,s,sc}=fixture();changePlanDraft(d,'provider','openai',s);changePlanDraft(d,'plan','oai-plus',s);
+ const existing=newLine('subscription','glm-lite',1);Object.assign(existing,{audience:'manual',input:0,output:0});sc.lines=[existing];
+ const before=clone(sc),q=runningPlanCost(d,s,sc);
+ assert.equal(q.draft.annual.range,true);
+ near(q.draft.annual.low,q.draft.low*12);near(q.draft.annual.high,q.draft.high*12);
+ near(q.setup.annual.high-q.draft.annual.high,PLAN['glm-lite'].monthly*12);
+ assert.deepEqual(sc,before);
+});
+test('annual gateway quote counts 30-day renewals rather than multiplying the monthly equivalent',()=>{
+ const {d,s,sc}=fixture();s.date='2026-10-20';
+ changePlanDraft(d,'quantity',1,s);changePlanDraft(d,'method','api',s);changePlanDraft(d,'provider','vsegpt',s);
+ Object.assign(d.line,{period:'team-month',input:0,output:0,gatewayAccessTier:'professional',gatewayMemberTier:'professional',rows:[newRow('vsegpt26-openai-gpt-6-1-sol-medium')]});
+ d.line.rows[0].customRates=[100,125,10,500];
+ const q=runningPlanCost(d,s,sc);assert.equal(q.valid,true);assert.equal(q.draft.annual.valid,true);
+ near(q.draft.annual.high,399*13/s.fx);
+ assert.ok(Math.abs(q.draft.annual.high-q.draft.high*12)>1);
+});
+test('a valid recurring month cannot hide invalid first-payment assumptions in the annual quote',()=>{
+ const {d,s,sc}=fixture();changePlanDraft(d,'quantity',1,s);changePlanDraft(d,'provider','anthropic',s);
+ d.line.bundle50=41; // $2,050 exceeds the personal account's $2,000 bundle limit.
+ const q=runningPlanCost(d,s,sc);
+ assert.equal(q.valid,true);
+ assert.deepEqual(q.draft.annual,{valid:false});
+ assert.deepEqual(q.setup.annual,{valid:false});
+});

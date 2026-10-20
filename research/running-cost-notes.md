@@ -1,10 +1,12 @@
 # Running estimate · 20 October 2026
 
-The manual wizard now has a monthly estimate in its existing sticky footer. The primary value is the draft plan; when saved lines exist, a secondary value shows the full setup with this draft included. Both use USD and RUB at the current scenario's rate.
+The manual wizard now has monthly and 12-month estimates in its existing sticky footer. The primary value is the draft plan; when saved lines exist, a secondary value shows the full setup with this draft included. Both use USD and RUB at the current scenario's rate.
 
 The estimate starts when the user first reaches Plan, where the current default selection is visible. It is absent on the initial People step and stays visible when returning to People after choosing a plan. This visibility flag belongs to the temporary draft and never enters a saved budget.
 
-`runningPlanCost` validates complete draft fields, then uses the existing candidate scenario and preview calculations. Fees, tax, shared account rules, credits and subscription billing remain engine responsibilities. Missing shares or rates, invalid quantities and combined team errors suppress both prices rather than displaying zero. Unknown allowances retain ranges; uncovered usage and unsuitable account routes remain visible warnings.
+`runningPlanCost` validates complete draft fields, then forecasts the candidate scenario with the existing engine. Fees, tax, shared account rules, credits and subscription billing remain engine responsibilities. The annual draft amount sums that line's payments across the same 12-month ledger as the combined setup. This retains annual/quarterly prepayments, confirmed introductory discounts, credit expiry and 30-day renewal dates; it is not monthly cost multiplied by twelve. Invalid forecast assumptions suppress annual amounts even when the recurring month is valid. Missing shares or rates, invalid quantities and combined team errors suppress both prices rather than displaying zero. Unknown allowances retain ranges; uncovered usage and unsuitable account routes remain visible warnings.
+
+Recommendations, the saved setup entry and the plans editor reuse a compact annual USD/RUB line. The existing bilingual `12-month total` label is shared across these surfaces.
 
 Number and text inputs update only the footer's estimate region, preserving the active field and caret. Structural selections rebuild the existing wizard as before. The footer's native buttons and earlier selection summaries are unchanged.
 

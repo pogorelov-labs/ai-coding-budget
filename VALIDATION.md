@@ -76,3 +76,8 @@ A temporary local performance probe measured initial Plans LCP at 84ms and CLS a
 108 tests pass. New tests cover live changes to volume/cache/model, invalid input handling, uncertain quota ranges, shared team constraints, exact OpenRouter endpoint rates, cache-write unknowns, time/context/TTL overrides, mixed PAYG/BYOK account funding, legacy price preservation, native RUB conversion, VAT, Polza route/Flex pricing, VseGPT manual quotes and access eligibility, head/subaccount fees, 30-day renewals, duplicate access-group prevention, and analytics reconciliation.
 
 Browser checks verified input focus while typing, clearing input without stale prices, monthly USD/RUB updates, native-RUB cost invariance when FX changes, independent scenario FX comparisons, collapsed Budget details, real OpenRouter route changes, VseGPT's manual-price guard, EN/RU and 354px layouts without horizontal page overflow. No provider inference or credential-bearing request was made. Public metadata and documentation were the research inputs; no throughput load test or KYC approval was performed.
+
+
+### Annual totals during plan selection · 20 October 2026
+
+The suite now contains 112 tests. Four added cases verify actual annual prepayments with confirmed introductory discounts and tax, preserved ranges plus existing plan payments, VseGPT 13-payment renewal years, and invalid first-payment assumptions despite a valid recurring month. The standalone build succeeds. Browser checks verified live model/workload updates with retained input focus, USD/RUB, EN/RU, saved setup and recommendation totals, and a 354px layout without horizontal overflow. No warnings or errors were captured in the preview browser.

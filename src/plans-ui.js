@@ -8,7 +8,7 @@ function planJourney(){if(!planJourneys.has(active().id))planJourneys.set(active
 function enterPlans(mode='choice'){planJourney().mode=mode;state.tab='calculator';}
 function plansChoiceHTML(){
  const sc=active(),f=sc.lines.length?forecast(sc,settings()):null;
- return `${heading('Step 2 of 3','Choose your setup','Get a recommendation or build one plan at a time.')}<div class="plan-paths"><button class="plan-path suggested" data-action="plan-recommend"><strong>Use a recommendation</strong><span>We compare costs for your team and suggest a setup.</span></button><button class="plan-path" data-action="plan-manual"><strong>Build my own</strong><span>Choose people, plans and models in four steps.</span></button></div>${f?`<section class="saved-setup"><div><strong>Saved setup</strong><p><span>${sc.lines.length}</span> <span>plans</span> · ${f.regular.valid?priceRange(f.regular.low,f.regular.high):tr('Check inputs')} <span>/ month</span></p></div><button class="btn" data-action="plan-edit">Edit saved setup</button></section>`:''}<div class="step-footer"><button class="btn quiet" data-tab="team">Back to team</button></div>`;
+ return `${heading('Step 2 of 3','Choose your setup','Get a recommendation or build one plan at a time.')}<div class="plan-paths"><button class="plan-path suggested" data-action="plan-recommend"><strong>Use a recommendation</strong><span>We compare costs for your team and suggest a setup.</span></button><button class="plan-path" data-action="plan-manual"><strong>Build my own</strong><span>Choose people, plans and models in four steps.</span></button></div>${f?`<section class="saved-setup"><div><strong>Saved setup</strong><p><span>${sc.lines.length}</span> <span>plans</span> · ${f.regular.valid?priceRange(f.regular.low,f.regular.high):tr('Check inputs')} <span>/ month</span></p>${planAnnualHTML(f.year)}</div><button class="btn" data-action="plan-edit">Edit saved setup</button></section>`:''}<div class="step-footer"><button class="btn quiet" data-tab="team">Back to team</button></div>`;
 }
 function plansEditorHTML(){
  const sc=active(),f=forecast(sc,settings());
@@ -69,10 +69,10 @@ function wizardRunningCostHTML(d){
  if(!d.estimateStarted)return '';
  const q=runningPlanCost(d,settings(),active());
  if(!q.valid)return `<div class="running-cost-unavailable"><span>Draft plan / month</span><strong>Complete plan details</strong>${q.errors[0]?`<p class="running-cost-warning">${esc(tr(q.errors[0]))}</p>`:''}</div>`;
- const total=(label,r,secondary=false)=>`<div class="running-cost-total ${secondary?'running-cost-setup':''}"><span>${label}</span><div><strong>${priceRange(r.low,r.high)}</strong><small>${priceRange(r.low,r.high,'rub')}</small></div></div>`;
+ const total=(label,r,secondary=false)=>`<div class="running-cost-total ${secondary?'running-cost-setup':''}"><span>${label}</span><div><strong>${priceRange(r.low,r.high)}</strong><small>${priceRange(r.low,r.high,'rub')}</small></div>${planAnnualHTML(r.annual)}</div>`;
  const warnings=[];
- if(!q.draft.covered||!q.setup.covered)warnings.push('Not all usage is covered. Add fallback or change plans.');
- if(q.draft.range||q.setup.range)warnings.push('Included quota is unknown; this is a cost range.');
+ if(!q.draft.covered||!q.setup.covered||(q.setup.annual.valid&&!q.setup.annual.covered))warnings.push('Not all usage is covered. Add fallback or change plans.');
+ if(q.draft.range||q.setup.range||q.setup.annual.range)warnings.push('Included quota is unknown; this is a cost range.');
  if(automationAssessment(d.line,settings())?.level==='bad')warnings.push('Review account rules before using this route.');
  return `<div class="running-cost-totals">${total('Draft plan / month',q.draft)}${q.hasExisting?total('Setup with this plan / month',q.setup,true):''}</div>${warnings.length?`<p class="running-cost-warning">${warnings.map(w=>`<span>${w}</span>`).join(' ')}</p>`:d.line.kind==='subscription'&&d.line.billing!=='monthly'?'<p class="running-cost-hint">Upfront billing, shown per month.</p>':''}`;
 }

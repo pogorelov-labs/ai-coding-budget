@@ -8,7 +8,7 @@ Compare AI coding subscriptions and API spending for a team. Describe power, reg
 - Personal and team subscriptions, direct APIs and OpenRouter routes.
 - Per-model input/output tokens, cache assumptions, workload allocation and scheduling.
 - Billing periods, credits, overage, confirmed promotions and editable USD/RUB conversion (default 95).
-- Live USD/RUB estimates during setup, a totals-first Budget page, inline scenario comparison, and expandable charts/assumptions.
+- Live monthly and 12-month USD/RUB estimates during setup, a totals-first Budget page, inline scenario comparison, and expandable charts/assumptions.
 - OpenRouter, ProxyAPI, Polza AI and VseGPT gateway options with dated model prices and provider conditions.
 - JSON backup/import, CSV export and a downloadable offline calculator.
 

@@ -70,3 +70,8 @@ The wizard shows its current plan and, when applicable, the whole setup includin
 Budget now leads with monthly total and the 12-month forecast, followed by the first-month requirement. These represent subscription prepayments, modeled token usage and applicable fees; unused prepaid top-up balances are not counted as expenses. Plan detail, charts and assumptions are collapsed. Saved alternatives appear in an inline comparison, each with its own profile, dates and exchange rate; no cheapest label is assigned to potentially different workloads.
 
 Manual API setup includes OpenRouter, ProxyAPI, Polza AI and VseGPT. Current routes and native-currency rates are explicit. OpenRouter funding can be grouped per account; saved per-line estimates remain historical until changed. VseGPT requires a token quote and models one paid account per selected user/agent, separate head/subaccount fees and actual 30-day renewals. Multiple access groups require distinct names; all models belonging to one VseGPT access group stay on one line.
+
+
+## Annual totals while choosing plans · 20 October 2026
+
+A compact 12-month total appears below monthly costs in the manual builder, recommendations and saved-plan summaries, in USD and RUB. The builder shows the draft and combined setup separately. It uses the existing forecast payment ledger, preserving discounts, prepayments, credit balances and 30-day renewals. The layout retains the current palette and adds no controls. Browser checks covered live usage/model changes without losing focus, annual billing, EN/RU, saved setup and recommendations, plus a 354px combined-setup footer without horizontal overflow.

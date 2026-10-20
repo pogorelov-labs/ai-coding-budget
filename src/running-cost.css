@@ -11,6 +11,14 @@
 .running-cost-total small{font-size:13px;color:var(--slate);overflow-wrap:anywhere}
 .running-cost-setup strong{font-size:15px;font-weight:550;color:var(--ink)}
 .running-cost-setup small{font-size:12px}
+.plan-annual{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 7px;margin-top:6px;font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums}
+.plan-annual>span{font-size:11px;color:var(--muted)}
+.plan-annual>b{font-weight:600;color:var(--ink);overflow-wrap:anywhere}
+.plan-annual>small,.running-cost-total .plan-annual>small{font-size:11px;color:var(--slate);overflow-wrap:anywhere}
+.running-cost-total>.plan-annual{gap:2px 7px}
+.plan-estimate-prices{text-align:right;min-width:0}
+.plan-estimate-prices .plan-annual{justify-content:flex-end}
+.recommendation .plan-annual{margin-top:12px}
 .running-cost-warning,.running-cost-hint{font-size:11px;line-height:1.5;margin-top:5px;max-width:75ch}
 .running-cost-warning{color:var(--amber-deep)}
 .running-cost-warning span{display:inline}
@@ -24,4 +32,9 @@
  .running-cost-setup strong{font-size:14px}
 }
 @media(max-height:520px){.wizard-footer{position:static}}
+@media(max-width:620px){
+ .estimate-strip{flex-wrap:wrap;gap:10px}
+ .plan-estimate-prices{text-align:left}
+ .plan-estimate-prices .plan-annual{justify-content:flex-start}
+}
 @media print{.wizard-footer{display:none}}
