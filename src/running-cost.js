@@ -16,5 +16,5 @@ export function runningPlanCost(draft,settings,scenario={lines:[]}){
   valid:true,
   ...totals({low:results.reduce((sum,r)=>sum+r.cashLow,0),high:results.reduce((sum,r)=>sum+r.cashHigh,0),covered:results.every(r=>r.covered)})
  }:{valid:false};
- return {valid:true,errors:[],hasExisting,draft:{...totals(line),annual:annual(draftMonths)},setup:{...totals(setup),annual:annual(months.map(m=>m.result))}};
+ return {valid:true,errors:[],hasExisting,forecast:f,draft:{...totals(line),annual:annual(draftMonths)},setup:{...totals(setup),annual:annual(months.map(m=>m.result))}};
 }

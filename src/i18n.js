@@ -748,6 +748,68 @@ Plan prepayments and modeled usage.|Предоплата планов и рас�
 person|человек
 person / account|чел. / аккаунт
 agent account|аккаунт агента
+Build your plan cart|Соберите корзину планов
+Choose a group, add a plan, repeat. Each group can use different subscriptions and APIs.|Выберите группу и добавьте план. Для каждой группы можно сочетать разные подписки и API.
+Choose a group|Выберите группу
+View cart|Открыть корзину
+Your cart|Ваша корзина
+Your cart is empty.|Ваша корзина пуста.
+Choose a group and add its first plan.|Выберите группу и добавьте первый план.
+Remove|Удалить
+Items|Позиции
+Plans added|Добавлено планов
+item|позиция
+items|позиций
+workload assigned|нагрузки распределено
+Add plan for|Добавить план для
+Add people on Team, or enter a manual workload.|Добавьте людей в разделе «Команда» или задайте нагрузку вручную.
+Use more than one plan for a group? Split its workload between them.|При нескольких планах для группы распределите между ними её нагрузку.
+Add for all developers|Для всех разработчиков
+Enter people manually|Указать людей вручную
+Need a starting point?|С чего начать?
+Get a suggested cart for your team.|Подберите корзину для своей команды.
+Recommend plans|Подобрать планы
+Compare recommendation|Сравнить с рекомендацией
+Edit your cart|Редактирование корзины
+Adjust a plan’s people, models or usage.|Измените пользователей, модели или нагрузку плана.
+Back to cart|К корзине
+Add another item|Добавить позицию
+Add setup to cart|Добавить в корзину
+Save alternative cart|Сохранить другую корзину
+One cart item for this group. Add more plans for the same or other people later.|Эта позиция — для выбранной группы. Затем можно добавить планы для неё или других людей.
+Add a cart item|Добавление в корзину
+Choose who uses this plan, then its subscription or API.|Выберите пользователей плана, затем подписку или API.
+Already in your cart|Уже в корзине
+Add to cart|Добавить в корзину
+Added to cart.|Добавлено в корзину.
+Recommended setup added to cart.|Рекомендуемые планы добавлены в корзину.
+This item / month|Эта позиция / месяц
+Cart with this item / month|Корзина с позицией / месяц
+Spending limit|Лимит бюджета
+Set spending limit|Задать лимит бюджета
+Edit spending limit|Изменить лимит бюджета
+Optional|Необязательно
+Budget limit|Лимит бюджета
+Budget period|Период бюджета
+Budget currency|Валюта бюджета
+No limit|Без лимита
+12 months|12 месяцев
+Optional. Leave blank for no limit.|Необязательно. Пустое поле — без лимита.
+Invalid budget limit.|Некорректный лимит бюджета.
+Enter a budget from 0 to 1 trillion, or leave it blank.|Укажите бюджет от 0 до 1 триллиона или оставьте поле пустым.
+Choose monthly or 12-month budgeting.|Выберите бюджет на месяц или на 12 месяцев.
+Choose USD or RUB for the budget.|Выберите USD или RUB для бюджета.
+Complete plan details to check the budget.|Заполните параметры планов для проверки бюджета.
+Budget not checked|Бюджет не проверен
+Remaining budget|Остаток бюджета
+Budget fully allocated|Бюджет распределён полностью
+May exceed budget|Возможно превышение бюджета
+Over budget|Превышение бюджета
+Up to|До
+including this item|с учётом этой позиции
+Some usage is not covered by this estimate.|Часть нагрузки не покрыта этой оценкой.
+Monthly equivalent; upfront payments may be higher.|В пересчёте на месяц; предоплата может быть выше.
+add plans to your cart for each group. Split a group’s workload across plans when needed.|добавьте планы в корзину для каждой группы. При необходимости распределите нагрузку группы между планами.
 `.trim().split('\n').map(line=>line.split('|')));
 Object.assign(UI_TRANSLATIONS,RESEARCH_TRANSLATIONS);
 const UI_REVERSE=Object.fromEntries(Object.entries(UI_TRANSLATIONS).map(([en,ru])=>[ru,en]));

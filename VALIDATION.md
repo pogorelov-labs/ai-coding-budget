@@ -81,3 +81,10 @@ Browser checks verified input focus while typing, clearing input without stale p
 ### Annual totals during plan selection · 20 October 2026
 
 The suite now contains 112 tests. Four added cases verify actual annual prepayments with confirmed introductory discounts and tax, preserved ranges plus existing plan payments, VseGPT 13-payment renewal years, and invalid first-payment assumptions despite a valid recurring month. The standalone build succeeds. Browser checks verified live model/workload updates with retained input focus, USD/RUB, EN/RU, saved setup and recommendation totals, and a 354px layout without horizontal overflow. No warnings or errors were captured in the preview browser.
+
+
+### Cart and spending limits · 20 October 2026
+
+120 tests pass. New cases cover absent/zero limits, exact and ranged overspend, native RUB and currency conversion, annual introductory payments, invalid estimates, incomplete coverage, per-scenario JSON compatibility and isolation, overlapping group allocation and translation. Browser checks cover entering a limit before plans, adding different groups, live overspend while drafting, annual/RUB changes, saved-item editing, removal/undo, recommendations preserving limits, blank/zero/invalid fields, and Budget-page feedback.
+
+Manual accessibility checks: native labels, numeric validation feedback, keyboard activation, visible focus and touch controls. Tested text contrasts are 5.43:1 or greater. A 354px iframe viewport has no horizontal document overflow; its cart summary and wizard balance remain visible. Preview console had no captured warnings/errors. A temporary local rendering probe measured LCP 92ms and CLS 0; INP and field p75 remain unmeasured. Probe files are removed before publication.

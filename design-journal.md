@@ -39,3 +39,18 @@ Verification covered live input focus, missing-value states, uncertainty/coverag
 ## Annual totals while choosing plans · 20 October 2026
 
 A compact 12-month total appears below monthly costs in the manual builder, recommendations and saved-plan summaries, in USD and RUB. The builder shows the draft and combined setup separately. It uses the existing forecast payment ledger, preserving discounts, prepayments, credit balances and 30-day renewals. The layout retains the current palette and adds no controls. Browser checks covered live usage/model changes without losing focus, annual billing, EN/RU, saved setup and recommendations, plus a 354px combined-setup footer without horizontal overflow.
+
+## Plan cart and spending limit · 20 October 2026
+
+Keep forest #326451, slate #48647d, amber #996a2e, ink #203341, muted #5b6c79 and background #f5f7f8; existing system fonts, tabular prices, no new motion. Three directions considered: a provider store (obscures who needs access), a cart drawer (hides the total), and a people-first catalogue with a visible cart (chosen). Each group can add multiple subscriptions/APIs. The signature is the visible relationship between people, allocated workload and cart items, rather than another set of generic plan cards.
+
+```
+Team → optional monthly / 12-month limit, USD / RUB
+Plans → people groups + Add plan | cart items + total + budget balance
+        People → Plan → Usage → Add to cart
+Budget → totals + remaining / over-budget amount
+```
+
+Budget belongs to each scenario, accepts an explicit zero, and compares monthly equivalents or actual 12-month forecast payments. Ranges distinguish possible from definite overspend; incomplete coverage remains visible. Adding to a cart saves an estimate only. Preserve existing saved scenarios and manual workloads.
+
+Verification and critique: removed the old two-path entry cards and the sticky back-only footer, corrected default h4 margins, and kept recommendations as a secondary action. Added a compact mobile cart link so totals are visible before scrolling through groups. No new decorative icons, motion or colors were introduced. Tested group additions, repeated billing edits, limit changes, removal/undo, recommendations and EN/RU. The 354px cart and draft views have no horizontal overflow. Manual contrast/keyboard checks passed; local LCP 92ms, CLS 0, with INP/field p75 unmeasured.

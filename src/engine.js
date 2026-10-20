@@ -1,6 +1,7 @@
 import {GATEWAY_PROVIDERS} from './gateway-catalog.js';
 import {gatewayAccessCost} from './gateway-billing.js';
 import {MODEL,PLAN,ROUTES,CHECKED} from './catalog.js';
+import {budgetErrors} from './budget-limit.js';
 export const uid=()=>globalThis.crypto?.randomUUID?.()||('x'+Date.now()+Math.random().toString(36).slice(2));
 export const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
@@ -344,6 +345,7 @@ export function validateState(x){
  if(!x||x.version!==3||!x.settings||!Array.isArray(x.scenarios)||!x.scenarios.length||x.scenarios.length>30)throw new Error('Нужен файл сценариев версии 1, 2 или 3, не более 30 сценариев.');
  if(!Array.isArray(x.settings.profile))throw new Error('Отсутствует профиль команды');
  if(!x.settings.technical)throw new Error('Отсутствует технический профиль');
+ for(const sc of x.scenarios){const errors=budgetErrors(sc.budget);if(errors.length)throw new Error(errors[0]);}
  const s=x.settings,bad=settingsErrors(s);if(bad.length)throw new Error(bad[0]);
  const ids=new Set();for(const sc of x.scenarios){if(typeof sc.id!=='string'||!/^[a-zA-Z0-9_-]{1,100}$/.test(sc.id)||ids.has(sc.id)||typeof sc.name!=='string'||sc.name.length>120||!Array.isArray(sc.lines)||sc.lines.length>50)throw new Error('Некорректный сценарий');ids.add(sc.id);const ss=scenarioSettings(sc,s);if(sc.settings&&(!Array.isArray(ss.profile)||!ss.technical))throw new Error('Неполный профиль сценария');const issues=settingsErrors(ss);if(issues.length)throw new Error(issues[0]);const lineIds=new Set();for(const l of sc.lines){if(typeof l.id!=='string'||!/^[a-zA-Z0-9_-]{1,100}$/.test(l.id)||lineIds.has(l.id)||!Array.isArray(l.rows)||l.rows.length>50)throw new Error('Некорректная позиция');lineIds.add(l.id);const rowIds=new Set();for(const r of l.rows){if(!r||typeof r.id!=='string'||!/^[a-zA-Z0-9_-]{1,100}$/.test(r.id)||rowIds.has(r.id))throw new Error('Некорректный ID модели');rowIds.add(r.id);}if(lineErrors(l,ss).length)throw new Error('Позиция содержит ошибки: '+lineErrors(l,ss)[0]);}}
  if(!x.scenarios.some(sc=>sc.id===x.active))x.active=x.scenarios[0]?.id;

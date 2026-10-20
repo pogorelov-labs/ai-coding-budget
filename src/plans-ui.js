@@ -1,3 +1,4 @@
+import {cartGroups,budgetBalance} from './budget-limit.js';
 import {GATEWAY_PROVIDERS} from './gateway-catalog.js';
 import {gatewayAccessCost} from './gateway-billing.js';
 import {createPlanDraft,changePlanDraft,builderProviders,builderPlans,builderModels,planDraftErrors,previewPlanDraft,commitPlanDraft,draftScenario} from './plan-builder.js';
@@ -6,24 +7,37 @@ import {runningPlanCost} from './running-cost.js';
 const planJourneys=new Map();
 function planJourney(){if(!planJourneys.has(active().id))planJourneys.set(active().id,{mode:'choice',draft:null,errors:[]});return planJourneys.get(active().id);}
 function enterPlans(mode='choice'){planJourney().mode=mode;state.tab='calculator';}
+function cartItemsHTML(f,editable=true){
+ const sc=active();
+ if(!sc.lines.length)return '<p class="cart-empty"><strong>Your cart is empty.</strong><span>Choose a group and add its first plan.</span></p>';
+ return `<ul class="cart-items">${sc.lines.map((l,i)=>{const e=effectiveLine(l,settings()),r=f.regular.lines[i],models=l.rows.map(row=>MODEL[row.model]?.name||row.model);return `<li><div class="cart-item-head"><strong ${l.name?'data-user-content':''}>${esc(label(l))}</strong><b>${r?.valid?priceRange(r.low,r.high):tr('Check inputs')} <small>/ month</small></b></div><p><span>${tr(audienceName(l.audience))}</span> · <span>${tr(quantityText(l,l.kind==='subscription'?e.seats:e.users))}</span></p><p class="cart-models">${models.slice(0,2).map(name=>esc(tr(name))).join(' · ')}${models.length>2?' · +'+(models.length-2):''}</p>${editable?`<div class="cart-item-actions"><button class="btn quiet" data-action="cart-edit-line" data-id="${l.id}" aria-label="${esc(tr('Edit')+' '+(l.name||tr(label(l))))}">Edit</button><button class="btn quiet" data-action="remove-line" data-id="${l.id}" aria-label="${esc(tr('Remove')+' '+(l.name||tr(label(l))))}">Remove</button></div>`:''}</li>`;}).join('')}</ul>`;
+}
+function cartSummaryHTML(f){
+ const sc=active(),r=f.regular;
+ return `<aside id="plan-cart" class="plan-cart" aria-label="${tr('Your cart')}"><div class="cart-heading"><h3>Your cart</h3><span><span>Items</span>: ${sc.lines.length}</span></div>${cartItemsHTML(f)}<div class="cart-totals"><span>Monthly total</span><strong>${r.valid?priceRange(r.low,r.high):tr('Check inputs')}</strong><small>${r.valid?priceRange(r.low,r.high,'rub'):''}</small>${planAnnualHTML(f.year)}</div><button class="btn quiet budget-edit" data-action="edit-budget-limit">${currentBudget().amount===null?'Set spending limit':'Edit spending limit'}</button><div data-budget-feedback aria-live="polite">${budgetStatusHTML(f)}</div><button class="btn primary cart-review" data-tab="budget" ${sc.lines.length?'':'disabled'}>Review budget</button></aside>`;
+}
+function mobileCartHTML(f){
+ const q=budgetBalance(currentBudget(),settings(),f),title={within:'Remaining budget','at-limit':'Budget fully allocated',over:'Over budget',possible:'May exceed budget'}[q.status];
+ return `<a href="#plan-cart" class="cart-mobile-summary"><span><span>View cart</span> (${active().lines.length})</span> <strong>${f.regular.valid?priceRange(f.regular.low,f.regular.high):tr('Check inputs')} <small>/ month</small></strong>${q.enabled&&q.valid?`<span class="mobile-balance ${['over','possible'].includes(q.status)?'caution':''}"><span>${title}</span>: ${q.status==='possible'?tr('Up to')+' ':''}${priceRange(q.status==='possible'?q.high:q.low,q.high)} · <span>${q.period==='annual'?'12 months':'Monthly'}</span></span>`:''}</a>`;
+}
 function plansChoiceHTML(){
- const sc=active(),f=sc.lines.length?forecast(sc,settings()):null;
- return `${heading('Step 2 of 3','Choose your setup','Get a recommendation or build one plan at a time.')}<div class="plan-paths"><button class="plan-path suggested" data-action="plan-recommend"><strong>Use a recommendation</strong><span>We compare costs for your team and suggest a setup.</span></button><button class="plan-path" data-action="plan-manual"><strong>Build my own</strong><span>Choose people, plans and models in four steps.</span></button></div>${f?`<section class="saved-setup"><div><strong>Saved setup</strong><p><span>${sc.lines.length}</span> <span>plans</span> · ${f.regular.valid?priceRange(f.regular.low,f.regular.high):tr('Check inputs')} <span>/ month</span></p>${planAnnualHTML(f.year)}</div><button class="btn" data-action="plan-edit">Edit saved setup</button></section>`:''}<div class="step-footer"><button class="btn quiet" data-tab="team">Back to team</button></div>`;
+ const sc=active(),s=settings(),f=forecast(sc,s),groups=cartGroups(sc,s);
+ return `${heading('Step 2 of 3','Build your plan cart','Choose a group, add a plan, repeat. Each group can use different subscriptions and APIs.')}<div id="cart-mobile">${mobileCartHTML(f)}</div><div class="cart-layout"><section class="cart-catalogue" aria-label="${tr('Choose a group')}"><div class="section-heading"><h3>Choose a group</h3><button class="btn quiet" data-tab="team">Edit team</button></div>${groups.length?`<div class="cart-groups">${groups.map(g=>`<article class="cart-group"><div><h4>${tr(audienceName(g.id))}</h4><p>${g.count} <span>${g.id==='technical'?(g.count===1?'agent account':'agent accounts'):(g.count===1?'person':'people')}</span></p><small class="${g.share>100?'allocation-warning':''}">${g.plans?`<span>Plans added</span>: ${g.plans} · ${nf.format(g.share)}% <span>workload assigned</span>`:'No plans yet'}</small></div><button class="btn" data-action="plan-manual" data-audience="${g.id}" aria-label="${esc(tr('Add plan for')+' '+tr(audienceName(g.id)))}">Add plan</button></article>`).join('')}</div>`:'<p class="cart-empty">Add people on Team, or enter a manual workload.</p>'}<p class="inline-help">Use more than one plan for a group? Split its workload between them.</p><div class="cart-other-groups">${s.team?'<button class="btn quiet" data-action="plan-manual" data-audience="all">Add for all developers</button>':''}<button class="btn quiet" data-action="plan-manual" data-audience="manual">Enter people manually</button></div><div class="cart-recommend"><div><h3>Need a starting point?</h3><p>Get a suggested cart for your team.</p></div><button class="btn" data-action="plan-recommend">${sc.lines.length?'Compare recommendation':'Recommend plans'}</button></div></section>${cartSummaryHTML(f)}</div><div class="step-footer"><button class="btn quiet" data-tab="team">Back to team</button></div>`;
 }
 function plansEditorHTML(){
  const sc=active(),f=forecast(sc,settings());
- return `${heading('Step 2 of 3','Your plans','Edit a plan or add another.')}<button class="btn quiet plans-back" data-action="plan-choice">Change setup</button><div id="summary">${planEstimateHTML(f)}</div><div id="lines">${sc.lines.map((l,i)=>compactPlanHTML(l,i,f.regular.lines[i],f.first.lines[i])).join('')}</div><button class="btn add-plan" data-action="plan-manual">Add another plan</button>${stepFooter('team','budget','Review budget')}`;
+ return `${heading('Step 2 of 3','Edit your cart','Adjust a plan’s people, models or usage.')}<button class="btn quiet plans-back" data-action="plan-choice">Back to cart</button><div id="summary">${planEstimateHTML(f)}<div data-budget-feedback aria-live="polite">${budgetStatusHTML(f)}</div></div><div id="lines">${sc.lines.map((l,i)=>compactPlanHTML(l,i,f.regular.lines[i],f.first.lines[i])).join('')}</div><button class="btn add-plan" data-action="plan-choice">Add another item</button>${stepFooter('calculator','budget','Review budget')}`;
 }
 function recommendationStepHTML(){
  const hasPlans=active().lines.length>0;
- return `${heading('Step 2 of 3','Recommended setup','Lowest cost among the compared direct-provider options.')}<button class="btn quiet plans-back" data-action="plan-choice">Change setup</button>${recommendationHTML()}<div class="step-footer"><span></span>${currentRecommendation().valid?`<button class="btn primary" data-action="use-recommendation">${hasPlans?'Save alternative':'Use this setup'}</button>`:''}</div>`;
+ return `${heading('Step 2 of 3','Recommended setup','Lowest cost among the compared direct-provider options.')}<button class="btn quiet plans-back" data-action="plan-choice">Back to cart</button>${recommendationHTML()}<div class="step-footer"><span></span>${currentRecommendation().valid?`<button class="btn primary" data-action="use-recommendation">${hasPlans?'Save alternative cart':'Add setup to cart'}</button>`:''}</div>`;
 }
-function startManualPlan(audience){if(active().lines.length>=50){toast('A scenario can contain up to 50 plans.');return;}const j=planJourney();j.draft??=createPlanDraft(settings(),audience);j.mode='wizard';j.errors=[];state.tab='calculator';render();focusPage();}
+function startManualPlan(audience){if(active().lines.length>=50){toast('A scenario can contain up to 50 plans.');return;}const j=planJourney();if(!j.draft)j.draft=createPlanDraft(settings(),audience);else if(audience){changePlanDraft(j.draft,'audience',audience,settings());j.draft.step=0;}j.mode='wizard';j.errors=[];state.tab='calculator';render();focusPage();}
 function wizInput(key,title,value,options={}){const d=planJourney().draft,invalid=planJourney().errors.length&&(!Number.isFinite(value)||value<(options.min??0)||value>(options.max??100000000)||(options.step===1&&!Number.isInteger(value))||(key.startsWith('row.')&&key.endsWith('.share')&&Math.abs(d.line.rows.reduce((n,r)=>n+(r.share||0),0)-100)>.00001));return `<label class="field"><span>${title}</span><input data-wizard="${key}" ${invalid?'aria-invalid="true" aria-describedby="wizard-errors"':''} type="number" value="${esc(value??'')}" min="${options.min??0}" max="${options.max??100000000}" step="${options.step??'any'}" required></label>`;}
 function wizSelect(key,title,value,options){return `<label class="field"><span>${title}</span><select data-wizard="${key}">${options.map(([id,name,disabled])=>`<option value="${esc(id)}" ${id===value?'selected':''} ${disabled?'disabled':''}>${esc(name)}</option>`).join('')}</select></label>`;}
 function wizardAudienceHTML(d){
  const l=d.line,e=effectiveLine(l,settings()),choices=audienceOptions().map(o=>[...o,o[0]!=='manual'&&effectiveLine({...l,audience:o[0]},settings()).users===0]);
- return `<h3>Who is it for?</h3>${wizSelect('audience','Team group',l.audience,choices)}${l.audience==='manual'?wizInput('quantity','People / accounts',l.users,{min:1,max:10000,step:1}):`<p class="wizard-note"><strong>${e.users}</strong> <span>${l.audience==='technical'?'agent accounts':'people from your team'}</span></p>`}<p class="inline-help">Each plan covers one group. You can add more plans later.</p>`;
+ return `<h3>Who is it for?</h3>${wizSelect('audience','Team group',l.audience,choices)}${l.audience==='manual'?wizInput('quantity','People / accounts',l.users,{min:1,max:10000,step:1}):`<p class="wizard-note"><strong>${e.users}</strong> <span>${l.audience==='technical'?'agent accounts':'people from your team'}</span></p>`}<p class="inline-help">One cart item for this group. Add more plans for the same or other people later.</p>`;
 }
 function wizardPlanHTML(d){
  const l=d.line,p=PLAN[l.plan],subscription=l.kind==='subscription',periods=[['monthly','Monthly']];if(p?.quarterly!=null)periods.push(['quarterly','Quarterly']);if(p?.annual!=null)periods.push(['annual','Annual · paid upfront']);
@@ -68,13 +82,13 @@ function wizardReviewHTML(d){
 function wizardRunningCostHTML(d){
  if(!d.estimateStarted)return '';
  const q=runningPlanCost(d,settings(),active());
- if(!q.valid)return `<div class="running-cost-unavailable"><span>Draft plan / month</span><strong>Complete plan details</strong>${q.errors[0]?`<p class="running-cost-warning">${esc(tr(q.errors[0]))}</p>`:''}</div>`;
+ if(!q.valid)return `<div class="running-cost-unavailable"><span>This item / month</span><strong>Complete plan details</strong>${q.errors[0]?`<p class="running-cost-warning">${esc(tr(q.errors[0]))}</p>`:''}</div>`;
  const total=(label,r,secondary=false)=>`<div class="running-cost-total ${secondary?'running-cost-setup':''}"><span>${label}</span><div><strong>${priceRange(r.low,r.high)}</strong><small>${priceRange(r.low,r.high,'rub')}</small></div>${planAnnualHTML(r.annual)}</div>`;
  const warnings=[];
  if(!q.draft.covered||!q.setup.covered||(q.setup.annual.valid&&!q.setup.annual.covered))warnings.push('Not all usage is covered. Add fallback or change plans.');
  if(q.draft.range||q.setup.range||q.setup.annual.range)warnings.push('Included quota is unknown; this is a cost range.');
  if(automationAssessment(d.line,settings())?.level==='bad')warnings.push('Review account rules before using this route.');
- return `<div class="running-cost-totals">${total('Draft plan / month',q.draft)}${q.hasExisting?total('Setup with this plan / month',q.setup,true):''}</div>${warnings.length?`<p class="running-cost-warning">${warnings.map(w=>`<span>${w}</span>`).join(' ')}</p>`:d.line.kind==='subscription'&&d.line.billing!=='monthly'?'<p class="running-cost-hint">Upfront billing, shown per month.</p>':''}`;
+ return `<div class="running-cost-totals">${total('This item / month',q.draft)}${q.hasExisting?total('Cart with this item / month',q.setup,true):''}</div>${budgetStatusHTML(q.forecast,active(),true)}${warnings.length?`<p class="running-cost-warning">${warnings.map(w=>`<span>${w}</span>`).join(' ')}</p>`:d.line.kind==='subscription'&&d.line.billing!=='monthly'?'<p class="running-cost-hint">Upfront billing, shown per month.</p>':''}`;
 }
 function refreshWizardRunningCost(){
  const d=planJourney().draft,slot=$('#wizard-running-cost');
@@ -86,7 +100,7 @@ function planWizardHTML(){
  const j=planJourney(),d=j.draft;if(!d)return plansChoiceHTML();
  if(d.step>=1)d.estimateStarted=true;
  const steps=['People','Plan','Usage','Review'];
- return `${heading('Step 2 of 3','Build your setup','')}<ol class="wizard-progress" aria-label="${tr('Plan setup steps')}">${steps.map((name,i)=>`<li ${i===d.step?'aria-current="step"':''} class="${i<d.step?'complete':''}"><span aria-hidden="true">${i+1}</span>${tr(name)}</li>`).join('')}</ol>${wizardSelectionsHTML(d)}<section class="plan-wizard"><div id="wizard-errors" class="callout bad" role="alert" tabindex="-1" ${j.errors.length?'':'hidden'}>${j.errors.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>${[wizardAudienceHTML,wizardPlanHTML,wizardUsageHTML,wizardReviewHTML][d.step](d)}</section><div class="step-footer wizard-footer"><div id="wizard-running-cost" aria-live="polite" aria-atomic="true">${wizardRunningCostHTML(d)}</div><div class="wizard-footer-actions"><button class="btn quiet" data-action="${d.step?'wizard-back':'wizard-cancel'}">${d.step?'Back':'Cancel'}</button><button class="btn primary" data-action="${d.step===3?'wizard-save':'wizard-next'}" ${d.step===3&&planDraftErrors(d,settings(),active(),3).length?'disabled':''}>${d.step===3?'Add plan':'Continue'}</button></div></div>`;
+ return `${heading('Step 2 of 3','Add a cart item','Choose who uses this plan, then its subscription or API.')}${active().lines.length?`<details class="cart-peek"><summary><span>Already in your cart</span> · ${active().lines.length}</summary>${cartItemsHTML(forecast(active(),settings()),false)}</details>`:''}<ol class="wizard-progress" aria-label="${tr('Plan setup steps')}">${steps.map((name,i)=>`<li ${i===d.step?'aria-current="step"':''} class="${i<d.step?'complete':''}"><span aria-hidden="true">${i+1}</span>${tr(name)}</li>`).join('')}</ol>${wizardSelectionsHTML(d)}<section class="plan-wizard"><div id="wizard-errors" class="callout bad" role="alert" tabindex="-1" ${j.errors.length?'':'hidden'}>${j.errors.map(x=>`<p>${esc(tr(x))}</p>`).join('')}</div>${[wizardAudienceHTML,wizardPlanHTML,wizardUsageHTML,wizardReviewHTML][d.step](d)}</section><div class="step-footer wizard-footer"><div id="wizard-running-cost" aria-live="polite" aria-atomic="true">${wizardRunningCostHTML(d)}</div><div class="wizard-footer-actions"><button class="btn quiet" data-action="${d.step?'wizard-back':'wizard-cancel'}">${d.step?'Back':'Cancel'}</button><button class="btn primary" data-action="${d.step===3?'wizard-save':'wizard-next'}" ${d.step===3&&planDraftErrors(d,settings(),active(),3).length?'disabled':''}>${d.step===3?'Add to cart':'Continue'}</button></div></div>`;
 }
 function plansAction(b){
  const act=b.dataset.action,j=planJourney();
@@ -94,7 +108,9 @@ function plansAction(b){
  if(act==='plan-choice'){j.mode='choice';}
  else if(act==='plan-recommend'){j.mode='recommend';}
  else if(act==='plan-edit'){j.mode='edit';}
- else if(act==='plan-manual'){startManualPlan();return true;}
+ else if(act==='cart-edit-line'){j.mode='edit';openDetails.add('plan-'+b.dataset.id);}
+ else if(act==='edit-budget-limit'){budgetEditDialog();return true;}
+ else if(act==='plan-manual'){startManualPlan(b.dataset.audience);return true;}
  else if(act==='wizard-cancel'){j.draft=null;j.errors=[];j.mode='choice';}
  else if(act==='wizard-edit-step'){const step=Number(b.dataset.step);if(!j.draft||!Number.isInteger(step)||step<0||step>=j.draft.step)return true;j.draft.step=step;j.errors=[];}
  else if(act==='wizard-back'){j.draft.step=Math.max(0,j.draft.step-1);j.errors=[];}
@@ -104,12 +120,12 @@ function plansAction(b){
  }
  else if(act==='wizard-save'){
   const result=commitPlanDraft(j.draft,active(),settings());j.errors=result.errors||[];
-  if(result.ok){pendingUndo=clone(state);active().lines=result.scenario.lines;j.draft=null;j.mode='edit';toast('Plan added.');}
+  if(result.ok){pendingUndo=clone(state);active().lines=result.scenario.lines;j.draft=null;j.mode='choice';toast('Added to cart.');}
  }
  else if(act==='wizard-add-model'){if(j.draft.line.rows.length<50)j.draft.line.rows.push(newRow(builderModels(j.draft)[0].id,0));}
  else if(act==='wizard-remove-model'){if(j.draft.line.rows.length>1)j.draft.line.rows.splice(Number(b.dataset.index),1);}
  else return false;
- render();if(j.errors.length)$('#wizard-errors')?.focus();else focusPage();return true;
+ render();if(j.errors.length)$('#wizard-errors')?.focus();else if(act==='cart-edit-line'){const item=document.querySelector(`[data-detail="plan-${b.dataset.id}"]`);item?.querySelector('summary')?.focus();item?.scrollIntoView({block:'start'});}else focusPage();return true;
 }
 function updatePlanDraft(el){
  const j=planJourney();if(!j.draft)return;

@@ -2,13 +2,14 @@
 
 [Open the calculator](https://pogorelov-labs.github.io/ai-coding-budget/)
 
-Compare AI coding subscriptions and API spending for a team. Describe power, regular and light users plus server agents. On **Plans**, choose **Use a recommendation** or **Build my own**. Manual setup follows **People → Plan → Usage → Review** and adds a plan only after confirmation. Inspect monthly costs and a 12-month forecast on Budget.
+Compare AI coding subscriptions and API spending for a team. Describe power, regular and light users plus server agents. On **Plans**, choose a people group and add a subscription or API to its cart. Each group can have several plans with split workload shares. A recommendation can fill a new cart for you. Manual setup follows **People → Plan → Usage → Review → Add to cart**. Inspect monthly costs and a 12-month forecast on Budget.
 
 - English/Russian interface, research notes and provider conditions.
 - Personal and team subscriptions, direct APIs and OpenRouter routes.
 - Per-model input/output tokens, cache assumptions, workload allocation and scheduling.
 - Billing periods, credits, overage, confirmed promotions and editable USD/RUB conversion (default 95).
 - Live monthly and 12-month USD/RUB estimates during setup, a totals-first Budget page, inline scenario comparison, and expandable charts/assumptions.
+- Optional per-scenario monthly or 12-month spending limits in USD or RUB, with remaining balance, exact overspend and uncertainty warnings.
 - OpenRouter, ProxyAPI, Polza AI and VseGPT gateway options with dated model prices and provider conditions.
 - JSON backup/import, CSV export and a downloadable offline calculator.
 
@@ -41,6 +42,8 @@ Set **Settings → Pages → Build and deployment → Source** to **GitHub Actio
 | `src/catalog.js` | Core provider prices, plans, offers and source links |
 | `src/openrouter-current.js` / `src/gateway-catalog.js` | Dated gateway models, routes and native-currency tariffs |
 | `src/gateway-billing.js` | Access plans and 30-day renewal accounting |
+| `src/budget-limit.js` / `src/budget-limit-ui.js` | Scenario spending limits, remaining balances and uncertainty states |
+| `src/plans-ui.js` / `src/plan-cart.css` | People-first plan cart and guided item setup |
 | `src/running-cost.js` | Validated live plan and setup estimates |
 | `src/engine.js` | Token pricing, quotas, fees, credits and forecast ledger |
 | `src/recommendations.js` | Comparable-model setup recommendations |

@@ -75,3 +75,12 @@ Manual API setup includes OpenRouter, ProxyAPI, Polza AI and VseGPT. Current rou
 ## Annual totals while choosing plans · 20 October 2026
 
 A compact 12-month total appears below monthly costs in the manual builder, recommendations and saved-plan summaries, in USD and RUB. The builder shows the draft and combined setup separately. It uses the existing forecast payment ledger, preserving discounts, prepayments, credit balances and 30-day renewals. The layout retains the current palette and adds no controls. Browser checks covered live usage/model changes without losing focus, annual billing, EN/RU, saved setup and recommendations, plus a 354px combined-setup footer without horizontal overflow.
+
+
+## People-first cart and budget limit · 20 October 2026
+
+Plans now opens directly on people groups and a cart. Each group has Add plan, a plan count and its allocated workload percentage. The same group can receive several items; explicit workload shares avoid treating several subscriptions as separate people. Combined and manual audiences remain available. The wizard ends with Add to cart, then returns to the cart; saved items expose Edit and Remove with existing Undo support. Recommendations fill an empty cart or create a separate alternative. A narrow-screen summary links to the cart and shows its budget state.
+
+An optional limit is entered on Team, or edited from Plans/Budget. Monthly limits compare with the recurring monthly equivalent; 12-month limits compare with forecast payments including prepayments, discounts and renewal schedules. Limits use USD or RUB, preserve the entered native amount across FX changes, and convert the amount when its currency selector changes. The selected period changes the comparison horizon without multiplying the entered limit. Empty means unlimited; zero is an explicit zero budget.
+
+States distinguish remaining balance, fully allocated, possible overspend and definite overspend. Uncertain costs retain their bounds. Invalid entries suppress balance feedback, while invalid budget-form drafts remain transient so they cannot corrupt saved scenarios. Limits persist per scenario through JSON/offline export, duplication and recommendations; older scenarios have no limit. The cart remains an estimate and does not charge providers.
