@@ -27,3 +27,10 @@ Removed the extra captions from the two entry cards and the repeated recommendat
 Add a compact “Your choices” summary below the step trail, using the existing slate surface and typography. Show only earlier steps: People on Plan, People + Plan on Usage, then People + Plan + Usage on Review. Each row has a keyboard-accessible Edit action that goes backward without clearing draft fields. Reuse the summary on Review instead of repeating the old details table. Model lists over two entries and custom token prices expand on demand. User-entered workspace names remain unmodified and escaped.
 
 Verification: 72 existing tests passed; the standalone build succeeded. Browser checks verified selection retention when editing people, refreshed billing/provider values after switching to API, quota and model/cache details, manual input/output units and period, EN/RU, and a 354px viewport with no page overflow. No browser warnings or errors were captured. No calculation or persistence logic changed.
+
+
+## Live pricing and simpler Budget · 20 October 2026
+
+Keep the established palette and controls. Place the draft/combined monthly estimate in the wizard footer rather than adding another dashboard. At narrow widths the estimate sits above the navigation, and short viewports disable sticky positioning. Budget puts its two time horizons first and compares saved alternatives directly below; detailed assumptions and plots remain native disclosures. Gateway details belong beside provider selection and in an expandable research reference.
+
+Verification covered live input focus, missing-value states, uncertainty/coverage notices, EN/RU and 354px mobile rendering. Numeric provider prices remain native-currency data; unknown billing units are visible limitations. No new motion or external UI dependency was introduced. Existing first-load performance checks remain historical; INP and field p75 are unmeasured.

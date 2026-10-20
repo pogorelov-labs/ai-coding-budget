@@ -405,7 +405,7 @@ This route is not established for a shared team bot.|Этот способ не 
 Account guide|Правила учётных записей
 Provider account rules & sources|Правила провайдера и источники
 Other models are compared through their own API prices. Models are never swapped to claim savings. OpenRouter first-party routes add fees to the same rates; discounted alternative hosts are outside this comparison because quality, quantization and availability can differ. Claude/OpenAI included quotas are not treated as free unlimited tokens.|Другие модели сравниваются по их собственным API-тарифам. Модели не подменяются ради экономии. Прямые маршруты OpenRouter добавляют комиссии к тем же ставкам. Другие хосты со скидками не сравниваются: качество, квантизация и доступность могут отличаться. Квоты Claude/OpenAI не считаются бесплатными безлимитными токенами.
-Lowest modeled recurring cost among the eligible combinations checked, for the selected models and billing period. Not a model-quality or throughput ranking. Compares GLM Lite/Pro/Max, Team Standard/Premium and direct API where compatible. Seat minima, one tier per GLM team, weekly and 5-hour quotas are enforced. Over-quota plans need the fallback option.|Минимальная расчётная стоимость среди проверенных допустимых наборов для выбранных моделей и периода оплаты. Это не рейтинг качества или скорости. Сравниваются совместимые GLM Lite/Pro/Max, Team Standard/Premium и прямой API. Учитываются минимум мест, единый тариф GLM Team, недельные и пятичасовые квоты. При превышении нужна платная альтернатива.
+Lowest modeled recurring cost among the eligible combinations checked, for the selected models and billing period. Not a model-quality or throughput ranking. Compares GLM Lite/Pro/Max, Team Standard/Premium and direct API where compatible. Gateway routes are available in manual setup and are not silently substituted into recommendations. Seat minima, one tier per GLM team, weekly and 5-hour quotas are enforced. Over-quota plans need the fallback option.|Минимальная расчётная стоимость среди проверенных допустимых наборов для выбранных моделей и периода оплаты. Это не рейтинг качества или скорости. Сравниваются совместимые GLM Lite/Pro/Max, Team Standard/Premium и прямой API. Маршруты шлюзов доступны в ручной настройке и не подменяют варианты в рекомендациях. Учитываются минимум мест, единый тариф GLM Team, недельные и пятичасовые квоты. При превышении нужна платная альтернатива.
 GLM quota & seat rules|Квоты и места GLM
 GLM API prices|Цены GLM API
 DeepSeek rates & hours|Тарифы и часы DeepSeek
@@ -528,6 +528,226 @@ Cache|Кеш
 All model details|Все параметры моделей
 Metered workspace credits|Расход по credits рабочего пространства
 Workspace|Рабочее пространство
+Annual plans averaged monthly.|Годовые планы усреднены по месяцам.
+12-month forecast|Прогноз на 12 месяцев
+Cash payments at current rates.|Платежи по текущим тарифам.
+Your budget|Ваш бюджет
+Monthly cost and the year ahead.|Расходы за месяц и прогноз на год.
+Plan breakdown|Расходы по планам
+Charts & spending|Графики и структура расходов
+Edit team|Изменить команду
+Compare setups|Сравнение вариантов
+Save another scenario to compare costs here.|Сохраните ещё один сценарий, чтобы сравнить расходы здесь.
+Duplicate scenario|Создать копию
+Saved scenarios|Сохранённые сценарии
+Each scenario uses its own workload, dates and exchange rate.|Для каждого сценария используются его нагрузка, даты и валютный курс.
+Setup|Вариант
+Review account rules|Проверьте правила аккаунта
+Review allocation|Проверьте распределение
+Current|Текущий
+Monthly costs and forecast payments, side by side.|Сравнение месячных расходов и прогнозируемых платежей.
+A quota is exceeded without paid fallback. Add coverage before relying on this total.|Квота превышена, а платный резерв не задан. Добавьте покрытие, прежде чем использовать эту сумму.
+Subscription token allowances are unknown. The upper estimate prices the entered workload as overage; it is not a spending cap.|Токенные квоты подписок неизвестны. Верхняя оценка считает указанную нагрузку как доплату сверх квоты; это не лимит расходов.
+Draft plan / month|Добавляемый план / месяц
+Setup with this plan / month|С этим планом / месяц
+Complete plan details|Заполните параметры плана
+Not all usage is covered. Add fallback or change plans.|Не вся нагрузка покрыта. Добавьте резерв или измените планы.
+Review account rules before using this route.|Проверьте правила аккаунта для этого способа подключения.
+Upfront billing, shown per month.|Оплата вперёд, сумма в пересчёте на месяц.
+Gateways: plans, models and conditions|Шлюзы: планы, модели и условия
+Checked 20 October 2026|Проверено 20 октября 2026
+A researched shortlist, not a popularity ranking. Expand a provider to see native-currency prices and conditions. A dash means unverified, not free.|Подборка по результатам исследования, а не рейтинг популярности. Раскройте провайдера, чтобы увидеть цены в валюте расчётов и условия. Прочерк означает отсутствие подтверждения, а не бесплатное использование.
+RUB per million tokens|RUB за миллион токенов
+USD per million tokens|USD за миллион токенов
+Model / route|Модель / маршрут
+Confirmed quote required|Нужен подтверждённый тариф
+Batch|Пакетная обработка
+Alternative host|Другой хостинг
+USD usage + funding fee|Расход в USD + комиссия пополнения
+Standard: no seat fee; 5.5% credit-purchase fee. Business: no seat fee; 8%. Taxes are separate.|Standard: без платы за место, комиссия покупки кредитов 5,5%. Business: без платы за место, комиссия 8%. Налоги отдельно.
+Organizations: 10 members by default; request more. Standard has 5 workspaces, Business 1,000; workspaces are not seats.|В организации по умолчанию 10 участников; расширение — по запросу. Standard включает 5 рабочих пространств, Business — 1 000; это не количество мест.
+Members|Участники
+Standard card funding: minimum $0.80 per purchase, once per shared funding account. Business minimum and crypto/Business interaction are unconfirmed.|Пополнение Standard картой: минимум $0,80 за покупку, один раз для общего счёта. Минимум Business и сочетание его комиссии с криптооплатой не подтверждены.
+Funding|Пополнение
+BYOK still pays the upstream provider. OpenRouter charges 5% above $25,000/month of list-price-equivalent usage; this is not free inference.|При BYOK запросы по-прежнему оплачиваются поставщику модели. OpenRouter берёт 5% сверх $25 000 в месяц расхода по прейскуранту; бесплатного использования моделей это не даёт.
+BYOK|BYOK
+Startup awards are conditional: up to $3,000 and 12 months without platform fees; most awarded credits expire after 6 months.|Гранты стартапам выдаются при одобрении: до $3 000 и 12 месяцев без комиссий платформы; большинство выданных кредитов сгорает через 6 месяцев.
+Startup offer|Программа для стартапов
+Prices exclude funding fees and paid tools. Pin the route; alternative hosts may differ in quantization, latency and availability.|Цены не включают комиссии пополнения и платные инструменты. Закрепите маршрут; у других хостингов могут отличаться квантизация, задержки и доступность.
+Cache, timing and capacity|Кэш, расписание цен и пропускная способность
+GPT long-context prices apply above 272,000 input tokens per request: input and cache ×2; output ×1.5. Claude one-hour cache writes have separate prices.|Повышенные цены GPT действуют при входе свыше 272 000 токенов на запрос: вход и кэш ×2, выход ×1,5. Для записи кэша Claude на один час действуют отдельные цены.
+Price rules|Правила цены
+DeepSeek Pro on the deepseek route is half price off-peak. Peak: weekdays 01:00–04:00 and 06:00–10:00 UTC. During 09:00–18:00 Moscow, uniform weekday usage is 4/9 peak.|DeepSeek Pro на маршруте deepseek вне пика стоит вдвое дешевле. Пик: будни 01:00–04:00 и 06:00–10:00 UTC. При равномерной работе по будням с 09:00 до 18:00 по Москве на пик приходится 4/9 расхода.
+Timed route|Маршрут с расписанием цен
+Paid tiers have no published plan-based request cap, but upstream capacity, balance holds and protection limits still apply. Extra keys do not multiply capacity.|Для платных планов не опубликован лимит запросов самого плана, но действуют ограничения поставщика, резервирование баланса и защитные лимиты. Дополнительные ключи не увеличивают пропускную способность.
+Capacity|Пропускная способность
+Europe routing requires Business or Enterprise and includes the UK and Switzerland. Account-specific identity checks and country eligibility remain subject to confirmation.|Маршрутизация по Европе требует Business или Enterprise и включает Великобританию и Швейцарию. Проверки личности и доступность в конкретной стране нужно подтверждать для аккаунта.
+Regions|Регионы
+RUB usage · 5% VAT included|Расход в RUB · НДС 5% включён
+No mandatory model-API subscription or seat fee. Top up any amount by card, SBP or business invoice.|Нет обязательной подписки на API моделей или платы за место. Пополнение на любую сумму: карта, СБП или счёт для организации.
+Billing|Оплата
+Up to 10 API keys by default; request more. This is a key limit, not a team-member limit. A key’s monthly budget is compared with total account usage.|По умолчанию до 10 API-ключей; больше — по запросу. Это лимит ключей, а не участников команды. Месячный бюджет ключа сравнивается с расходом всего аккаунта.
+Keys|Ключи
+Prices include 5% VAT. Do not add it again. Published Batch prices are separate asynchronous tariffs.|Цены включают НДС 5%; не добавляйте его повторно. Опубликованные цены Batch — отдельные тарифы асинхронной обработки.
+Tariffs|Тарифы
+GPT-6.1 Sol has a 272K+ tier: input and cache ×2; output ×1.5. Other unpublished long-context or one-hour cache-write prices need confirmation.|Для GPT-6.1 Sol есть уровень 272K+: вход и кэш ×2, выход ×1,5. Другие неопубликованные цены длинного контекста и записи кэша на час требуют подтверждения.
+Capacity and account conditions|Пропускная способность и условия аккаунта
+No fixed customer concurrency guarantee was verified. Twenty 4xx errors per key per minute can trigger a temporary pause; retry only suitable transient errors.|Гарантированное число параллельных запросов клиента не подтверждено. Двадцать ошибок 4xx за минуту на одном ключе могут вызвать временную блокировку; повторяйте только запросы с подходящими временными ошибками.
+Business invoices require contract registration. Universal per-member passport checks and UK/KZ/RU citizenship-specific eligibility were not established; upstream terms still apply.|Для счёта организации нужна регистрация договора. Обязательная проверка паспорта каждого участника и доступность по гражданству UK/KZ/RU не установлены; условия поставщиков моделей также действуют.
+Terms|Условия
+RUB usage · choose an exact route|Расход в RUB · выберите точный маршрут
+No mandatory API seat fee. Shared organization balance, separate employee keys; minimum card top-up 100 RUB.|Нет обязательной платы за место для API. Общий баланс организации и отдельные ключи сотрудников; минимальное пополнение картой — 100 RUB.
+No standard volume discount is published. Enterprise starts at 100,000 RUB monthly usage, which is an eligibility threshold, not an extra fee.|Стандартная скидка за объём не опубликована. Enterprise доступен от 100 000 RUB расхода в месяц; это условие подключения, а не дополнительная плата.
+Enterprise|Enterprise
+Discounts|Скидки
+Pin provider.only and disable fallbacks to reproduce the selected tariff. A “from” price can use Flex or a different host.|Для расчёта по выбранному тарифу закрепите provider.only и отключите резервные маршруты. Цена «от» может относиться к Flex или другому хостингу.
+Routing|Маршрутизация
+VAT inclusion, long-context premiums and unlisted cache-write prices are unconfirmed. The displayed RUB snapshot may change; your display exchange rate does not set the provider’s prices.|Включение НДС, надбавки за длинный контекст и неопубликованные цены записи кэша не подтверждены. Показанные цены в RUB могут меняться; курс отображения не задаёт цены провайдера.
+Team roles are advertised, but a numeric member cap and fixed customer concurrency entitlement were not verified.|Заявлены роли в команде, но числовой лимит участников и гарантированное число параллельных запросов клиента не подтверждены.
+Teams|Команды
+Registration asks for name, email and phone. Further information may be requested within 5 business days. Worldwide terms do not confirm every payment method or upstream model in every country.|При регистрации нужны имя, email и телефон. Дополнительные сведения могут запросить со сроком ответа 5 рабочих дней. Условия использования по всему миру не подтверждают доступность каждого способа оплаты или модели в любой стране.
+Access fee + usage · confirmed token quote needed|Плата за доступ + расход · нужен подтверждённый токенный тариф
+Each selected developer or server agent is counted as a paid account. Team access includes the head account; every added subaccount needs its own Basic or Professional subscription. Usage is always extra.|Каждый выбранный разработчик или серверный агент считается отдельным платным аккаунтом. Team включает головной аккаунт; каждому подаккаунту нужна своя подписка Basic или Professional. Расход всегда оплачивается отдельно.
+Access fees in RUB; generation costs are extra|Плата за доступ в RUB; генерации оплачиваются отдельно
+Basic|Basic
+Professional|Professional
+Professional · 3 days|Professional · 3 дня
+Team 4|Team 4
+Team 10|Team 10
+FAST|FAST
+Fee|Плата
+Period|Период
+Account coverage|Аккаунты
+days|дней
+3 days|3 дня
+30 days|30 дней
+Per account|За аккаунт
+Head account + up to 4 separately subscribed subaccounts|Головной аккаунт + до 4 подаккаунтов с отдельными подписками
+Head account + up to 10 separately subscribed subaccounts|Головной аккаунт + до 10 подаккаунтов с отдельными подписками
+Individual plans|Личные планы
+Team and FAST plans|Планы Team и FAST
+Team billing example|Пример оплаты команды
+Team and FAST need requested activation. Team activation requires at least 1,500 RUB on balance. Larger teams need a quote; no annual discount was verified.|Team и FAST подключаются по запросу. Для подключения Team нужно не менее 1 500 RUB на балансе. Для больших команд нужен отдельный расчёт; годовая скидка не подтверждена.
+Activation|Подключение
+These are 30-day periods, not calendar months. The 3-day pass is listed for reference; renewals follow the selected period.|Период составляет 30 дней, а не календарный месяц. Пропуск на 3 дня приведён для справки; продления следуют выбранному периоду.
+Public documentation conflicts on character versus token billing. Enter a confirmed RUB-per-million-token quote; the calculator does not convert character prices.|Публичная документация противоречива: цены указаны то за символы, то за токены. Введите подтверждённую цену в RUB за миллион токенов; калькулятор не пересчитывает цены за символы.
+Billing units|Единицы тарификации
+Standard rate limits conflict: 1 request/second on the tariff page versus 1 every 2 seconds in API errors. FAST’s 10–20 RPS statement is not a guaranteed concurrency allowance.|Лимиты стандартного плана противоречивы: на странице тарифов 1 запрос/с, в документации ошибок — 1 запрос за 2 секунды. Заявление о 10–20 RPS для FAST не гарантирует число параллельных запросов.
+Claude Code uses an Anthropic-compatible beta. Responses API is not supported; current Codex compatibility is not established.|Claude Code использует бета-версию Anthropic-совместимого API. Responses API не поддерживается; совместимость с актуальным Codex не установлена.
+API support|Поддержка API
+Consumer plans are for individuals. VAT, enterprise terms and citizenship-specific eligibility need confirmation; no universal passport-check guarantee is made.|Потребительские планы предназначены для физических лиц. НДС, условия для организаций и доступность по гражданству нужно подтвердить; единые правила паспортной проверки не установлены.
+GPT-6.1 Sol · ProxyAPI · Batch|GPT-6.1 Sol · ProxyAPI · Пакетная обработка
+Claude Sonnet 5.5 · ProxyAPI · Batch|Claude Sonnet 5.5 · ProxyAPI · Пакетная обработка
+OpenAI: GPT-6.1 Sol (Thinking Medium) · VseGPT|OpenAI: GPT-6.1 Sol (среднее рассуждение) · VseGPT
+Anthropic: Claude Sonnet 5.5 (Thinking Medium) · VseGPT|Anthropic: Claude Sonnet 5.5 (среднее рассуждение) · VseGPT
+Z.AI: GLM 5.3 (Thinking Low) · VseGPT|Z.AI: GLM 5.3 (лёгкое рассуждение) · VseGPT
+Z.AI: GLM 5.3 Flash (Thinking Low) · VseGPT|Z.AI: GLM 5.3 Flash (лёгкое рассуждение) · VseGPT
+Upstream route|Маршрут провайдера
+Input RUB/M|Вход, RUB/млн
+Cache write RUB/M|Запись кэша, RUB/млн
+Cache read RUB/M|Чтение кэша, RUB/млн
+Output RUB/M|Выход, RUB/млн
+Enter confirmed prices per million tokens. Character prices are not equivalent.|Введите подтверждённые цены за миллион токенов. Цены за символы им не эквивалентны.
+access plus usage|доступ плюс расход
+Account and funding|Аккаунт и пополнение
+Funding-fee scope|Как объединять комиссии
+Shared billing account|Общий платёжный аккаунт
+Per line · legacy estimate|Отдельно по позициям · прежний расчёт
+Card top-ups are assumed. Use the same account name and funding settings to charge one purchase fee across models.|Расчёт предполагает пополнение картой. Укажите одинаковое имя аккаунта и параметры пополнения, чтобы комиссия учитывалась один раз для всех моделей.
+10 organisation members by default; support approval is needed for more. Workspaces and API consumers are separate counts.|По умолчанию доступно 10 участников организации; больше — по согласованию с поддержкой. Рабочие пространства и потребители API считаются отдельно.
+Current routes: 20 Oct 2026. Original saved route prices remain unchanged.|Текущие маршруты проверены 20 октября 2026. Цены в ранее сохранённых маршрутах не изменены.
+Native RUB tariffs. USD is converted at your scenario exchange rate.|Исходные тарифы указаны в RUB. Пересчёт в USD использует курс сценария.
+Access-account group|Группа аккаунтов доступа
+VseGPT access plan|План доступа VseGPT
+Subaccount access|Доступ подаккаунтов
+basic · 199 RUB / 30 days|Basic · 199 RUB / 30 дней
+professional · 399 RUB / 30 days|Professional · 399 RUB / 30 дней
+team4 · 699 RUB / 30 days|Team 4 · 699 RUB / 30 дней
+team10 · 999 RUB / 30 days|Team 10 · 999 RUB / 30 дней
+fast · 999 RUB / 30 days|FAST · 999 RUB / 30 дней
+Basic · 199 RUB / 30 days|Basic · 199 RUB / 30 дней
+Professional · 399 RUB / 30 days|Professional · 399 RUB / 30 дней
+Access is charged per user or agent. Team head fees and member subscriptions are both included; usage is extra.|Доступ оплачивается за каждого пользователя или агента. Учтены плата за головные аккаунты Team и подписки участников; расход оплачивается отдельно.
+/ 30 days · access only|/ 30 дней · только доступ
+Token prices require a manual quote: public VseGPT pages disagree on characters versus tokens.|Введите подтверждённый тариф вручную: на публичных страницах VseGPT расход указан то в символах, то в токенах.
+PAYG with no mandatory access subscription. Published prices include 5% VAT.|Оплата по расходу без обязательной подписки на доступ. Опубликованные цены включают НДС 5%.
+PAYG with no mandatory access subscription. Pin the selected route; VAT inclusion is unconfirmed.|Оплата по расходу без обязательной подписки на доступ. Закрепите выбранный маршрут; включение НДС не подтверждено.
+Gateway conditions|Условия шлюза
+Model availability, capacity and account eligibility must be confirmed with the gateway. Upstream subscriptions do not fund these API requests.|Подтвердите у шлюза доступность моделей, пропускную способность и требования к аккаунту. Подписки исходных провайдеров не оплачивают эти API-запросы.
+Access renews every 30 days; the forecast counts actual renewal dates. Team plans include 4 or 10 subaccounts, each with a separate subscription.|Доступ продлевается каждые 30 дней; прогноз учитывает даты продлений. Планы Team допускают 4 или 10 подаккаунтов, каждый с отдельной подпиской.
+A top-up minimum is prepaid balance, not an extra monthly fee. No unconfirmed annual or volume discount is applied.|Минимальное пополнение — аванс на баланс, а не дополнительная месячная плата. Неподтверждённые годовые скидки и скидки за объём не применяются.
+Provider documentation|Документация провайдера
+Tariff currency|Валюта тарифа
+Cache-write pricing is unconfirmed; the default assumes no separately billed writes. Edit rates to budget them.|Цена записи кэша не подтверждена; по умолчанию отдельно оплачиваемых записей нет. Укажите тарифы, чтобы учесть их.
+This processing tier may have different latency from interactive coding.|Задержка этого режима обработки может отличаться от интерактивного кодинга.
+Alternative host: quality, quantization and availability may differ.|Альтернативный хостинг: качество, квантование и доступность могут отличаться.
+Custom endpoint — enter rates|Свой endpoint — введите тарифы
+Long context, % (quote required)|Длинный контекст, % (нужен тариф)
+API · direct or gateway|API · напрямую или через шлюз
+Token usage cost:|Стоимость токенов:
+Direct API equivalent:|Эквивалент прямого API:
+Choose a supported API provider.|Выберите поддерживаемого API-провайдера.
+Choose a recurring VseGPT access plan.|Выберите возобновляемый план доступа VseGPT.
+Choose Basic or Professional access for subaccounts.|Выберите Basic или Professional для доступа подаккаунтов.
+This model requires Professional access for every account using it.|Для этой модели каждому использующему её аккаунту нужен доступ Professional.
+Choose a valid funding-fee scope.|Выберите допустимый способ объединения комиссий за пополнение.
+This model is only available through its listed gateway.|Эта модель доступна только через указанный для неё шлюз.
+Select the matching API gateway for this model.|Выберите API-шлюз, указанный для этой модели.
+Models in this line must belong to the selected API provider.|Модели в этой позиции должны принадлежать выбранному API-провайдеру.
+Gateway token rates cannot be used as a coding subscription.|Токенные тарифы шлюза нельзя использовать как подписку для кодинга.
+Enter a verified token-rate quote for this gateway. Character prices cannot be converted automatically.|Введите подтверждённый токенный тариф этого шлюза. Цены за символы не пересчитываются автоматически.
+A price for the selected token category is unconfirmed. Set its usage to zero or enter explicit rates.|Цена выбранной категории токенов не подтверждена. Обнулите её расход или введите тариф вручную.
+One-hour cache-write pricing is unconfirmed for this route. Use the default TTL or enter explicit rates.|Цена записи кэша на один час для этого маршрута не подтверждена. Используйте стандартный TTL или введите тариф вручную.
+Long-context pricing is unconfirmed for this route. Enter explicit rates.|Цена длинного контекста для этого маршрута не подтверждена. Введите тариф вручную.
+Gateway prices are quoted in RUB and converted to USD using the scenario exchange rate; changing FX does not change the native RUB token bill.|Тарифы шлюзов заданы в RUB и пересчитываются в USD по курсу сценария; изменение курса не меняет исходный рублёвый счёт за токены.
+Gateway estimates use dated route prices. Extra tools, search and provider-specific fees are included only when entered explicitly.|Расчёты шлюзов используют тарифы маршрутов на указанную дату. Инструменты, поиск и дополнительные сборы провайдеров учитываются только при явном вводе.
+Legacy funding estimate: fees are charged per line. Choose shared account funding to combine top-ups across lines.|Прежний расчёт пополнений: комиссия начисляется отдельно по каждой позиции. Выберите общий платёжный аккаунт, чтобы объединить пополнения.
+OpenRouter documents a default limit of 10 organisation members; support approval is needed for more. Invited members and API consumers are different counts.|OpenRouter указывает лимит 10 участников организации по умолчанию; больше — по согласованию с поддержкой. Приглашённые участники и потребители API считаются отдельно.
+VseGPT access renews every 30 days, not every calendar month. Each user or agent is budgeted as a paid account; Team subaccounts also pay a subscription. A 12-month cash forecast can contain 13 renewals.|Доступ VseGPT продлевается каждые 30 дней, а не каждый календарный месяц. Каждый пользователь или агент учитывается как платный аккаунт; подаккаунтам Team тоже нужна подписка. Прогноз платежей на 12 месяцев может включать 13 продлений.
+ProxyAPI token prices include 5% VAT; the scenario tax field is an additional surcharge, not the included VAT.|Токенные тарифы ProxyAPI включают НДС 5%; поле налога в сценарии задаёт дополнительную надбавку, а не уже включённый НДС.
+Polza prices require the listed route to be pinned with fallback disabled. VAT inclusion is unconfirmed; no extra VAT is assumed.|Тарифы Polza требуют закрепить указанный маршрут и отключить резервные маршруты. Включение НДС не подтверждено; дополнительный НДС не предполагается.
+Use the same funding-fee scope for all lines sharing an OpenRouter account.|Выберите одинаковый способ объединения комиссий для всех позиций одного аккаунта OpenRouter.
+An OpenRouter Startup grant is capped at $3,000 per account; do not repeat it across lines.|Грант OpenRouter Startup ограничен $3,000 на аккаунт; не дублируйте его в нескольких позициях.
+OpenRouter lines sharing an account must use the same funding settings.|Для позиций одного аккаунта OpenRouter должны совпадать параметры пополнения.
+Use one VseGPT line per access-account group, with all its models in that line. A separate purchase needs a different account-group name.|Для каждой группы аккаунтов VseGPT используйте одну позицию со всеми её моделями. Для отдельной покупки задайте другое имя группы аккаунтов.
+Gateway API account|API-аккаунт шлюза
+Use a separate gateway API key and server-side budget. Upstream subscription allowances and service-account privileges do not transfer. Confirm the selected model, automation terms and rate limits with the gateway.|Используйте отдельный API-ключ шлюза и серверный бюджет. Квоты подписок и права сервисных аккаунтов исходных провайдеров не переносятся. Подтвердите у шлюза выбранную модель, условия автоматизации и лимиты запросов.
+OpenRouter · routes and terms · 20 Oct 2026|OpenRouter · маршруты и условия · 20 октября 2026
+ProxyAPI · RUB prices and conditions|ProxyAPI · рублёвые тарифы и условия
+Polza AI · pinned model routes|Polza AI · закреплённые маршруты моделей
+VseGPT · access plans and usage units|VseGPT · планы доступа и единицы расхода
+Saved in this browser · Core prices 17 Oct · Gateways 20 Oct 2026|Сохранено в браузере · Основные тарифы на 17 октября · Шлюзы на 20 октября 2026
+GPT-6.1 Sol · 17 Oct snapshot|GPT-6.1 Sol · тарифы на 17 октября
+GPT-6 Luna · 17 Oct snapshot|GPT-6 Luna · тарифы на 17 октября
+Claude Sonnet 5.5 · 17 Oct snapshot|Claude Sonnet 5.5 · тарифы на 17 октября
+Claude Opus 5.5 · 17 Oct snapshot|Claude Opus 5.5 · тарифы на 17 октября
+GLM-5.3 · 17 Oct snapshot|GLM-5.3 · тарифы на 17 октября
+GLM-5.3-Flash · 17 Oct snapshot|GLM-5.3-Flash · тарифы на 17 октября
+DeepSeek V4.1 Flash · 17 Oct snapshot|DeepSeek V4.1 Flash · тарифы на 17 октября
+DeepSeek V4 Pro 0813 · 17 Oct snapshot|DeepSeek V4 Pro 0813 · тарифы на 17 октября
+ProxyAPI prices include 5% VAT. Do not add that VAT again.|Тарифы ProxyAPI включают НДС 5%. Не добавляйте его повторно.
+Batch prices are for asynchronous processing, not an interactive coding latency guarantee.|Тарифы Batch относятся к асинхронной обработке и не гарантируют задержку интерактивного кодинга.
+Pin the displayed upstream route and disable fallbacks to reproduce this tariff.|Закрепите показанный маршрут провайдера и отключите резервные маршруты, чтобы получить этот тариф.
+VAT inclusion is unconfirmed; add only a confirmed extra tax or surcharge.|Включение НДС не подтверждено; добавляйте только подтверждённый дополнительный налог или надбавку.
+Flex processing is a separate service tier; latency differs from standard interactive requests.|Flex — отдельный режим обработки; его задержка отличается от стандартных интерактивных запросов.
+Alternative host: model quality, quantization, availability and latency may differ.|Альтернативный хостинг: качество модели, квантование, доступность и задержка могут отличаться.
+Public VseGPT documentation conflicts on characters versus tokens. Enter confirmed RUB prices per million tokens; no character conversion is assumed.|Публичная документация VseGPT противоречива: цены указаны то за символы, то за токены. Введите подтверждённую цену в RUB за миллион токенов; пересчёт символов не предполагается.
+API provider|API-провайдер
+Mixed direct APIs / legacy|Разные прямые API / прежний расчёт
+Direct API equivalent:|Эквивалент прямого API:
+Core prices are dated 2026-10-17; gateway tariffs are dated 2026-10-20. Source pages may use their original language.|Основные тарифы — на 17.10.2026, тарифы шлюзов — на 20.10.2026. Внешние источники могут быть на языке оригинала.
+Monthly equivalent at current usage.|Месячный эквивалент при текущем расходе.
+30 days|30 дней
+Team 4 · 699 RUB / 30 days|Team 4 · 699 RUB / 30 дней
+Team 10 · 999 RUB / 30 days|Team 10 · 999 RUB / 30 дней
+FAST · 999 RUB / 30 days|FAST · 999 RUB / 30 дней
+Lowest cost among the compared direct-provider options.|Минимальная стоимость среди сравниваемых прямых вариантов провайдеров.
+head accounts|головных аккаунтов
+paid subaccounts|платных подаккаунтов
+Plan prepayments and modeled usage.|Предоплата планов и расчётный расход.
+person|человек
+person / account|чел. / аккаунт
+agent account|аккаунт агента
 `.trim().split('\n').map(line=>line.split('|')));
 Object.assign(UI_TRANSLATIONS,RESEARCH_TRANSLATIONS);
 const UI_REVERSE=Object.fromEntries(Object.entries(UI_TRANSLATIONS).map(([en,ru])=>[ru,en]));

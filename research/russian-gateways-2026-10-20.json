@@ -1,0 +1,853 @@
+{
+  "checked_at": "2026-10-20",
+  "selection": "Practical shortlist with public official pricing and coding integrations; not a validated market-share or popularity ranking.",
+  "price_snapshot_only": true,
+  "currency_policy": "Keep provider-native RUB. Display USD as RUB/userFx. Changing userFx must not change the RUB bill.",
+  "providers": [
+    {
+      "id": "proxyapi",
+      "name": "ProxyAPI",
+      "billing_model": "PAYG in RUB; no mandatory subscription for model API",
+      "api_base": "https://api.proxyapi.ru/v1",
+      "access_fee_rub": 0,
+      "minimum_topup_rub": null,
+      "minimum_topup_status": "balance documentation explicitly says any amount",
+      "vat_included": true,
+      "vat_percent": 5,
+      "team": "Up to 10 API keys by default; support can increase. This is a key limit, not a team-seat limit. Model API has no published per-seat fee.",
+      "limits": {
+        "concurrency": null,
+        "rpm": null,
+        "tpm": null,
+        "notes": "No numeric customer guarantee published. Provider describes pooled upstream RPM/TPM. 20 HTTP 4xx errors per key per minute triggers escalating pauses: 1 minute, 10 minutes, 1 hour, 12 hours."
+      },
+      "kyc": {
+        "passport_required_each_member": null,
+        "passport_required_buyer": null,
+        "country_citizenship_eligibility": "Not published for UK/KZ/RU individually; terms require compliance with upstream service terms. RU payment support does not establish unrestricted upstream eligibility.",
+        "buyer_business": "Contract registration and company billing details required for bank invoice; no universal per-developer identity check found."
+      },
+      "discounts": "Published model batch prices where supported; no annual/team blanket discount verified. Additional products can have subscriptions under terms, but model PAYG requires none.",
+      "sources": [
+        "https://proxyapi.ru/docs/balance",
+        "https://proxyapi.ru/docs/api-keys",
+        "https://proxyapi.ru/docs/rate-limits",
+        "https://proxyapi.ru/terms"
+      ]
+    },
+    {
+      "id": "polza",
+      "name": "Polza AI",
+      "billing_model": "PAYG prepaid organisation balance in RUB",
+      "api_base": "https://polza.ai/api/v1",
+      "access_fee_rub": 0,
+      "minimum_card_topup_rub": 100,
+      "vat_included": null,
+      "vat_percent": null,
+      "vat_note": "Business pages mention VAT and monthly UПД, but no explicit inclusion/rate found for public model prices. Do not auto-add or infer 5%.",
+      "team": "Shared organisation balance and separate employee API keys; roles advertised. No numeric member/key cap found.",
+      "limits": {
+        "concurrency": null,
+        "rpm": null,
+        "tpm": null,
+        "notes": "No fixed per-customer numeric API limit verified; public 10-concurrent SEO example is a vendor test, not an entitlement."
+      },
+      "kyc": {
+        "registration_fields": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "email_confirmation": true,
+        "additional_information_may_be_requested": true,
+        "additional_information_deadline_business_days": 5,
+        "passport_required_each_member": null,
+        "passport_required_buyer": null,
+        "country_citizenship_eligibility": "User agreement says worldwide; exact payment acceptance and upstream model restrictions for UK/KZ/RU not individually verified.",
+        "buyer_business": "Company may register through representative; invoice requires organisation details."
+      },
+      "discounts": "FAQ says no standard volume discount, individual large-client terms possible. Enterprise starts at 100000 RUB monthly usage; this is eligibility, not an extra access fee. No general annual/team or time-of-day discount verified.",
+      "sources": [
+        "https://polza.ai/docs/gaidy/getting-started",
+        "https://polza.ai/docs/glavnoe/faq",
+        "https://polza.ai/docs/glavnoe/enterprise",
+        "https://polza.ai/docs/gaidy/provider-selection",
+        "https://polza.ai/documents/user-agreement",
+        "https://polza.ai/collections/code"
+      ]
+    },
+    {
+      "id": "vsegpt",
+      "name": "VseGPT",
+      "billing_model": "Mandatory access subscription plus independently metered generations",
+      "api_base": "https://api.vsegpt.ru/v1",
+      "access_fee_rub": null,
+      "vat_included": null,
+      "vat_percent": null,
+      "vat_note": "No explicit VAT inclusion/rate found in reviewed consumer plan/offer pages.",
+      "plans": [
+        {
+          "id": "basic",
+          "price_rub": 199,
+          "period_days": 30,
+          "fee_scope": "per_account",
+          "max_subaccounts": 0,
+          "metered_usage_included": false
+        },
+        {
+          "id": "professional",
+          "price_rub": 399,
+          "period_days": 30,
+          "fee_scope": "per_account",
+          "max_subaccounts": 0,
+          "metered_usage_included": false
+        },
+        {
+          "id": "professional_3_days",
+          "price_rub": 99,
+          "period_days": 3,
+          "fee_scope": "per_account",
+          "metered_usage_included": false
+        },
+        {
+          "id": "team4",
+          "price_rub": 699,
+          "period_days": 30,
+          "fee_scope": "head_account",
+          "max_subaccounts": 4,
+          "head_professional_access_included": true,
+          "subaccount_subscription_included": false,
+          "metered_usage_included": false,
+          "activation_by_request": true
+        },
+        {
+          "id": "team10",
+          "price_rub": 999,
+          "period_days": 30,
+          "fee_scope": "head_account",
+          "max_subaccounts": 10,
+          "head_professional_access_included": true,
+          "subaccount_subscription_included": false,
+          "metered_usage_included": false,
+          "activation_by_request": true
+        },
+        {
+          "id": "fast",
+          "price_rub": 999,
+          "period_days": 30,
+          "fee_scope": "per_account",
+          "head_professional_access_included": true,
+          "metered_usage_included": false,
+          "activation_by_request": true
+        }
+      ],
+      "team": "Head fee includes head Professional access; up to 4 or 10 additional subaccounts, each separately subscribed (199 or 399 RUB/30 days depending models). Larger 20/50 options are by quote. Do not call Team10 a bundle of 10 paid subscriptions.",
+      "activation_minimum_balance_rub": 1500,
+      "limits": {
+        "concurrency": null,
+        "standard_rps": null,
+        "standard_rps_status": "conflict: tariff says 1 per second with additional conditions; API Errors says 1 per 2 seconds per account",
+        "fast_rps_vendor_claim": [
+          10,
+          20
+        ],
+        "fast_rps_guaranteed": false,
+        "notes": "FAST requested separately with alternate URL; potential 100 RPS is explicitly experimental, not guaranteed."
+      },
+      "kyc": {
+        "passport_required_each_member": null,
+        "passport_required_buyer": null,
+        "registration_fields": "Current full contact data including phone/email under TermsOfUse; individual accounts for subaccounts.",
+        "buyer_business": "Consumer tariffs marked for individuals; legal-entity contract terms need separate confirmation.",
+        "country_citizenship_eligibility": "No explicit UK/KZ/RU citizenship matrix found."
+      },
+      "discounts": "No annual/team volume discount verified. Team is administration, not a discounted seat bundle. All stated periods are 30 days, not calendar months.",
+      "api_compatibility": "OpenAI Chat Completions; native Anthropic Messages beta permits Claude Code; official docs explicitly do not plan Responses API. Do not promise current Codex compatibility.",
+      "sources": [
+        "https://vsegpt.ru/Docs/Tariffs",
+        "https://vsegpt.ru/Docs/Tariffs/Ext",
+        "https://vsegpt.ru/Docs/Tariffs/ExampleTeam",
+        "https://vsegpt.ru/Docs/Tariffs/TeamStart",
+        "https://vsegpt.ru/Docs/Tariffs/Example",
+        "https://vsegpt.ru/Docs/API/Errors",
+        "https://vsegpt.ru/Docs/API",
+        "https://vsegpt.ru/docs/TermsOfUse",
+        "https://vsegpt.ru/docs/oferta"
+      ]
+    }
+  ],
+  "token_models": [
+    {
+      "gateway": "proxyapi",
+      "id": "openai/gpt-6.1-sol",
+      "name": "GPT-6.1 Sol",
+      "route": "ProxyAPI standard tariff",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        420,
+        525,
+        21,
+        2100
+      ],
+      "cache_write_status": "published",
+      "long_context": {
+        "threshold_input_tokens": 272000,
+        "rates_per_million": [
+          840,
+          1050,
+          42,
+          3150
+        ]
+      },
+      "long_context_status": "published_272K_plus_tier",
+      "batch": {
+        "rates": [
+          210.0,
+          262.5,
+          10.5,
+          1050.0
+        ],
+        "discount_fraction": 0.5
+      },
+      "batch_status": "published",
+      "vat_included": true,
+      "vat_percent": 5,
+      "source_url": "https://proxyapi.ru/models/openai/gpt-6-1-sol",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Live public HTML and first-party model page",
+      "eligible_for_automatic_token_estimate": true
+    },
+    {
+      "gateway": "proxyapi",
+      "id": "anthropic/claude-sonnet-5-5",
+      "name": "Claude Sonnet 5.5",
+      "route": "ProxyAPI standard tariff",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        500,
+        625,
+        50,
+        2500
+      ],
+      "cache_write_status": "published",
+      "long_context": null,
+      "long_context_status": "no_distinct_long_context_tariff_found_on_model_page",
+      "batch": {
+        "rates": [
+          250.0,
+          312.5,
+          25.0,
+          1250.0
+        ],
+        "discount_fraction": 0.5
+      },
+      "batch_status": "published",
+      "vat_included": true,
+      "vat_percent": 5,
+      "source_url": "https://proxyapi.ru/models/anthropic/claude-sonnet-5-5",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Live public HTML and first-party model page",
+      "eligible_for_automatic_token_estimate": true
+    },
+    {
+      "gateway": "proxyapi",
+      "id": "z-ai/glm-5.3",
+      "name": "GLM-5.3",
+      "route": "ProxyAPI standard tariff",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        200,
+        null,
+        50,
+        700
+      ],
+      "cache_write_status": "not_published_on_model_page",
+      "long_context": null,
+      "long_context_status": "no_distinct_long_context_tariff_found_on_model_page",
+      "batch": null,
+      "batch_status": "not_published_on_model_page",
+      "vat_included": true,
+      "vat_percent": 5,
+      "source_url": "https://proxyapi.ru/models/z-ai/glm-5.3",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Live public HTML and first-party model page",
+      "eligible_for_automatic_token_estimate": true
+    },
+    {
+      "gateway": "proxyapi",
+      "id": "z-ai/glm-5.3-flash",
+      "name": "GLM 5.3 Flash",
+      "route": "ProxyAPI standard tariff",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        16.84,
+        null,
+        3.58,
+        58.95
+      ],
+      "cache_write_status": "not_published_on_model_page",
+      "long_context": null,
+      "long_context_status": "no_distinct_long_context_tariff_found_on_model_page",
+      "batch": null,
+      "batch_status": "not_published_on_model_page",
+      "vat_included": true,
+      "vat_percent": 5,
+      "source_url": "https://proxyapi.ru/models/z-ai/glm-5.3-flash",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Live public HTML and first-party model page",
+      "eligible_for_automatic_token_estimate": true
+    },
+    {
+      "gateway": "proxyapi",
+      "id": "deepseek/deepseek-v4.1-flash-1017",
+      "name": "DeepSeek V4.1 Flash 1017",
+      "route": "ProxyAPI standard tariff",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        21.05,
+        null,
+        0.41,
+        81.05
+      ],
+      "cache_write_status": "not_published_on_model_page",
+      "long_context": null,
+      "long_context_status": "no_distinct_long_context_tariff_found_on_model_page",
+      "batch": null,
+      "batch_status": "not_published_on_model_page",
+      "vat_included": true,
+      "vat_percent": 5,
+      "source_url": "https://proxyapi.ru/models/deepseek/deepseek-v4.1-flash-1017",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Live public HTML and first-party model page",
+      "eligible_for_automatic_token_estimate": true
+    },
+    {
+      "gateway": "polza",
+      "id": "openai/gpt-6.1-sol",
+      "name": "OpenAI: GPT-6.1 Sol",
+      "route": "openai",
+      "route_tier": "standard",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        233.9592,
+        292.449,
+        11.69796,
+        1169.796
+      ],
+      "cache_write_status": "published",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "routing": {
+        "only": [
+          "openai"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/openai/gpt-6.1-sol",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "anthropic/claude-sonnet-5.5",
+      "name": "Anthropic: Claude Sonnet 5.5",
+      "route": "anthropic",
+      "route_tier": "standard",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        233.9592,
+        292.449,
+        11.69796,
+        1169.796
+      ],
+      "cache_write_status": "published",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1000000,
+      "max_output_tokens": 128000,
+      "routing": {
+        "only": [
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/anthropic/claude-sonnet-5.5",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "z-ai/glm-5.3",
+      "name": "Z.ai: GLM 5.3",
+      "route": "z-ai/fp8",
+      "route_tier": "standard",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        163.77144,
+        null,
+        30.414696,
+        514.71024
+      ],
+      "cache_write_status": "not_published_for_route",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1048576,
+      "max_output_tokens": 131072,
+      "routing": {
+        "only": [
+          "z-ai/fp8"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/z-ai/glm-5.3",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "z-ai/glm-5.3-flash",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "route": "z-ai/fp8",
+      "route_tier": "standard",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        17.54694,
+        null,
+        3.509388,
+        58.4898
+      ],
+      "cache_write_status": "not_published_for_route",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1048576,
+      "max_output_tokens": 131072,
+      "routing": {
+        "only": [
+          "z-ai/fp8"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/z-ai/glm-5.3-flash",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "deepseek/deepseek-v4.1-flash-1017",
+      "name": "DeepSeek: DeepSeek V4.1 Flash 1017",
+      "route": "deepseek",
+      "route_tier": "standard",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        17.54694,
+        null,
+        0.3509388,
+        70.18776
+      ],
+      "cache_write_status": "not_published_for_route",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1048576,
+      "max_output_tokens": 393216,
+      "routing": {
+        "only": [
+          "deepseek"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/deepseek/deepseek-v4.1-flash-1017",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "openai/gpt-6.1-sol",
+      "name": "OpenAI: GPT-6.1 Sol",
+      "route": "openai/flex",
+      "route_tier": "optional_flex",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        116.9796,
+        146.2245,
+        5.84898,
+        584.898
+      ],
+      "cache_write_status": "published",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1050000,
+      "max_output_tokens": 128000,
+      "routing": {
+        "only": [
+          "openai/flex"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/openai/gpt-6.1-sol",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "z-ai/glm-5.3-flash",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "route": "open-inference/fp4",
+      "route_tier": "optional_alternative_host",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        5.6150208,
+        null,
+        0.7018776,
+        18.716736
+      ],
+      "cache_write_status": "not_published_for_route",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1048576,
+      "max_output_tokens": 943718,
+      "routing": {
+        "only": [
+          "open-inference/fp4"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/z-ai/glm-5.3-flash",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    },
+    {
+      "gateway": "polza",
+      "id": "z-ai/glm-5.3",
+      "name": "Z.ai: GLM 5.3",
+      "route": "wafer/us",
+      "route_tier": "optional_alternative_host",
+      "currency": "RUB",
+      "unit": "per_million_tokens",
+      "rates_order": [
+        "input",
+        "cache_write",
+        "cache_read",
+        "output"
+      ],
+      "rates": [
+        9.2413884,
+        null,
+        9.1244088,
+        163.77144
+      ],
+      "cache_write_status": "not_published_for_route",
+      "long_context": null,
+      "long_context_status": "not_exposed_in_retrieved_public_catalogue_response",
+      "batch": null,
+      "batch_status": "not_verified_for_selected_route",
+      "vat_included": null,
+      "vat_percent": null,
+      "context_length": 1048576,
+      "max_output_tokens": 943718,
+      "routing": {
+        "only": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "source_url": "https://polza.ai/api/v1/models?type=chat&include_providers=true",
+      "model_url": "https://polza.ai/models/z-ai/glm-5.3",
+      "checked_at": "2026-10-20",
+      "evidence_method": "Unauthenticated GET of official public models API; route-specific pricing field names explicitly state per_million and RUB",
+      "eligible_for_automatic_token_estimate": true,
+      "notes": [
+        "Preserve route identity; model-page from price or top_provider may use a different service tier.",
+        "Omitted cache-write/long-context fields are unknown, not proven zero.",
+        "RUB catalogue snapshot; provider FX/repricing formula not established."
+      ]
+    }
+  ],
+  "manual_quote_models": [
+    {
+      "gateway": "vsegpt",
+      "id": "openai/gpt-6.1-sol-medium",
+      "name": "OpenAI: GPT-6.1 Sol (Thinking Medium)",
+      "required_plan": "professional",
+      "currency": "RUB",
+      "published_table_unit": "per_1000_characters",
+      "raw_input_rate": 0.6,
+      "raw_output_rate": 3.0,
+      "token_unit_status": "conflicting_public_documentation",
+      "rates_per_million_tokens": null,
+      "cache_read": null,
+      "cache_write": null,
+      "eligible_for_automatic_token_estimate": false,
+      "requiresManualRates": true,
+      "context_length": 1000000,
+      "source_url": "https://www.vsegpt.ru/Docs/Models",
+      "catalogue_api_url": "https://api.vsegpt.ru/v1/models",
+      "checked_at": "2026-10-20",
+      "notes": [
+        "Table and billing example use characters; new model notes use provider token counts; API echoes numeric rates without a unit. Do not convert automatically."
+      ]
+    },
+    {
+      "gateway": "vsegpt",
+      "id": "anthropic/claude-sonnet-5.5-medium",
+      "name": "Anthropic: Claude Sonnet 5.5 (Thinking Medium)",
+      "required_plan": "professional",
+      "currency": "RUB",
+      "published_table_unit": "per_1000_characters",
+      "raw_input_rate": 0.6,
+      "raw_output_rate": 3.0,
+      "token_unit_status": "conflicting_public_documentation",
+      "rates_per_million_tokens": null,
+      "cache_read": null,
+      "cache_write": null,
+      "eligible_for_automatic_token_estimate": false,
+      "requiresManualRates": true,
+      "context_length": 1000000,
+      "source_url": "https://www.vsegpt.ru/Docs/Models",
+      "catalogue_api_url": "https://api.vsegpt.ru/v1/models",
+      "checked_at": "2026-10-20",
+      "notes": [
+        "Table and billing example use characters; new model notes use provider token counts; API echoes numeric rates without a unit. Do not convert automatically."
+      ]
+    },
+    {
+      "gateway": "vsegpt",
+      "id": "z-ai/glm-5.3-low",
+      "name": "Z.AI: GLM 5.3 (Thinking Low)",
+      "required_plan": "basic",
+      "currency": "RUB",
+      "published_table_unit": "per_1000_characters",
+      "raw_input_rate": 0.4,
+      "raw_output_rate": 1.3,
+      "token_unit_status": "conflicting_public_documentation",
+      "rates_per_million_tokens": null,
+      "cache_read": null,
+      "cache_write": null,
+      "eligible_for_automatic_token_estimate": false,
+      "requiresManualRates": true,
+      "context_length": 1000000,
+      "source_url": "https://www.vsegpt.ru/Docs/Models",
+      "catalogue_api_url": "https://api.vsegpt.ru/v1/models",
+      "checked_at": "2026-10-20",
+      "notes": [
+        "Table and billing example use characters; new model notes use provider token counts; API echoes numeric rates without a unit. Do not convert automatically."
+      ]
+    },
+    {
+      "gateway": "vsegpt",
+      "id": "z-ai/glm-5.3-flash-low",
+      "name": "Z.AI: GLM 5.3 Flash (Thinking Low)",
+      "required_plan": "basic",
+      "currency": "RUB",
+      "published_table_unit": "per_1000_characters",
+      "raw_input_rate": 0.035,
+      "raw_output_rate": 0.1,
+      "token_unit_status": "conflicting_public_documentation",
+      "rates_per_million_tokens": null,
+      "cache_read": null,
+      "cache_write": null,
+      "eligible_for_automatic_token_estimate": false,
+      "requiresManualRates": true,
+      "context_length": 1000000,
+      "source_url": "https://www.vsegpt.ru/Docs/Models",
+      "catalogue_api_url": "https://api.vsegpt.ru/v1/models",
+      "checked_at": "2026-10-20",
+      "notes": [
+        "Table and billing example use characters; new model notes use provider token counts; API echoes numeric rates without a unit. Do not convert automatically."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "provider": "proxyapi",
+      "claim": "GLM-5.3 rates",
+      "older_web_cache": [
+        189.47,
+        18.95,
+        600
+      ],
+      "live_html_input_cache_read_output": [
+        200,
+        50,
+        700
+      ],
+      "resolution": "Use live 2026-10-20 HTML which agrees with current catalogue, not cached older model page."
+    },
+    {
+      "provider": "polza",
+      "claim": "Units",
+      "docs": "Overview prose says RUB per token",
+      "live_api": "Route fields explicitly end _per_million and currency RUB",
+      "resolution": "Use live explicit per_million schema, not old prose. Pin route."
+    },
+    {
+      "provider": "vsegpt",
+      "claim": "Billing unit",
+      "table": "RUB/1000 characters",
+      "model_details": "provider token usage",
+      "resolution": "Unresolved. Do not generate token-cost estimates from character rates."
+    }
+  ]
+}

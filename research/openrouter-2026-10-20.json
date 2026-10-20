@@ -1,0 +1,820 @@
+{
+  "schema_version": "1.0",
+  "client_as_of_date": "2026-10-20",
+  "timezone": "Europe/Moscow",
+  "scope": "Public OpenRouter gateway pricing and selected coding routes; no paid calls, account creation, checkout or authenticated capacity test.",
+  "currency": "USD",
+  "plans": [
+    {
+      "id": "free",
+      "type": "free_usage",
+      "monthly_subscription_usd": 0,
+      "workspace_limit": 5,
+      "organization_member_limit": 10,
+      "free_rpm": 20,
+      "free_rpd": 50,
+      "free_rpd_after_10usd_lifetime_credit_purchase": 1000,
+      "included_paid_model_tokens": 0,
+      "suitable_for_production_team_default": false
+    },
+    {
+      "id": "standard",
+      "type": "pay_as_you_go",
+      "monthly_subscription_usd": 0,
+      "workspace_limit": 5,
+      "organization_member_limit": 10,
+      "credit_purchase_fee_fraction": 0.055,
+      "stripe_minimum_fee_usd": 0.8,
+      "annual_discount": null,
+      "per_seat_charge": false,
+      "sources": [
+        "pricing",
+        "faq",
+        "organization"
+      ]
+    },
+    {
+      "id": "business",
+      "type": "pay_as_you_go",
+      "monthly_subscription_usd": 0,
+      "workspace_limit": 1000,
+      "organization_member_limit": 10,
+      "credit_purchase_fee_fraction": 0.08,
+      "minimum_fee_usd": null,
+      "minimum_fee_status": "Not stated specifically for Business in reviewed official pages.",
+      "annual_discount": null,
+      "per_seat_charge": false,
+      "regional_routing": true,
+      "workload_identity_federation": true,
+      "downgrade_wait_days": 30,
+      "sources": [
+        "pricing",
+        "organization"
+      ]
+    },
+    {
+      "id": "enterprise",
+      "type": "contract",
+      "monthly_subscription_usd": null,
+      "workspace_limit": null,
+      "organization_member_limit": null,
+      "credit_purchase_fee_fraction": null,
+      "annual_discount": null,
+      "note": "Negotiated fees/commitments, invoice options, SSO/SCIM, pooled workspace budgets and contractual SLAs; do not infer a price or seat limit."
+    }
+  ],
+  "organization_constraints": {
+    "published_member_limit": 10,
+    "increase": "Contact support; no self-serve larger member count established.",
+    "minimum_members": null,
+    "member_limit_plan_caveat": "Organization FAQ states 10 without a tier distinction; pricing only states workspace caps. Show as documented default/support-needed warning, not a proven immutable cap for every contract.",
+    "verified_email_required_to_create": true,
+    "shared_billing": true,
+    "system_keys_supported": true,
+    "kyc": "Only verified creator email requirement confirmed here. No basis to assert no KYC for every nationality, payment or risk review.",
+    "source_ids": [
+      "organization",
+      "workspaces"
+    ]
+  },
+  "funding": {
+    "standard_stripe_formula": "For each actual nonzero credit purchase C_j: max(0.055*C_j,0.80). Sum purchases at billing-account scope.",
+    "business_formula": "0.08*C established; minimum unspecified.",
+    "crypto": {
+      "faq_fee_fraction": 0.05,
+      "source_url": "https://openrouter.ai/docs/faq.md",
+      "business_interaction": "Unknown: do not automatically add or replace Business 8%; verify checkout.",
+      "automatic_discount_or_stack": false
+    },
+    "fee_applies_to": "Purchased credits, not per model request or per seat. Inference is billed at endpoint prices.",
+    "vat_included": false,
+    "no_minimum_commitment": true,
+    "credit_expiry": "FAQ says unused credits may be expired one year after purchase.",
+    "current_engine_risk": "src/engine.js charges Standard/Business funding minima per line; lines sharing one billing account can overcount a single actual top-up. Group account funding or explicitly model independent purchases."
+  },
+  "byok": {
+    "allowance_list_price_usd_month": 25000,
+    "overage_fraction": 0.05,
+    "provider_invoice_separate": true,
+    "formula": "F = .05*max(0, monthly_list_price_equivalent-25000); total = upstream actual invoice + F + applicable funding fee on new OpenRouter credits needed for F/tools/fallback.",
+    "allowance_scope_assumption": "Aggregate billing account/organization; not seats/keys/workspaces. Ledger reset timezone and proration not precisely established.",
+    "provider_discounts": "May affect provider invoice, not the OpenRouter list-price threshold.",
+    "shared_capacity_fallback": "May consume paid OpenRouter credits; explicitly configure if provider-only spend is required.",
+    "subscription_credentials": "No support verified for ChatGPT/Claude subscription OAuth or GLM Coding Plan allowance via BYOK. Use standard provider API credentials only as confirmed.",
+    "sources": [
+      "pricing",
+      "byok",
+      "workspaces"
+    ]
+  },
+  "promotions": {
+    "startup": {
+      "requires_approval": true,
+      "maximum_credit_usd": 3000,
+      "processing_and_byok_fee_waiver_months": 12,
+      "most_credit_expiry_months": 6,
+      "actual_award_required": true,
+      "default_enabled": false,
+      "eligibility_summary": "Pre-Series B, full-time AI-native product, approved partner referral, public website, matching individual company email, under $500 lifetime spend, no prior award.",
+      "source_ids": [
+        "startups"
+      ]
+    },
+    "self_serve_team_or_annual_discount": null,
+    "universal_offpeak_discount": null,
+    "endpoint_discounts": "Published endpoint prices already include discount metadata; no additional multiplication. Timed routes use exact endpoint override schedule.",
+    "batch": "Separate catalogue :batch model variant where offered; do not apply blanket 50% to every model/route."
+  },
+  "discovery": {
+    "catalog_url": "https://openrouter.ai/api/v1/models",
+    "snapshot_text_model_count": 468,
+    "public_no_auth_fetch_succeeded": true,
+    "output_modalities": "Default text; ?output_modalities=all includes other modalities.",
+    "coding_filter": "?supported_parameters=tools",
+    "endpoint_url_template": "https://openrouter.ai/api/v1/models/{author}/{slug}/endpoints",
+    "endpoint_public_no_auth_fetch_succeeded": true,
+    "units": "Price strings are USD per token/request/unit; multiply only token fields by 1e6.",
+    "route_identity": "model ID + provider tag + provider model ID, keeping region/tier/quantization.",
+    "not_guarantees": [
+      "Availability for a specific account or geography",
+      "Concurrency, RPM/TPM or latency SLA",
+      "Stable rates over forecast",
+      "Identical quality among quantizations",
+      "Minimum catalogue price equals actual routed price"
+    ],
+    "override_rules": {
+      "threshold": "min_prompt_tokens matches strictly greater-than",
+      "combination": "All conditions must match; later matching entries win per price key; absent fields inherit base.",
+      "time": "UTC HHMM start inclusive/end exclusive, wraps across midnight. Base prices reflect current time window. Use full overrides rather than multiplying current base.",
+      "weekly_days": "UTC weekdays, not Moscow weekdays around midnight.",
+      "source_url": "https://openrouter.ai/docs/guides/overview/models"
+    },
+    "integration_policy": "Persist a checked snapshot and explicit route choice. Do not silently mutate existing saved scenario rates from live discovery."
+  },
+  "capacity": {
+    "paid_plan_request_limit": null,
+    "meaning": "No OpenRouter plan-based cap; provider limits/capacity and DDoS protection remain. More keys do not raise global capacity.",
+    "concurrency_guarantee": null,
+    "in_flight_budget": "Some low-balance/new prepaid accounts can receive 402 despite positive balance. Exact threshold/fraction/ceiling unpublished; max_tokens influences reserved amount.",
+    "source_ids": [
+      "pricing",
+      "limits"
+    ]
+  },
+  "region": {
+    "business_or_enterprise_required": true,
+    "europe_definition": [
+      "EU",
+      "EEA",
+      "UK",
+      "Switzerland"
+    ],
+    "operational_records_may_be_us": true,
+    "byok_region_customer_responsibility": true,
+    "strict_eu_only_guaranteed_by_default": false,
+    "source_ids": [
+      "region"
+    ]
+  },
+  "selected_routes": [
+    {
+      "model_id": "openai/gpt-6.1-sol",
+      "canonical_slug": "openai/gpt-6.1-sol-20260929",
+      "name": "OpenAI: GPT-6.1 Sol",
+      "provider_tag": "openai",
+      "provider_name": "OpenAI",
+      "provider_model_id": "openai/gpt-6.1-sol",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 2.0,
+        "input_cache_write": 2.5,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.1,
+        "completion": 10.0
+      },
+      "conditional_prices": [
+        {
+          "min_prompt_tokens": 272000,
+          "prompt": 4.0,
+          "completion": 15.0,
+          "input_cache_read": 0.2,
+          "input_cache_write": 5.0
+        }
+      ],
+      "non_token_unit_prices_usd": {
+        "web_search": "0.01"
+      },
+      "discount_metadata_already_applied": 0,
+      "context_length": 1050000,
+      "max_completion_tokens": 128000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/openai/gpt-6.1-sol/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:18.770108+00:00",
+      "cache_write_note": null
+    },
+    {
+      "model_id": "openai/gpt-6.1-sol",
+      "canonical_slug": "openai/gpt-6.1-sol-20260929",
+      "name": "OpenAI: GPT-6.1 Sol",
+      "provider_tag": "azure/eu",
+      "provider_name": "Azure",
+      "provider_model_id": "openai/gpt-6.1-sol",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 2.2,
+        "input_cache_write": 2.75,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.11,
+        "completion": 11.0
+      },
+      "conditional_prices": [
+        {
+          "min_prompt_tokens": 272000,
+          "prompt": 4.4,
+          "completion": 16.5,
+          "input_cache_read": 0.22,
+          "input_cache_write": 5.5
+        }
+      ],
+      "non_token_unit_prices_usd": {
+        "web_search": "0.01"
+      },
+      "discount_metadata_already_applied": 0,
+      "context_length": 1050000,
+      "max_completion_tokens": 128000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/openai/gpt-6.1-sol/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:18.770108+00:00",
+      "cache_write_note": null
+    },
+    {
+      "model_id": "openai/gpt-6-luna",
+      "canonical_slug": "openai/gpt-6-luna-20260922",
+      "name": "OpenAI: GPT-6 Luna",
+      "provider_tag": "openai",
+      "provider_name": "OpenAI",
+      "provider_model_id": "openai/gpt-6-luna",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.1,
+        "input_cache_write": 0.125,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.01,
+        "completion": 0.5
+      },
+      "conditional_prices": [
+        {
+          "min_prompt_tokens": 272000,
+          "prompt": 0.2,
+          "completion": 0.75,
+          "input_cache_read": 0.02,
+          "input_cache_write": 0.25
+        }
+      ],
+      "non_token_unit_prices_usd": {
+        "web_search": "0.01"
+      },
+      "discount_metadata_already_applied": 0,
+      "context_length": 1050000,
+      "max_completion_tokens": 128000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/openai/gpt-6-luna/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:18.572939+00:00",
+      "cache_write_note": null
+    },
+    {
+      "model_id": "anthropic/claude-sonnet-5.5",
+      "canonical_slug": "anthropic/claude-sonnet-5.5-20260928",
+      "name": "Anthropic: Claude Sonnet 5.5",
+      "provider_tag": "anthropic",
+      "provider_name": "Anthropic",
+      "provider_model_id": "anthropic/claude-sonnet-5.5",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 2.0,
+        "input_cache_write": 2.5,
+        "input_cache_write_1h": 4.0,
+        "input_cache_read": 0.1,
+        "completion": 10.0
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {
+        "web_search": "0.01"
+      },
+      "discount_metadata_already_applied": 0,
+      "context_length": 1000000,
+      "max_completion_tokens": 128000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:18.914704+00:00",
+      "cache_write_note": null
+    },
+    {
+      "model_id": "anthropic/claude-opus-5.5",
+      "canonical_slug": "anthropic/claude-opus-5.5-20260921",
+      "name": "Anthropic: Claude Opus 5.5",
+      "provider_tag": "anthropic",
+      "provider_name": "Anthropic",
+      "provider_model_id": "anthropic/claude-opus-5.5",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 4.0,
+        "input_cache_write": 5.0,
+        "input_cache_write_1h": 8.0,
+        "input_cache_read": 0.2,
+        "completion": 20.0
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {
+        "web_search": "0.01"
+      },
+      "discount_metadata_already_applied": 0,
+      "context_length": 1000000,
+      "max_completion_tokens": 128000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/anthropic/claude-opus-5.5/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.064028+00:00",
+      "cache_write_note": null
+    },
+    {
+      "model_id": "z-ai/glm-5.3",
+      "canonical_slug": "z-ai/glm-5.3-20260816",
+      "name": "Z.ai: GLM 5.3",
+      "provider_tag": "z-ai/fp8",
+      "provider_name": "Z.AI",
+      "provider_model_id": "z-ai/glm-5.3",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 1.4,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.26,
+        "completion": 4.4
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "quantization": "fp8",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/z-ai/glm-5.3/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.415328+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "z-ai/glm-5.3",
+      "canonical_slug": "z-ai/glm-5.3-20260816",
+      "name": "Z.ai: GLM 5.3",
+      "provider_tag": "relace",
+      "provider_name": "Relace",
+      "provider_model_id": "z-ai/glm-5.3",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.75,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.075,
+        "completion": 2.4
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/z-ai/glm-5.3/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.415328+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "z-ai/glm-5.3",
+      "canonical_slug": "z-ai/glm-5.3-20260816",
+      "name": "Z.ai: GLM 5.3",
+      "provider_tag": "tenstorrent/fp8",
+      "provider_name": "Tenstorrent",
+      "provider_model_id": "z-ai/glm-5.3",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.6,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.1,
+        "completion": 2.5
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1044480,
+      "max_completion_tokens": 131072,
+      "quantization": "fp8",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/z-ai/glm-5.3/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.415328+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "z-ai/glm-5.3-flash",
+      "canonical_slug": "z-ai/glm-5.3-flash-20260826",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "provider_tag": "z-ai/fp8",
+      "provider_name": "Z.AI",
+      "provider_model_id": "z-ai/glm-5.3-flash",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.15,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.03,
+        "completion": 0.5
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 131072,
+      "quantization": "fp8",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/z-ai/glm-5.3-flash/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.280313+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "z-ai/glm-5.3-flash",
+      "canonical_slug": "z-ai/glm-5.3-flash-20260826",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "provider_tag": "streamlake/fp8",
+      "provider_name": "StreamLake",
+      "provider_model_id": "z-ai/glm-5.3-flash",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.073845,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.014769,
+        "completion": 0.24615
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0.5077,
+      "context_length": 1024000,
+      "max_completion_tokens": 128000,
+      "quantization": "fp8",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/z-ai/glm-5.3-flash/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.280313+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "deepseek/deepseek-v4.1-flash",
+      "canonical_slug": "deepseek/deepseek-v4.1-flash-20260910",
+      "name": "DeepSeek: DeepSeek V4.1 Flash",
+      "provider_tag": "sail-research/fp4",
+      "provider_name": "Sail Research",
+      "provider_model_id": "deepseek/deepseek-v4.1-flash",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.101,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.006735,
+        "completion": 0.15
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 384000,
+      "quantization": "fp4",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.515065+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro-0813",
+      "canonical_slug": "deepseek/deepseek-v4-pro-20260813",
+      "name": "DeepSeek: DeepSeek V4 Pro 0813",
+      "provider_tag": "deepseek",
+      "provider_name": "DeepSeek",
+      "provider_model_id": "deepseek/deepseek-v4-pro-0813",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.66,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.022,
+        "completion": 1.98
+      },
+      "conditional_prices": [
+        {
+          "utc_days": [
+            "saturday",
+            "sunday"
+          ],
+          "prompt": 0.66,
+          "completion": 1.98,
+          "input_cache_read": 0.022
+        },
+        {
+          "utc_start": 0,
+          "utc_end": 100,
+          "utc_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "prompt": 0.66,
+          "completion": 1.98,
+          "input_cache_read": 0.022
+        },
+        {
+          "utc_start": 100,
+          "utc_end": 400,
+          "utc_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "prompt": 1.32,
+          "completion": 3.96,
+          "input_cache_read": 0.044
+        },
+        {
+          "utc_start": 400,
+          "utc_end": 600,
+          "utc_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "prompt": 0.66,
+          "completion": 1.98,
+          "input_cache_read": 0.022
+        },
+        {
+          "utc_start": 600,
+          "utc_end": 1000,
+          "utc_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "prompt": 1.32,
+          "completion": 3.96,
+          "input_cache_read": 0.044
+        },
+        {
+          "utc_start": 1000,
+          "utc_end": 0,
+          "utc_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday"
+          ],
+          "prompt": 0.66,
+          "completion": 1.98,
+          "input_cache_read": 0.022
+        }
+      ],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 393216,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.514132+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro-0813",
+      "canonical_slug": "deepseek/deepseek-v4-pro-20260813",
+      "name": "DeepSeek: DeepSeek V4 Pro 0813",
+      "provider_tag": "streamlake",
+      "provider_name": "StreamLake",
+      "provider_model_id": "deepseek/deepseek-v4-pro-0813",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.66,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.022,
+        "completion": 1.98
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0.5,
+      "context_length": 1024000,
+      "max_completion_tokens": 384000,
+      "quantization": "unknown",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.514132+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro-0813",
+      "canonical_slug": "deepseek/deepseek-v4-pro-20260813",
+      "name": "DeepSeek: DeepSeek V4 Pro 0813",
+      "provider_tag": "sail-research/fp4",
+      "provider_name": "Sail Research",
+      "provider_model_id": "deepseek/deepseek-v4-pro-0813",
+      "currency": "USD",
+      "unit": "per_1_million_tokens",
+      "prices": {
+        "prompt": 0.896,
+        "input_cache_write": null,
+        "input_cache_write_1h": null,
+        "input_cache_read": 0.187,
+        "completion": 0.582
+      },
+      "conditional_prices": [],
+      "non_token_unit_prices_usd": {},
+      "discount_metadata_already_applied": 0,
+      "context_length": 1048576,
+      "max_completion_tokens": 384000,
+      "quantization": "fp4",
+      "status_raw": 0,
+      "tool_calling_reported": true,
+      "source_url": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro-0813/endpoints",
+      "checked_date": "2026-10-20",
+      "retrieved_at_utc": "2026-10-20T17:36:19.514132+00:00",
+      "cache_write_note": "Not separately published; null does not mean free. Budgeting may explicitly assume normal-input price for misses; do not imply a distinct cache-write entitlement."
+    }
+  ],
+  "catalog_deltas": [
+    {
+      "model": "glm",
+      "route": "relace",
+      "old_rates_input_cache_output": [
+        0.0632,
+        0.0588,
+        4.4
+      ],
+      "new_rates_input_cache_output": [
+        0.75,
+        0.075,
+        2.4
+      ]
+    },
+    {
+      "model": "dsflash",
+      "route": "sail",
+      "old_rates_input_cache_output": [
+        0.09,
+        0.006,
+        0.3
+      ],
+      "new_rates_input_cache_output": [
+        0.101,
+        0.006735,
+        0.15
+      ]
+    },
+    {
+      "model": "dspro",
+      "route": "sail",
+      "old_rates_input_cache_output": [
+        0.448,
+        0.0935,
+        1.164
+      ],
+      "new_rates_input_cache_output": [
+        0.896,
+        0.187,
+        0.582
+      ]
+    },
+    {
+      "model": "dsflash",
+      "route": "vendor",
+      "status": "deepseek provider tag absent from current response; cannot claim current route availability. Preserve old saved snapshot separately or flag stale."
+    },
+    {
+      "model": "flash",
+      "route": "streamlake/fp8",
+      "status": "Now status0 at .073845/.014769/.24615 (input/cache/output); older snapshot status-2. Optional explicitly selected alternative, not automatic cheapest default."
+    },
+    {
+      "condition": "min_prompt_tokens/override precedence",
+      "status": "Previous notes marked uncertainty; now official model docs specify strictly > threshold and later-wins per price key."
+    }
+  ],
+  "unknowns": [
+    "Business-specific minimum fee",
+    "Crypto fee interaction with Business plan",
+    "Contract enterprise fee/member limits",
+    "Guaranteed paid concurrency/RPM/TPM",
+    "Individual-account provider/region eligibility",
+    "BYOK ledger reset/proration detail",
+    "Future promotion end dates or route prices"
+  ],
+  "sources": [
+    {
+      "id": "pricing",
+      "url": "https://openrouter.ai/pricing",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "faq",
+      "url": "https://openrouter.ai/docs/faq.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "byok",
+      "url": "https://openrouter.ai/docs/guides/overview/auth/byok.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "startups",
+      "url": "https://openrouter.ai/startups",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "workspaces",
+      "url": "https://openrouter.ai/docs/guides/features/workspaces.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "limits",
+      "url": "https://openrouter.ai/docs/api_reference/limits.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "region",
+      "url": "https://openrouter.ai/docs/guides/features/in-region-routing.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "models_docs",
+      "url": "https://openrouter.ai/docs/guides/overview/models.md",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "models",
+      "url": "https://openrouter.ai/api/v1/models",
+      "checked_date": "2026-10-20"
+    },
+    {
+      "id": "organization",
+      "url": "https://openrouter.ai/docs/cookbook/administration/organization-management",
+      "checked_date": "2026-10-20"
+    }
+  ]
+}

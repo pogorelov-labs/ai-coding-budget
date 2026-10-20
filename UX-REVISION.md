@@ -62,3 +62,11 @@ Drafts are kept separately in memory per scenario. Back navigation and language 
 ### Previous selections
 
 From the second wizard step onward, a “Your choices” summary shows earlier selections and links back to edit them. It includes the group and count, subscription/billing or API provider, team workspace, workload share or explicit tokens and period, model shares/cache, and GLM fallback choice. Review uses the same summary without repeating these details. Editing a previous step preserves the draft and still requires the normal validation before advancing.
+
+## Live estimates and Budget overview · 20 October 2026
+
+The wizard shows its current plan and, when applicable, the whole setup including that draft in USD and RUB. Numeric typing updates only the estimate region, retaining focus. Invalid or incomplete inputs suppress amounts; unknown quotas retain ranges, and uncovered usage remains explicit. The initial People step does not price an unseen plan. After Plan has been reached, the estimate remains available while editing earlier choices.
+
+Budget now leads with monthly total and the 12-month forecast, followed by the first-month requirement. These represent subscription prepayments, modeled token usage and applicable fees; unused prepaid top-up balances are not counted as expenses. Plan detail, charts and assumptions are collapsed. Saved alternatives appear in an inline comparison, each with its own profile, dates and exchange rate; no cheapest label is assigned to potentially different workloads.
+
+Manual API setup includes OpenRouter, ProxyAPI, Polza AI and VseGPT. Current routes and native-currency rates are explicit. OpenRouter funding can be grouped per account; saved per-line estimates remain historical until changed. VseGPT requires a token quote and models one paid account per selected user/agent, separate head/subaccount fees and actual 30-day renewals. Multiple access groups require distinct names; all models belonging to one VseGPT access group stay on one line.

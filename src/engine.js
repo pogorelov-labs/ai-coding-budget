@@ -1,3 +1,5 @@
+import {GATEWAY_PROVIDERS} from './gateway-catalog.js';
+import {gatewayAccessCost} from './gateway-billing.js';
 import {MODEL,PLAN,ROUTES,CHECKED} from './catalog.js';
 export const uid=()=>globalThis.crypto?.randomUUID?.()||('x'+Date.now()+Math.random().toString(36).slice(2));
 export const clone=x=>JSON.parse(JSON.stringify(x));
@@ -34,7 +36,7 @@ export function migrateState(x){
  for(const sc of x.scenarios||[])for(const l of sc.lines||[]){l.audience='manual';if(l.kind==='subscription'&&Number.isInteger(l.seats)&&l.seats>=1&&l.users>l.seats){const oldUsers=l.users;l.legacyUsers=oldUsers;l.users=l.seats;(x.migrationNotes||=[]).push('В сценарии «'+sc.name+'» у '+(l.name||PLAN[l.plan]?.name||'подписки')+' было '+l.seats+' оплаченных подписок/мест и '+oldUsers+' активных пользователей. При переносе установлено единое количество '+l.seats+'. Остальные параметры сохранены.');}l.spareSeats=Math.max(0,num(l.seats)-num(l.users));}
  return migrateState(x);
 }
-export function newRow(id='glm',share=100){return {id:uid(),model:id,share,input:10,output:.5,cache:80,writes:100,ttl:'5m',speed:'standard',long:0,geo:0,route:'vendor',customRates:null};}
+export function newRow(id='glm',share=100){const m=MODEL[id];return {id:uid(),model:id,share,input:10,output:.5,cache:m?.rates[2]===null?0:80,writes:m?.cacheWriteKnown===false?0:100,ttl:'5m',speed:'standard',long:0,geo:0,route:m?.defaultRoute||'vendor',customRates:null};}
 export function newLine(kind='subscription',plan='glm-pro',users=10){return {id:uid(),name:'',kind,plan,seats:users,users,billing:'monthly',org:'main',volumeMode:'mix',period:'person-day',input:10,output:.5,rows:[newRow(plan==='oai-go'?'luna':plan.startsWith('oai')?'sol':plan.startsWith('claude')?'sonnet':'glm')],unitPrice:null,discount:0,intro:0,introConfirmed:false,introUntil:'',coverageMode:'unknown',coverage:0,creditUsd:.04,creditConfirmed:false,overflow:'stop',glmOveragePromo:false,extraUsd:0,extraCredits:0,routerPlan:'standard',topups:1,feeMin:null,byokPrior:0,providerDiscount:0,startup:false,startupDate:CHECKED,startupGrant:0,grantOnce:0,grantUntil:'',monthlyCredit:0,bonusSource:'',bonusConfirmed:false,holiday:false,bundle50:0,bundle250:0,bundle1000:0,bundleRecurring:false,bundleMonths:1};}
 export function initialState(){
  const a=newLine();a.audience='all';a.spareSeats=0;a.rows=[newRow('glm',80),newRow('flash',20)];
@@ -103,24 +105,27 @@ export function volume(line,row,s){
  const monthly=[input*scale,output*scale];return {monthly,daily:monthly.map(v=>users>0&&num(s.days)>0?v/users/num(s.days):0)};
 }
 function speedFactor(row,m){if(row.speed==='standard')return 1;if(m.provider==='openai')return ({fast:2,ultrafast:6,batch:.5,flex:.5})[row.speed]||1;if(m.provider==='anthropic')return row.speed==='batch'?.5:row.speed==='fast'&&m.fast?2:1;return 1;}
+export function pricingFor(line,row){const model=MODEL[row.model],route=line.kind==='openrouter'?(ROUTES[model?.id]||[]).find(r=>r.id===row.route):null;return {model,route,pricing:route?{...model,...route,timed:route.timed===true}:model};}
 export function costRow(line,row,s){
  s=lineSettings(line,s);
- const m=MODEL[row.model];if(!m)throw new Error('Неизвестная модель');
- const route=line.kind==='openrouter'?(ROUTES[m.id]||[]).find(r=>r.id===row.route):null;
- const rates=row.customRates?[...row.customRates]:(route?[...route.rates]:[...m.rates]);
- if(!row.customRates&&row.ttl==='1h'&&m.write1h){rates[1]=route?.regional?m.write1h*1.1:m.write1h;}
+ const {model:m,route,pricing}=pricingFor(line,row);if(!m)throw new Error('Неизвестная модель');
+ const nativeRates=row.customRates?[...row.customRates]:[...pricing.rates];
+ const currency=pricing.currency||'USD',conversion=currency==='RUB'?1/num(s.fx):1;
+ const oneHour=route&&Object.hasOwn(route,'write1h')?route.write1h:m.write1h;
+ if(!row.customRates&&row.ttl==='1h'&&oneHour!=null)nativeRates[1]=route?.regional&&!Object.hasOwn(route,'write1h')?oneHour*1.1:oneHour;
+ const rates=nativeRates.map(v=>v===null?null:v*conversion);
  const vol=volume(line,row,s);const [I,O]=vol.monthly;const R=I*num(row.cache)/100,W=(I-R)*num(row.writes)/100,U=I-R-W;
- const quantities=[U,W,R,O];const long=num(row.long)/100;
- const timed=!row.customRates&&(route?route.timed:m.timed);
+ const quantities=[U,W,R,O],long=num(row.long)/100;
+ const timed=!row.customRates&&pricing.timed;
  const time=timed?timeProfile(s,'deepseek',line.kind==='api'&&line.holiday):null;
- let effective=rates.map((r,i)=>r*(1+(m.long?m.long[i]-1:0)*long));
- if(timed){const off=row.customRates?rates.map(v=>v*.5):(route?.off||m.off);effective=effective.map((r,i)=>(r*time.peak+off[i]*(1-time.peak)*(1+(m.long?m.long[i]-1:0)*long)));}
+ let effective=rates.map((r,i)=>(r??0)*(1+(pricing.long?pricing.long[i]-1:0)*long));
+ if(timed){const off=pricing.off;effective=effective.map((r,i)=>r*time.peak+(off[i]??0)*conversion*(1-time.peak)*(1+(pricing.long?pricing.long[i]-1:0)*long));}
  const mult=speedFactor(row,m)*(1+num(row.geo)/100);effective=effective.map(r=>r*mult);
  const components=quantities.map((q,i)=>q*effective[i]);
- const [di,do_]=vol.daily;const h=num(row.cache)/100;
+ const [di,do_]=vol.daily,h=num(row.cache)/100;
  const glmDaily=m.glm?(di*((1-h)*m.glm[0]+h*m.glm[1])+do_*m.glm[2])*100:0;
  const codexCredits=m.credit?(I*((1-h)*m.credit[0]+h*m.credit[1])+O*m.credit[2])*(row.speed==='fast'?2:row.speed==='ultrafast'?6:1):0;
- return {id:row.id,model:m,route,vol,quantities,rates,effective,components,cost:components.reduce((a,b)=>a+b,0),glmDaily,codexCredits,time};
+ return {id:row.id,model:m,route,vol,quantities,rates,nativeRates,currency,effective,components,cost:components.reduce((a,b)=>a+b,0),glmDaily,codexCredits,time};
 }
 export function lineErrors(l,s){
  l=effectiveLine(l,s);
@@ -128,6 +133,9 @@ export function lineErrors(l,s){
  if(l.profileShare!==undefined&&(!Number.isFinite(l.profileShare)||l.profileShare<0||l.profileShare>100))errs.push('Доля нагрузки профиля должна быть от 0 до 100%');
  if(l.audience&&!['manual','all','active','technical',...PROFILE_GROUPS.map(g=>g.id)].includes(l.audience))errs.push('Неизвестная группа профиля');
  if(profileLinked(l)&&!s.profile)errs.push('Профиль команды отсутствует');
+ if(l.kind==='api'&&l.apiProvider&&!['zai','openai','anthropic','deepseek','custom',...Object.keys(GATEWAY_PROVIDERS)].includes(l.apiProvider))errs.push('Choose a supported API provider.');
+ if(l.kind==='api'&&l.apiProvider==='vsegpt'){const tier=GATEWAY_PROVIDERS.vsegpt.plans.find(p=>p.id===(l.gatewayAccessTier||'professional'));if(!tier||tier.period_days!==30)errs.push('Choose a recurring VseGPT access plan.');if(!['basic','professional'].includes(l.gatewayMemberTier||'professional'))errs.push('Choose Basic or Professional access for subaccounts.');const professional=l.rows.some(r=>MODEL[r.model]?.requiredAccess==='professional');if(professional&&(tier?.id==='basic'||tier?.max_subaccounts&&l.users>Math.ceil(l.users/(tier.max_subaccounts+1))&&l.gatewayMemberTier==='basic'))errs.push('This model requires Professional access for every account using it.');}
+ if(l.routerFeeScope!==undefined&&!['account','line'].includes(l.routerFeeScope))errs.push('Choose a valid funding-fee scope.');
  if(l.apiRuntime!==undefined&&!['own','claude-action'].includes(l.apiRuntime))errs.push('Неизвестная API-интеграция');
  if(l.scheduleOverride)errs.push(...technicalErrors(l.scheduleOverride));
  if(l.spareSeats!==undefined&&(!Number.isInteger(l.spareSeats)||l.spareSeats<0||l.spareSeats>10000))errs.push('Неиспользуемое количество должно быть целым и неотрицательным');
@@ -152,6 +160,15 @@ export function lineErrors(l,s){
  if(l.kind==='subscription'&&p?.onlyLuna&&l.rows.some(r=>r.model!=='luna'))errs.push('Go: в расчёте подписки доступна только Luna');
  for(const row of l.rows){
   const m=MODEL[row.model];if(!m){errs.push('Модель отсутствует в каталоге');continue;}if(m.id==='custom'&&!row.customRates)errs.push('Для своей модели заполните ручные ставки.');
+  if(m.allowedKinds&&!m.allowedKinds.includes(l.kind))errs.push('This model is only available through its listed gateway.');
+  if(m.gatewayOnly&&l.kind==='api'&&l.apiProvider!==m.provider)errs.push('Select the matching API gateway for this model.');
+  if(l.kind==='api'&&l.apiProvider&&m.provider!==l.apiProvider)errs.push('Models in this line must belong to the selected API provider.');
+  if(m.gatewayOnly&&l.kind==='subscription')errs.push('Gateway token rates cannot be used as a coding subscription.');
+  if(m.requiresManualRates&&!row.customRates)errs.push('Enter a verified token-rate quote for this gateway. Character prices cannot be converted automatically.');
+  const {pricing}=pricingFor(l,row),rate=row.customRates||pricing.rates,[input,output]=volume(l,row,s).monthly,read=input*num(row.cache)/100,write=(input-read)*num(row.writes)/100;
+  if([input-read-write,write,read,output].some((q,i)=>q>0&&(rate[i]===null||!Number.isFinite(Number(rate[i])))))errs.push('A price for the selected token category is unconfirmed. Set its usage to zero or enter explicit rates.');
+  if(m.gatewayOnly&&!row.customRates&&row.ttl==='1h'&&write>0&&pricing.write1h===null)errs.push('One-hour cache-write pricing is unconfirmed for this route. Use the default TTL or enter explicit rates.');
+  if(!row.customRates&&pricing.longPricingUnknown&&num(row.long)>0)errs.push('Long-context pricing is unconfirmed for this route. Enter explicit rates.');
   if(!['standard','fast','ultrafast','batch','flex'].includes(row.speed)||!['5m','1h'].includes(row.ttl))errs.push('Неизвестный режим модели');
   for(const key of ['share','cache','writes','long'])if(!Number.isFinite(Number(row[key]))||num(row[key])<0||num(row[key])>100)errs.push(m.name+': '+key+' должен быть 0–100%');
   for(const key of ['input','output','geo'])if(!Number.isFinite(Number(row[key]))||num(row[key])<0||num(row[key])>1e8)errs.push(m.name+': недопустимый '+key);
@@ -213,6 +230,8 @@ export function calculateLine(l,s,{first=false,date=s.date,month=0}={}){
  if(rows.some(r=>r.route?.alternative))notes.push('Альтернативный хост: эквивалентность качества, скорости и tool support не гарантирована.');
  if(rows.some(r=>r.route?.regional))notes.push('Europe routing включает EU/EEA, UK и CH; это не подтверждение strict EU-only.');
  if(l.kind==='openrouter'&&rows.some(r=>r.time)&&l.holiday)notes.push('Праздничная скидка direct DeepSeek не подтверждена в OpenRouter: здесь не применяется.');
+ if(rows.some(r=>r.currency==='RUB'))notes.push('Gateway prices are quoted in RUB and converted to USD using the scenario exchange rate; changing FX does not change the native RUB token bill.');
+ if(rows.some(r=>r.model.gatewayOnly))notes.push('Gateway estimates use dated route prices. Extra tools, search and provider-specific fees are included only when entered explicitly.');
  if(l.kind==='api'&&l.holiday)notes.push('Китайский праздник задан вручную только для direct DeepSeek; календарь не проверяется автоматически.');
  for(const r of rows)if(r.model.promoUntil&&date>r.model.promoUntil)notes.push(r.model.name+': промо подтверждено только до '+r.model.promoUntil+'; сохранена последняя цена, будущая неизвестна.');
  // Discounts and purchased balances are settled across matching accounts in calculateScenario.
@@ -223,18 +242,24 @@ export function calculateLine(l,s,{first=false,date=s.date,month=0}={}){
  if(l.kind==='openrouter'&&l.routerPlan==='byok'){usageLow*=1-num(l.providerDiscount)/100;usageHigh*=1-num(l.providerDiscount)/100;}
  const startupWithin=l.kind==='openrouter'&&l.startup&&date>=l.startupDate&&date<addMonths(l.startupDate,12);
  if(l.kind==='openrouter'&&l.routerPlan==='business'&&l.feeMin===null)notes.push('Business: отдельный minimum fee не подтверждён; в модели 0, можно изменить.');
+ if(l.kind==='openrouter'&&l.routerFeeScope!=='account')notes.push('Legacy funding estimate: fees are charged per line. Choose shared account funding to combine top-ups across lines.');
+ if(l.kind==='openrouter')notes.push('OpenRouter documents a default limit of 10 organisation members; support approval is needed for more. Invited members and API consumers are different counts.');
  if(l.kind==='openrouter'&&l.routerPlan==='byok')notes.push('BYOK: provider invoice отдельно; порог платформы общий по группе. OR credits оплачивают только platform fee. Пополнение для fee: 5.5%, minimum $0.80, если не изменён.');
  if(l.startup)notes.push('Startup включён как подтверждённая eligibility; waiver 12 месяцев, grant обычно 6.');
  if(num(l.monthlyCredit)>0)notes.push('Ежемесячные credits — ручное допущение; не суммируйте повторно со связанным API bonus.');
  if(p?.family==='anthropic'&&(bundleFace||l.bundle50||l.bundle250||l.bundle1000))notes.push('Перенос bundles в прогнозе: '+(l.bundleMonths??1)+' мес. Это выбранное допущение, срок провайдера не подтверждён. Team баланс общий в группе; personal — равномерно между аккаунтами.');
  const cashSeat=first?term-introSaving:(month%period===0?term:0);
- const out={line:l,plan:p,errors,notes,rows,api,credits,quota,covered,valid:true,seat,period,term,introSaving,usageLow,usageHigh,rawLow,rawHigh,feeLow:0,feeHigh:0,extras:num(l.extraUsd),bundleCash,bundleFace,bundleLeftLow:0,bundleLeftHigh:0,grantUsedLow:0,grantUsedHigh:0,startupWithin,cashSeat,bonusUsed:0};
+ const gatewayAccess=gatewayAccessCost(l,s,month);
+ if(gatewayAccess)notes.push('VseGPT access renews every 30 days, not every calendar month. Each user or agent is budgeted as a paid account; Team subaccounts also pay a subscription. A 12-month cash forecast can contain 13 renewals.');
+ if(rows.some(r=>r.model.provider==='proxyapi'))notes.push('ProxyAPI token prices include 5% VAT; the scenario tax field is an additional surcharge, not the included VAT.');
+ if(rows.some(r=>r.model.provider==='polza'))notes.push('Polza prices require the listed route to be pinned with fallback disabled. VAT inclusion is unconfirmed; no extra VAT is assumed.');
+ const out={line:l,plan:p,gatewayAccess,errors,notes,rows,api,credits,quota,covered,valid:true,seat,period,term,introSaving,usageLow,usageHigh,rawLow,rawHigh,feeLow:0,feeHigh:0,extras:num(l.extraUsd),bundleCash,bundleFace,bundleLeftLow:0,bundleLeftHigh:0,grantUsedLow:0,grantUsedHigh:0,startupWithin,cashSeat,bonusUsed:0};
  return finalize(out,s);
 }
 function finalize(r,s){
- const beforeLow=r.seat+r.usageLow+r.feeLow+r.extras+r.bundleCash;
- const beforeHigh=r.seat+r.usageHigh+r.feeHigh+r.extras+r.bundleCash;const tax=1+num(s.tax)/100;
- r.low=beforeLow*tax;r.high=beforeHigh*tax;r.cashLow=(r.cashSeat+r.usageLow+r.feeLow+r.extras+r.bundleCash)*tax;r.cashHigh=(r.cashSeat+r.usageHigh+r.feeHigh+r.extras+r.bundleCash)*tax;
+ const beforeLow=r.seat+r.usageLow+r.feeLow+r.extras+r.bundleCash+(r.gatewayAccess?.monthlyUsd||0);
+ const beforeHigh=r.seat+r.usageHigh+r.feeHigh+r.extras+r.bundleCash+(r.gatewayAccess?.monthlyUsd||0);const tax=1+num(s.tax)/100;
+ r.low=beforeLow*tax;r.high=beforeHigh*tax;r.cashLow=(r.cashSeat+r.usageLow+r.feeLow+r.extras+r.bundleCash+(r.gatewayAccess?.cashUsd||0))*tax;r.cashHigh=(r.cashSeat+r.usageHigh+r.feeHigh+r.extras+r.bundleCash+(r.gatewayAccess?.cashUsd||0))*tax;
  r.rubLow=r.low*num(s.fx);r.rubHigh=r.high*num(s.fx);return r;
 }
 // Independent low/high balance ledgers preserve uncertainty without spending the same credit twice.
@@ -281,15 +306,28 @@ export function calculateScenario(scenario,s,{first=false,date=scenarioSettings(
   const total=list.reduce((a,r)=>a+r.api,0),prior=num(l.byokPrior),fee=list[0].startupWithin?0:.05*(Math.max(0,prior+total-25000)-Math.max(0,prior-25000));
   let low=fee,high=fee;for(const r of list)for(const pool of [ledger.grants,ledger.startup]){const used=spend(pool,r.line.id,low,high,date);low-=used[0];high-=used[1];r.grantUsedLow+=used[0];r.grantUsedHigh+=used[1];}
   const funding=v=>v>0?Math.max(v*.055,(l.feeMin===null?.8:num(l.feeMin))*num(l.topups)):0;
-  for(const r of list){const share=total?r.api/total:1/list.length;r.feeLow=(low+funding(low))*share;r.feeHigh=(high+funding(high))*share;}
+  for(const r of list){const share=total?r.api/total:1/list.length;r.platformFeeLow=low*share;r.platformFeeHigh=high*share;r.feeLow=(low+(r.line.routerFeeScope==='account'?0:funding(low)))*share;r.feeHigh=(high+(r.line.routerFeeScope==='account'?0:funding(high)))*share;}
  }
- for(const r of lines){if(!r.valid||r.inactive)continue;const l=r.line;if(l.kind==='openrouter'&&l.routerPlan!=='byok'){const rate=r.startupWithin?0:l.routerPlan==='business'?.08:.055,min=r.startupWithin?0:l.feeMin!==null?num(l.feeMin):l.routerPlan==='standard'?.8:0;const f=v=>v>0?Math.max(v*rate,min*num(l.topups)):0;r.feeLow=f(r.usageLow);r.feeHigh=f(r.usageHigh);}
+ for(const r of lines){if(!r.valid||r.inactive)continue;const l=r.line;if(l.kind==='openrouter'&&l.routerPlan!=='byok'&&l.routerFeeScope!=='account'){const rate=r.startupWithin?0:l.routerPlan==='business'?.08:.055,min=r.startupWithin?0:l.feeMin!==null?num(l.feeMin):l.routerPlan==='standard'?.8:0;const f=v=>v>0?Math.max(v*rate,min*num(l.topups)):0;r.feeLow=f(r.usageLow);r.feeHigh=f(r.usageHigh);}
   if(r.grantUsedHigh)r.notes.push('Применено credits до $'+r.grantUsedHigh.toFixed(2)+' к eligible расходу/комиссии.');finalize(r,s);
  }
+ const fundingGroups=new Map();
+ for(const r of lines)if(r.valid&&!r.inactive&&r.line.kind==='openrouter'&&r.line.routerFeeScope==='account'){const key=r.line.org||'main';if(!fundingGroups.has(key))fundingGroups.set(key,[]);fundingGroups.get(key).push(r);}
+ for(const [account,list] of fundingGroups){
+  const l=(list.find(r=>r.line.routerPlan!=='byok')||list[0]).line;
+  if(lines.some(r=>r.valid&&r.line.kind==='openrouter'&&(r.line.org||'main')===account&&r.line.routerFeeScope!=='account'))errors.push('Use the same funding-fee scope for all lines sharing an OpenRouter account.');
+  if(list.reduce((n,r)=>n+num(r.line.startupGrant),0)>3000)errors.push('An OpenRouter Startup grant is capped at $3,000 per account; do not repeat it across lines.');
+  for(const r of list){for(const key of ['feeMin','topups','startup','startupDate'])if(r.line[key]!==l[key])errors.push('OpenRouter lines sharing an account must use the same funding settings.');if(r.line.routerPlan!=='byok'&&r.line.routerPlan!==l.routerPlan)errors.push('OpenRouter lines sharing an account must use the same funding settings.');}
+  const demand=(r,bound)=>r.line.routerPlan==='byok'?(r['platformFee'+bound]||0):r['usage'+bound];
+  const low=list.reduce((n,r)=>n+demand(r,'Low'),0),high=list.reduce((n,r)=>n+demand(r,'High'),0),rate=list[0].startupWithin?0:l.routerPlan==='business'?.08:.055,min=list[0].startupWithin?0:l.feeMin!==null?num(l.feeMin):l.routerPlan!=='business'?.8:0;
+  const fee=v=>v>0?Math.max(v*rate,min*num(l.topups)):0;
+  for(const r of list){r.feeLow=(r.platformFeeLow||0)+(low?fee(low)*demand(r,'Low')/low:0);r.feeHigh=(r.platformFeeHigh||0)+(high?fee(high)*demand(r,'High')/high:0);finalize(r,s);}
+ }
+ const vsegptGroups=new Set();for(const r of lines)if(r.valid&&!r.inactive&&r.line.apiProvider==='vsegpt'){const key=r.line.org||'main';if(vsegptGroups.has(key))errors.push('Use one VseGPT line per access-account group, with all its models in that line. A separate purchase needs a different account-group name.');vsegptGroups.add(key);}
  const groups=new Map();for(const r of lines){if(!r.valid||r.inactive||!r.plan?.team)continue;const key=r.plan.family+':'+(r.line.org||'main');if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r);}
  for(const list of groups.values()){const count=list.reduce((a,r)=>a+num(r.line.seats),0),p=list[0].plan;if(p.min&&count<p.min)errors.push(p.name+': в группе минимум '+p.min+' места');if(p.max&&count>p.max)errors.push(p.name+': превышен опубликованный максимум '+p.max);if(p.family==='glm'&&new Set(list.map(r=>r.plan.id)).size>1)errors.push('GLM: Standard и Premium нельзя смешивать в одной Team-группе.');}
  const sum=k=>lines.reduce((a,r)=>a+num(r[k]),0);
- return {lines,errors:[...new Set(errors)],valid:!errors.length,covered:lines.every(r=>r.covered),low:sum('low'),high:sum('high'),cashLow:sum('cashLow'),cashHigh:sum('cashHigh'),seat:sum('seat'),api:sum('api'),usageLow:sum('usageLow'),usageHigh:sum('usageHigh'),fees:sum('feeHigh'),extras:sum('extras')+sum('bundleCash'),range:Math.abs(sum('high')-sum('low'))>.005};
+ return {lines,errors:[...new Set(errors)],valid:!errors.length,covered:lines.every(r=>r.covered),low:sum('low'),high:sum('high'),cashLow:sum('cashLow'),cashHigh:sum('cashHigh'),seat:sum('seat'),api:sum('api'),usageLow:sum('usageLow'),usageHigh:sum('usageHigh'),fees:sum('feeHigh'),extras:sum('extras')+sum('bundleCash')+lines.reduce((n,r)=>n+(r.gatewayAccess?.monthlyUsd||0),0),range:Math.abs(sum('high')-sum('low'))>.005};
 }
 export function forecast(scenario,s){
  s=scenarioSettings(scenario,s);

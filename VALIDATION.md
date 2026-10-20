@@ -69,3 +69,10 @@
 Browser checks cover both entry routes, four manual stages, invalid model-share recovery, Back navigation, EN/RU draft retention, adding multiple plans, saving a recommended alternative, and restoring the original preview data. A draft exported before confirmation contained no new plan; original scenarios matched their pre-test copies, and the restored JSON matched exactly. No browser errors or warnings were captured. A 354px iframe viewport verified real responsive layout without horizontal overflow in the choice, usage and review screens; desktop checks used 1280px.
 
 A temporary local performance probe measured initial Plans LCP at 84ms and CLS at 0 in one lab run. INP and field p75 were not measured. The probe and responsive harness are not shipped. Palette and calculation catalogue remain unchanged.
+
+
+### Live totals, Budget overview and gateway tariffs · 20 October 2026
+
+108 tests pass. New tests cover live changes to volume/cache/model, invalid input handling, uncertain quota ranges, shared team constraints, exact OpenRouter endpoint rates, cache-write unknowns, time/context/TTL overrides, mixed PAYG/BYOK account funding, legacy price preservation, native RUB conversion, VAT, Polza route/Flex pricing, VseGPT manual quotes and access eligibility, head/subaccount fees, 30-day renewals, duplicate access-group prevention, and analytics reconciliation.
+
+Browser checks verified input focus while typing, clearing input without stale prices, monthly USD/RUB updates, native-RUB cost invariance when FX changes, independent scenario FX comparisons, collapsed Budget details, real OpenRouter route changes, VseGPT's manual-price guard, EN/RU and 354px layouts without horizontal page overflow. No provider inference or credential-bearing request was made. Public metadata and documentation were the research inputs; no throughput load test or KYC approval was performed.

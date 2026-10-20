@@ -1,3 +1,5 @@
+import {GATEWAY_PROVIDERS,GATEWAY_MODELS} from './gateway-catalog.js';
+import {CURRENT_OR_MODELS,CURRENT_OR_ROUTES} from './openrouter-current.js';
 export const CHECKED='2026-10-17';
 export const SOURCES=[
  {id:'oai-api',name:'OpenAI · API pricing',url:'https://developers.openai.com/api/docs/pricing',date:CHECKED},
@@ -41,6 +43,7 @@ export const MODELS=[
  model('dspro','DeepSeek V4 Pro 0813','deepseek',[1.32,1.32,.044,3.96],{timed:true,off:[.66,.66,.022,1.98],source:'ds-api',orSlug:'deepseek/deepseek-v4-pro-0813'}),
  model('custom','Своя модель / тариф','custom',[0,0,0,0],{source:null})
 ];
+MODELS.push(...CURRENT_OR_MODELS,...GATEWAY_MODELS);
 export const MODEL=Object.fromEntries(MODELS.map(m=>[m.id,m]));
 const plan=(id,name,family,monthly,annual=null,extra={})=>({id,name,family,monthly,annual,...extra});
 export const PLANS=[
@@ -94,3 +97,8 @@ export const OFFERS=[
 ];
 
 SOURCES.push({id:'codex-service',date:CHECKED,name:'Codex service accounts · только PAYG',url:'https://learn.chatgpt.com/docs/enterprise/service-accounts'});
+
+Object.assign(ROUTES,CURRENT_OR_ROUTES);
+SOURCES.push({id:'or-current',name:'OpenRouter · routes and terms · 20 Oct 2026',url:'https://openrouter.ai/pricing',date:'2026-10-20'});
+
+SOURCES.push({id:'proxyapi-rates',name:'ProxyAPI · RUB prices and conditions',url:'https://proxyapi.ru/models',date:'2026-10-20'},{id:'polza-rates',name:'Polza AI · pinned model routes',url:'https://polza.ai/docs/gaidy/provider-selection',date:'2026-10-20'},{id:'vsegpt-rates',name:'VseGPT · access plans and usage units',url:'https://vsegpt.ru/Docs/Tariffs',date:'2026-10-20'});

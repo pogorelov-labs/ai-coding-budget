@@ -2,8 +2,13 @@ let analyticsView={dimension:'group',basis:'cash',mode:'cumulative',currency:'us
 let analyticsMemo=null,analyticsCurrent=null;
 const ANALYTICS_COLORS=['#326451','#48647d','#996a2e','#354b5f','#4b7a67','#805722','#58748b','#67461c','#254a3c','#805722','#4b7a67','#354b5f'];
 const GROUP_COLORS={heavy:'#326451',regular:'#48647d',light:'#996a2e',technical:'#354b5f',manual:'#58748b',spare:'#805722'};
-const PROVIDER_COLORS={zai:'#48647d',openai:'#326451',anthropic:'#805722',deepseek:'#354b5f',openrouter:'#4b7a67',custom:'#58748b',shared:'#996a2e'};
-function chartColor(c,index){return analyticsView.dimension==='group'?GROUP_COLORS[c.id]||ANALYTICS_COLORS[index%12]:analyticsView.dimension==='provider'?PROVIDER_COLORS[c.id]||ANALYTICS_COLORS[index%12]:c.id==='shared'?'#58748b':ANALYTICS_COLORS[Math.max(0,['glm','flash','dsflash','sol','sonnet','opus','luna','haiku','flashx','dspro','astra','sol6','sol56','sonnet5','custom'].indexOf(c.id))%12];}
+const PROVIDER_COLORS={zai:'#48647d',openai:'#326451',anthropic:'#805722',deepseek:'#354b5f',openrouter:'#4b7a67',custom:'#58748b',proxyapi:'#58748b',polza:'#4b7a67',vsegpt:'#805722',shared:'#996a2e'};
+function chartColor(c,index){
+ const known=['glm','flash','dsflash','sol','sonnet','opus','luna','haiku','flashx','dspro','astra','sol6','sol56','sonnet5','custom'].indexOf(c.id);
+ const stable=known>=0?known:[...c.id].reduce((value,char)=>(value*31+char.charCodeAt(0))>>>0,0);
+ return analyticsView.dimension==='group'?GROUP_COLORS[c.id]||ANALYTICS_COLORS[index%12]:analyticsView.dimension==='provider'?PROVIDER_COLORS[c.id]||ANALYTICS_COLORS[stable%12]:c.id==='shared'?'#58748b':ANALYTICS_COLORS[stable%12];
+}
+
 function chartMoney(n,compact=false){return new Intl.NumberFormat(uiLocale(),{style:'currency',currency:analyticsView.currency==='rub'?'RUB':'USD',maximumFractionDigits:compact?1:2,...(compact?{notation:'compact'}:{})}).format(n*(analyticsView.currency==='rub'?settings().fx:1));}
 function chartAmount(n){return new Intl.NumberFormat(uiLocale(),{notation:'compact',maximumFractionDigits:1}).format(n*(analyticsView.currency==='rub'?settings().fx:1));}
 function chartRange(low,high){return Math.abs(high-low)<.005?chartMoney(low):chartMoney(low)+' – '+chartMoney(high);}

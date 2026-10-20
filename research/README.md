@@ -23,3 +23,10 @@ The account notes distinguish personal subscriptions, supported headless tools, 
 - [Z.ai and DeepSeek](calculator-zai-deepseek-2026-10-17.json)
 
 Private workspace pages and local browser test exports are not part of this public repository. The notes here and the provider links in `src/catalog.js` are the public reference material.
+
+## Gateway refresh · 20 October 2026
+
+- [OpenRouter plans, limits and exact route prices](openrouter-2026-10-20.md) · [Structured snapshots](openrouter-2026-10-20.json)
+- [ProxyAPI, Polza AI and VseGPT](russian-gateways-2026-10-20.md) · [Structured tariff data](russian-gateways-2026-10-20.json)
+
+The Russian-language services are a researched shortlist with useful public API documentation, not a measured popularity ranking. The app includes selected coding models and links to full provider catalogues. New dated gateway model IDs preserve historical saved tariffs. VseGPT's conflicting character/token units require an explicit token quote; access fees alone do not fund generation.

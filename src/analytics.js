@@ -2,7 +2,7 @@ import { PLAN, MODEL } from './catalog.js';
 import { forecast, scenarioSettings, costRow, lineSettings } from './engine.js';
 
 export const ANALYTICS_GROUPS={heavy:'Power users',regular:'Regular users',light:'Light users',technical:'Server agents',manual:'Manual workload',spare:'Unused seats'};
-export const ANALYTICS_PROVIDERS={glm:'Z.ai',zai:'Z.ai',openai:'OpenAI',anthropic:'Anthropic',deepseek:'DeepSeek',openrouter:'OpenRouter',custom:'Custom provider',shared:'Other services'};
+export const ANALYTICS_PROVIDERS={glm:'Z.ai',zai:'Z.ai',openai:'OpenAI',anthropic:'Anthropic',deepseek:'DeepSeek',openrouter:'OpenRouter',proxyapi:'ProxyAPI',polza:'Polza AI',vsegpt:'VseGPT',custom:'Custom provider',shared:'Other services'};
 const positive=n=>Number.isFinite(n)&&n>0?n:0;
 // Allocation is explanatory, not a provider invoice. It never changes the forecast.
 export function allocateForecastMonth(result,settings,basis='cash'){
@@ -17,13 +17,14 @@ export function allocateForecastMonth(result,settings,basis='cash'){
   };
   const seats=cohorts.map(g=>({group:g.id,weight:g.count}));const spare=Math.max(0,(l.seats||0)-(l.users||0));if(spare)seats.push({group:'spare',weight:spare});
   split((basis==='cash'?r.cashSeat:r.seat)||0,(basis==='cash'?r.cashSeat:r.seat)||0,seats);
+  if(r.gatewayAccess){const access=basis==='cash'?r.gatewayAccess.cashUsd:r.gatewayAccess.monthlyUsd;split(access,access,seats,'shared',l.apiProvider);}
   split((r.bundleCash||0)+(r.extras||0),(r.bundleCash||0)+(r.extras||0),seats);
   const weights=[];
   for(const g of cohorts){
    const rows=l._cohorts?.length?l.rows.map(row=>costRow({...l,audience:'manual',users:g.count,input:g.input,output:g.output},row,lineSettings(l,settings))):r.rows;
    const q=r.quota?.groups?.find(x=>x.id===g.id),fraction=q?1-q.fraction:r.quota?1-r.quota.fraction:1;
    for(const row of rows){let weight=p?.family==='openai'?row.codexCredits:row.cost;if(p?.family==='glm')weight*=Math.max(0,fraction);
-    weights.push({group:g.id,model:row.model.id,provider:l.kind==='openrouter'&&l.routerPlan!=='byok'?'openrouter':billedProvider&&l.kind==='subscription'?billedProvider:row.model.provider,weight:positive(weight)});
+    weights.push({group:g.id,model:row.model.id,provider:l.kind==='openrouter'&&l.routerPlan!=='byok'?'openrouter':billedProvider&&l.kind==='subscription'?billedProvider:l.kind==='openrouter'&&l.routerPlan==='byok'?(row.model.upstreamProvider||row.model.provider):row.model.provider,weight:positive(weight)});
    }
   }
   // Zero-price rows cannot claim paid costs. Shared credit/fee effects are allocated

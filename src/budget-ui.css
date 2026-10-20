@@ -1,0 +1,61 @@
+.budget-overview{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--green-line);border-radius:var(--radius);overflow:hidden}
+.budget-period{padding:24px;min-width:0}
+.budget-period h3{font-size:14px;color:var(--muted);font-weight:550}
+.budget-period-month{background:var(--green-soft)}
+.budget-period-year{background:var(--paper);border-left:1px solid var(--green-line)}
+.budget-period .budget-total{font-size:clamp(24px,2.5vw,36px);line-height:1.25;margin:12px 0 6px}
+.budget-period .budget-rubles{font-size:18px;margin-bottom:12px;overflow-wrap:anywhere}
+.budget-period-year .budget-rubles{color:var(--slate)}
+.budget-first-payment{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 2px;margin-bottom:8px;font-size:12px;color:var(--muted)}
+.budget-first-payment>div{text-align:right;font-variant-numeric:tabular-nums}
+.budget-first-payment strong{display:block;color:var(--ink);font-size:14px;font-weight:550}
+.budget-first-payment small{display:block;font-size:12px;margin-top:2px}
+.budget-comparison,.budget-compare-empty{margin:28px 0}
+.budget-comparison>.section-heading{margin-bottom:6px}
+.budget-compare-empty{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.budget-compare-empty p{margin-top:5px}
+.budget-compare-wrap{margin-top:14px}
+.scenario-comparison{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+.scenario-comparison th,.scenario-comparison td{padding:16px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;overflow-wrap:anywhere}
+.scenario-comparison thead th{color:var(--muted);font-size:11px;font-weight:550;padding-top:8px;padding-bottom:8px}
+.scenario-comparison .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.scenario-comparison th:first-child{width:33%}
+.scenario-comparison th:last-child{width:108px}
+.scenario-comparison tbody th{font-weight:550}
+.scenario-comparison tbody tr.selected{background:var(--slate-soft)}
+.scenario-comparison small{display:block;font-size:11px;line-height:1.5;color:var(--muted);font-weight:400;margin-top:4px}
+.comparison-name{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.comparison-current{font-size:10px;font-weight:550;color:var(--slate)}
+.scenario-comparison .badge{display:inline-block;white-space:normal;font-size:10px;line-height:1.4;margin-top:8px;padding:3px 6px}
+.comparison-price{font-variant-numeric:tabular-nums}
+.comparison-price strong{font-weight:600;line-height:1.5}
+.comparison-open .btn{min-height:44px;padding:8px;font-size:12px}
+.comparison-mobile-label{display:none}
+.budget-details{margin-top:28px}
+.budget-details>.details{margin-top:0;padding:0}
+.budget-details>.details>summary{font-size:14px;min-height:52px;align-content:center;padding:14px 0;color:var(--ink)}
+.budget-details>.details[open]>summary{margin-bottom:12px}
+.budget-details>.details[open]{padding-bottom:20px}
+.budget-details>.details .analytics{margin-top:0;padding-top:0}
+.budget-details .section-heading{margin-top:4px}
+@media(max-width:680px){
+  .budget-overview{grid-template-columns:1fr}
+  .budget-period{padding:20px}
+  .budget-period-year{border-left:0;border-top:1px solid var(--green-line)}
+  .budget-period .budget-total{font-size:28px}
+  .budget-first-payment{align-items:flex-start}
+  .budget-first-payment>span{max-width:45%}
+  .budget-compare-empty{align-items:flex-start;flex-direction:column}
+  .budget-comparison>.section-heading{align-items:flex-start}
+  .budget-comparison>.section-heading .btn{font-size:12px;padding:8px;min-height:44px}
+  .scenario-comparison,.scenario-comparison tbody{display:block;width:100%}
+  .scenario-comparison thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .scenario-comparison tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;border-bottom:1px solid var(--line);padding:16px 12px}
+  .scenario-comparison th,.scenario-comparison td{padding:0;border:0;width:auto!important;min-width:0}
+  .scenario-comparison tbody th{grid-column:1 / -1}
+  .scenario-comparison .comparison-price{padding-top:16px}
+  .comparison-mobile-label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+  .scenario-comparison .comparison-open{grid-column:1 / -1;text-align:right;padding-top:12px}
+  .scenario-comparison .comparison-open:empty{display:none}
+  .comparison-open .btn{padding:8px 0}
+}
