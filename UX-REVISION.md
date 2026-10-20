@@ -46,3 +46,14 @@ The main navigation contains only Team, Plans and Budget. Scenario selection is 
 ![Narrow Budget screen](qa/ux-mobile-budget.png)
 
 The screenshots are local QA evidence and are not included in the public web bundle. Some captures precede the final copy adjustment from “first payment” to “first month” and from “subscriptions” to “seats” for team plans.
+
+
+## Plans choice and manual wizard · 20 October 2026
+
+Opening Plans now presents two explicit routes: Use a recommendation or Build my own. Existing scenarios retain Edit saved setup. The Team action also goes to this choice, while Edit plans on Budget opens the existing editor directly.
+
+Recommendation summaries show the cost, first payment and one short reason per group. Full reasoning and assumptions stay in expandable sections. Applying a recommendation to a populated scenario creates an alternative rather than replacing the saved plans.
+
+The manual flow has four stages: People, Plan, Usage, Review. It supports subscriptions, direct API and OpenRouter; model choices follow the provider and plan. Billing periods, multiple model shares, caching, manual token inputs, custom rates, GLM fallback and optional team/workspace grouping are available where applicable. The review uses the same scenario calculation as the final budget, including router fees, shared team limits, quota gaps and uncertain allowances.
+
+Drafts are kept separately in memory per scenario. Back navigation and language changes retain them; Add plan is the only write to the saved plan list. Cancel discards the draft, and a reload does not persist unconfirmed work. Existing edits and advanced billing remain available in the saved-plan editor.

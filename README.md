@@ -2,7 +2,7 @@
 
 [Open the calculator](https://pogorelov-labs.github.io/ai-coding-budget/)
 
-Compare AI coding subscriptions and API spending for a team. Describe power, regular and light users plus server agents; get a suggested setup, adjust it, and inspect monthly costs and a 12-month forecast.
+Compare AI coding subscriptions and API spending for a team. Describe power, regular and light users plus server agents. On **Plans**, choose **Use a recommendation** or **Build my own**. Manual setup follows **People → Plan → Usage → Review** and adds a plan only after confirmation. Inspect monthly costs and a 12-month forecast on Budget.
 
 - English/Russian interface, research notes and provider conditions.
 - Personal and team subscriptions, direct APIs and OpenRouter routes.

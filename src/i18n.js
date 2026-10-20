@@ -441,6 +441,83 @@ Invalid line|Некорректная позиция
 File exceeds 2 MB|Файл больше 2 MB
 Invalid JSON key|Недопустимый ключ в JSON
 Source|Источник
+Choose plans|Выбрать планы
+Choose your setup|Выберите подход
+Get a recommendation or build one plan at a time.|Получите рекомендацию или добавляйте планы по одному.
+Use a recommendation|Использовать рекомендацию
+We compare costs for your team and suggest a setup.|Сравним стоимость для вашей команды и предложим набор планов.
+Review the price, then apply.|Посмотрите цену и примените.
+Build my own|Собрать самостоятельно
+Choose people, plans and models in four steps.|Выберите людей, планы и модели за четыре шага.
+Add one plan at a time.|Добавляйте по одному плану.
+Saved setup|Сохранённый набор
+Edit saved setup|Редактировать планы
+Your plans|Ваши планы
+Edit a plan or add another.|Измените план или добавьте ещё один.
+Change setup|Выбрать подход
+Add another plan|Добавить ещё план
+Lowest modeled cost for the selected models and workload.|Минимальная расчётная стоимость для выбранных моделей и нагрузки.
+Save alternative|Сохранить альтернативу
+Build your setup|Соберите набор
+People|Люди
+Usage|Нагрузка
+Review|Проверка
+Plan setup steps|Шаги настройки плана
+Team group|Группа команды
+People / accounts|Люди / аккаунты
+agent accounts|аккаунтов агентов
+people from your team|человек из вашей команды
+Each plan covers one group. You can add more plans later.|Каждый план покрывает одну группу. Позже можно добавить другие.
+How will you pay?|Как будете платить?
+Payment type|Тип оплаты
+Per person, with usage limits|За человека, с лимитами расхода
+Pay for tokens used|За использованные токены
+Provider|Провайдер
+Monthly price / seat, USD|Цена места в месяц, USD
+/ person / month|/ человек / месяц
+Paid upfront for the billing period.|Предоплата за весь период.
+Shared agents usually need API billing. Check this plan’s account rules before using it.|Общим агентам обычно нужен API. Проверьте правила аккаунта для этого плана.
+Set the workload|Укажите нагрузку
+Token estimates come from your team profile.|Расход токенов берётся из профиля команды.
+Model shares must total 100%. All token volumes are in millions.|Сумма долей моделей — 100%. Объёмы токенов указаны в миллионах.
+When the quota runs out|Когда закончится квота
+Paid Team overage|Платный перерасход Team
+Advanced rates and discounts are available after adding the plan.|Расширенные тарифы и скидки доступны после добавления плана.
+Review this plan|Проверьте план
+Estimated monthly cost|Расчётная стоимость в месяц
+First payment|Первый платёж
+This plan does not cover all entered usage. Go back and enable paid fallback or choose a larger plan.|План не покрывает весь расход. Вернитесь и включите платный перерасход или выберите план с большей квотой.
+Included quota is unknown; this is a cost range.|Включённая квота неизвестна; показан диапазон стоимости.
+Some workload is counted more than once. Adjust each plan’s workload share.|Часть нагрузки учтена повторно. Измените долю нагрузки в каждом плане.
+Personal GLM fallback needs a separate API key and manual switching.|Для перерасхода личного GLM нужен отдельный API-ключ и ручное переключение.
+Quota and provider details|Квота и условия провайдера
+Continue|Продолжить
+Cancel|Отмена
+Plan added.|План добавлен.
+Choose a group with people, or enter a positive whole number.|Выберите непустую группу или укажите положительное целое количество.
+Choose a provider.|Выберите провайдера.
+Choose a subscription.|Выберите подписку.
+Choose a supported billing period.|Выберите доступный период оплаты.
+Enter a nonnegative monthly seat price.|Укажите неотрицательную цену места в месяц.
+Complete the usage fields.|Заполните поля расхода.
+Enter model shares and cache percentages.|Укажите доли моделей и процент кеша.
+Enter all four custom token prices.|Укажите все четыре цены токенов.
+Separate API billing for unattended work.|Отдельная оплата API для автономной работы.
+Codex for active users; allowance varies.|Codex для активных; квота зависит от расхода.
+Pay only for this group’s usage.|Оплата только за расход этой группы.
+Team seats plus paid overage.|Места Team и платный перерасход.
+Subscription plus separate API fallback.|Подписка и отдельный API для перерасхода.
+Fits this group’s weekly and 5-hour quotas.|Укладывается в недельную и пятичасовую квоты группы.
+Subscription quotas for these models are unknown; API is used for comparison.|Квоты подписок для этих моделей неизвестны; сравнение проводится по API.
+Saves as a new scenario.|Сохранится отдельным сценарием.
+Why these plans?|Почему эти планы?
+Remove model|Удалить модель
+Custom|Свой вариант
+Metered workspace credits. Confirm the credit price in your contract.|Расход по credits рабочего пространства. Проверьте цену credit в договоре.
+Codex · service account PAYG|Codex · сервисный аккаунт PAYG
+Workspace settings|Настройки рабочего пространства
+Team / workspace name|Название команды / рабочего пространства
+Use the same name for seats in one team.|Для мест одной команды используйте одинаковое название.
 `.trim().split('\n').map(line=>line.split('|')));
 Object.assign(UI_TRANSLATIONS,RESEARCH_TRANSLATIONS);
 const UI_REVERSE=Object.fromEntries(Object.entries(UI_TRANSLATIONS).map(([en,ru])=>[ru,en]));

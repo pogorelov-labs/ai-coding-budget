@@ -60,3 +60,12 @@
 ### Palette and complete reference localization · 18 October 2026
 
 64/64 automated tests pass. Research rendering has no untranslated Russian fragments in EN, using either English or Russian number formatting. Every subscription/API automation condition and route name is covered. Dynamic notes preserve amounts, labels and eligibility caveats. Browser checks cover all reference tabs, expanded provider notes, language persistence after reload, English CSV export and 390px layout (page scroll width = viewport width). Chart tile white-text contrast is 4.71:1 or higher. Source prices and calculation engine are unchanged.
+
+
+### Plans choice and wizard · 20 October 2026
+
+72 tests pass. Eight added cases cover draft isolation, commit copying, technical schedules, provider/method transitions, missing inputs, model shares, custom rates, combined team seat minima, GLM tier separation, OpenRouter fees, quota fallback and the plan count limit.
+
+Browser checks cover both entry routes, four manual stages, invalid model-share recovery, Back navigation, EN/RU draft retention, adding multiple plans, saving a recommended alternative, and restoring the original preview data. A draft exported before confirmation contained no new plan; original scenarios matched their pre-test copies, and the restored JSON matched exactly. No browser errors or warnings were captured. A 354px iframe viewport verified real responsive layout without horizontal overflow in the choice, usage and review screens; desktop checks used 1280px.
+
+A temporary local performance probe measured initial Plans LCP at 84ms and CLS at 0 in one lab run. INP and field p75 were not measured. The probe and responsive harness are not shipped. Palette and calculation catalogue remain unchanged.

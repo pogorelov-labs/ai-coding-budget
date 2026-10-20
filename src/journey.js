@@ -4,9 +4,7 @@ const GROUP_COPY = {
   regular: ["Regular users", "Daily coding with an AI assistant"],
   light: ["Light users", "Occasional questions and small edits"],
 };
-let setupChoice = "managed",
-  setupBilling = "annual",
-  resourceTab = "overview";
+let resourceTab = "overview";
 function freshState() {
   const s = initialState();
   s.settings.profile.forEach((g) => (g.count = g.id === "regular" ? 10 : 0));
@@ -32,7 +30,7 @@ function contextHTML() {
 }
 function teamStepHTML() {
   const s = settings();
-  return `${heading("Step 1 of 3", "Who will use AI?", "Count your developers by activity. We’ll use editable token estimates to get you started.")}<div class="profile-cards">${s.profile.map((g, i) => `<section class="profile-card"><div class="profile-card-head"><span class="activity-dot level-${i}" aria-hidden="true"></span><h3>${GROUP_COPY[g.id][0]}</h3></div><p class="small muted">${GROUP_COPY[g.id][1]}</p>${input("p." + g.id + ".count", GROUP_COPY[g.id][0] + " · developers", g.count, { max: 10000, step: 1 })}</section>`).join("")}</div><div class="agent-row"><div><h3>Server agents</h3><p class="small muted">Shared bots, CI and unattended coding</p></div>${input("t.count", "Agent accounts", s.technical.count, { max: 10000, step: 1 })}</div><div id="profile-stats" aria-live="polite">${teamStatsHTML()}</div>${detail("usage-estimates", "Adjust token estimates", `<p class="inline-help">Example workloads, not provider allowances. Enter millions of tokens per person per working day. Input includes cached tokens; output includes billable reasoning.</p><div class="estimate-grid">${s.profile.map((g) => `<section><h3>${GROUP_COPY[g.id][0]}</h3>${input("p." + g.id + ".input", "Input M / person / day", g.input)}${input("p." + g.id + ".output", "Output M / person / day", g.output)}</section>`).join("")}<section><h3>Server agents</h3>${input("t.input", "Input M / agent / day", s.technical.input)}${input("t.output", "Output M / agent / day", s.technical.output)}</section></div>`)}${detail("schedule-currency", "Schedule, currency & tax", globalSettingsHTML())}${detail("agent-settings", "Agent schedule & account rules", agentSettingsHTML())}${active().lines.some((l) => !profileLinked(l)) ? '<p class="compact-note">This saved scenario includes manually entered workloads. Changing this profile affects only plans linked to a team group.</p>' : ""}${!active().settings ? '<p class="compact-note">This legacy profile is shared by your original scenarios. New scenarios have their own profile.</p>' : ""}${stepFooter(null, "calculator", "See recommendation", "show-recommendation")}`;
+  return `${heading("Step 1 of 3", "Who will use AI?", "Count your developers by activity. We’ll use editable token estimates to get you started.")}<div class="profile-cards">${s.profile.map((g, i) => `<section class="profile-card"><div class="profile-card-head"><span class="activity-dot level-${i}" aria-hidden="true"></span><h3>${GROUP_COPY[g.id][0]}</h3></div><p class="small muted">${GROUP_COPY[g.id][1]}</p>${input("p." + g.id + ".count", GROUP_COPY[g.id][0] + " · developers", g.count, { max: 10000, step: 1 })}</section>`).join("")}</div><div class="agent-row"><div><h3>Server agents</h3><p class="small muted">Shared bots, CI and unattended coding</p></div>${input("t.count", "Agent accounts", s.technical.count, { max: 10000, step: 1 })}</div><div id="profile-stats" aria-live="polite">${teamStatsHTML()}</div>${detail("usage-estimates", "Adjust token estimates", `<p class="inline-help">Example workloads, not provider allowances. Enter millions of tokens per person per working day. Input includes cached tokens; output includes billable reasoning.</p><div class="estimate-grid">${s.profile.map((g) => `<section><h3>${GROUP_COPY[g.id][0]}</h3>${input("p." + g.id + ".input", "Input M / person / day", g.input)}${input("p." + g.id + ".output", "Output M / person / day", g.output)}</section>`).join("")}<section><h3>Server agents</h3>${input("t.input", "Input M / agent / day", s.technical.input)}${input("t.output", "Output M / agent / day", s.technical.output)}</section></div>`)}${detail("schedule-currency", "Schedule, currency & tax", globalSettingsHTML())}${detail("agent-settings", "Agent schedule & account rules", agentSettingsHTML())}${active().lines.some((l) => !profileLinked(l)) ? '<p class="compact-note">This saved scenario includes manually entered workloads. Changing this profile affects only plans linked to a team group.</p>' : ""}${!active().settings ? '<p class="compact-note">This legacy profile is shared by your original scenarios. New scenarios have their own profile.</p>' : ""}${stepFooter(null, "calculator", "Choose plans", "show-plans")}`;
 }
 function teamStatsHTML() {
   const p = profileTotals(settings()),
@@ -70,32 +68,6 @@ function agentSettingsHTML() {
     ["schedule", "Evenly across schedule"],
     ["manual", "Custom peak share"],
   ])}${input("t.peak", "Agent tokens at peak, %", t.peak, { max: 100 })}</div><p class="inline-help">Daily tokens already include all workers. Worker count does not multiply the bill or guarantee throughput.</p>`;
-}
-function setupChoicesHTML() {
-  return `<fieldset class="setup-options"><legend>Start with a setup</legend>${[
-    [
-      "managed",
-      "Team subscriptions",
-      "GLM Team for developers, Codex for power and regular users. Server agents use API.",
-    ],
-    [
-      "economy",
-      "Lower-cost hybrid",
-      "Personal GLM for frequent coding, API for light users and server agents.",
-    ],
-    [
-      "custom",
-      "Build your own",
-      "Choose subscriptions and API accounts individually.",
-    ],
-  ]
-    .map(
-      ([id, title, desc]) =>
-        `<label class="setup-option"><input type="radio" name="setup" value="${id}" ${setupChoice === id ? "checked" : ""}><span><strong>${title}</strong><small>${desc}</small></span></label>`,
-    )
-    .join(
-      "",
-    )}</fieldset><div class="setup-payment"><label class="field"><span>Subscription billing</span><select id="setup-billing"><option value="annual" ${setupBilling === "annual" ? "selected" : ""}>Annual · lower monthly equivalent, paid upfront</option><option value="monthly" ${setupBilling === "monthly" ? "selected" : ""}>Monthly · no annual prepayment</option></select></label><button class="btn primary" data-action="apply-setup">${setupChoice === "custom" ? "Choose first plan" : "Use this setup"}</button></div><p class="inline-help">Uses your team profile. You can edit every plan before reviewing the budget.</p>`;
 }
 function compactPlanHTML(l, i, r, first) {
   const e = effectiveLine(l, settings()),
@@ -169,9 +141,8 @@ function planEditorHTML(l, r, first) {
   }${detail("models-" + l.id, "Models & token allocation", `<div class="usage-head"><p class="small muted">Input includes cache. Shares must total 100%.</p><div class="segmented"><button class="${l.volumeMode === "mix" ? "active" : ""}" data-action="volume-mode" data-id="${l.id}" data-value="mix">Model shares</button><button class="${l.volumeMode === "explicit" ? "active" : ""}" data-action="volume-mode" data-id="${l.id}" data-value="explicit">Exact tokens</button></div></div>${l.rows.map((row, i) => rowHTML(l, row, i, r?.rows[i])).join("")}<button class="btn quiet" data-action="add-row" data-id="${l.id}">Add model</button>`)}${detail("line-extra-" + l.id, "Limits, discounts & advanced billing", lineExtra(l))}${detail("result-" + l.id, "Quota check & calculation detail", `<div data-line-result="${l.id}">${lineResultHTML(r, first)}</div>`)}<div class="editor-actions"><button class="btn quiet" data-action="clone-line" data-id="${l.id}">Duplicate plan</button><button class="btn quiet danger" data-action="remove-line" data-id="${l.id}">Remove plan</button><button class="btn" data-action="close-plan" data-id="${l.id}">Done</button></div>`;
 }
 function plansStepHTML() {
-  const sc = active(),
-    f = forecast(sc, settings());
-  return `${heading("Step 2 of 3", "Choose how your team works.", sc.lines.length ? "Your current setup is saved. Open a plan to edit it, or compare a recommended alternative." : "We’ve compared eligible plans for your team. Review the reasons, then use the recommendation.")}<div id="summary">${planEstimateHTML(f)}</div>${sc.lines.length ? `${detail("recommend-alternative", "Find a cost-effective alternative", recommendationHTML())}<div id="lines">${sc.lines.map((l, i) => compactPlanHTML(l, i, f.regular.lines[i], f.first.lines[i])).join("")}</div><button class="btn add-plan" data-action="add-line">Add a subscription or API</button>` : recommendationHTML()+detail("manual-setups", "Choose a setup manually", setupChoicesHTML())}${sc.lines.length ? stepFooter("team", "budget", "Review budget") : `<div class="step-footer"><button class="btn quiet" data-tab="team">Back to team</button>${currentRecommendation().valid?'<button class="btn primary" data-action="use-recommendation">Use recommended setup</button>':''}</div>`}`;
+  const mode=planJourney().mode;
+  return mode==='wizard'?planWizardHTML():mode==='recommend'?recommendationStepHTML():mode==='edit'&&active().lines.length?plansEditorHTML():plansChoiceHTML();
 }
 function planEstimateHTML(f) {
   return active().lines.length
@@ -255,7 +226,7 @@ function budgetSummaryHTML(f) {
 function budgetStepHTML() {
   const sc = active(),
     f = forecast(sc, settings());
-  return `${heading("Step 3 of 3", "Your budget, explained.", "See the monthly estimate, the first-month cash requirement, and the assumptions that affect both.")}<div id="summary">${budgetSummaryHTML(f)}</div>${sc.lines.length ? `${analyticsHTML(f)}<section class="budget-breakdown"><div class="section-heading"><h3>What you’re paying for</h3><button class="btn quiet" data-tab="calculator">Edit plans</button></div>${f.regular.lines.map((r, i) => `<div class="breakdown-row"><div><strong ${sc.lines[i].name?"data-user-content":""}>${esc(label(sc.lines[i]))}</strong><small>${audienceName(sc.lines[i].audience)} · ${quantityText(sc.lines[i], r.line.kind === "subscription" ? r.line.seats : r.line.users)}</small></div><div><strong>${r.valid ? priceRange(r.low, r.high) : "Check inputs"}</strong><small>${r.valid ? priceRange(r.low, r.high, "rub") : ""}</small></div></div>`).join("")}</section>${detail("budget-assumptions", "Schedule, currency & calculation assumptions", globalSettingsHTML() + `<p class="inline-help">Pricing snapshot: ${CHECKED}. Taxes: ${settings().tax}%. Cache and quota assumptions are editable inside each plan. Infrastructure and tool fees are included only when entered explicitly.</p>`)}${sc.preset === "team-standard" ? detail("alternatives", "Try fewer GLM seats", `<p class="inline-help">Create a separate scenario with the same workload. Your current budget stays saved.</p><div class="actions"><button class="btn" data-action="team-alternative" data-value="active">GLM API for light users</button><button class="btn" data-action="team-alternative" data-value="api">All GLM through API</button></div>`) : ""}<div class="step-footer"><button class="btn quiet" data-tab="calculator">Back to plans</button><button class="btn primary" data-tab="compare">Compare saved scenarios</button></div>` : ""}`;
+  return `${heading("Step 3 of 3", "Your budget, explained.", "See the monthly estimate, the first-month cash requirement, and the assumptions that affect both.")}<div id="summary">${budgetSummaryHTML(f)}</div>${sc.lines.length ? `${analyticsHTML(f)}<section class="budget-breakdown"><div class="section-heading"><h3>What you’re paying for</h3><button class="btn quiet" data-action="plan-edit-budget">Edit plans</button></div>${f.regular.lines.map((r, i) => `<div class="breakdown-row"><div><strong ${sc.lines[i].name?"data-user-content":""}>${esc(label(sc.lines[i]))}</strong><small>${audienceName(sc.lines[i].audience)} · ${quantityText(sc.lines[i], r.line.kind === "subscription" ? r.line.seats : r.line.users)}</small></div><div><strong>${r.valid ? priceRange(r.low, r.high) : "Check inputs"}</strong><small>${r.valid ? priceRange(r.low, r.high, "rub") : ""}</small></div></div>`).join("")}</section>${detail("budget-assumptions", "Schedule, currency & calculation assumptions", globalSettingsHTML() + `<p class="inline-help">Pricing snapshot: ${CHECKED}. Taxes: ${settings().tax}%. Cache and quota assumptions are editable inside each plan. Infrastructure and tool fees are included only when entered explicitly.</p>`)}${sc.preset === "team-standard" ? detail("alternatives", "Try fewer GLM seats", `<p class="inline-help">Create a separate scenario with the same workload. Your current budget stays saved.</p><div class="actions"><button class="btn" data-action="team-alternative" data-value="active">GLM API for light users</button><button class="btn" data-action="team-alternative" data-value="api">All GLM through API</button></div>`) : ""}<div class="step-footer"><button class="btn quiet" data-tab="calculator">Back to plans</button><button class="btn primary" data-tab="compare">Compare saved scenarios</button></div>` : ""}`;
 }
 function comparisonHTML() {
   return `${heading("Compare alternatives", "Which setup fits your budget?", "Each scenario is a separate alternative. Check the people, workload and models before comparing prices.")}<div class="comparison-list">${state.scenarios
@@ -376,43 +347,12 @@ function focusPage() {
   window.scrollTo({ top: 0, behavior: "instant" });
   $("#page-title")?.focus({ preventScroll: true });
 }
-function showPlanPicker() {
-  const d = $("#add-dialog");
-  d.innerHTML = `<div class="dialog-head"><h2>Add a plan</h2><button class="btn quiet" data-action="close-dialog" aria-label="Close dialog">Close</button></div><label class="field"><span>Who is it for?</span><select id="add-audience">${audienceOptions()
-    .map((o) => `<option value="${o[0]}">${esc(o[1])}</option>`)
-    .join(
-      "",
-    )}</select></label><fieldset class="picker-type"><legend>How do you want to pay?</legend><label><input type="radio" name="picker-kind" value="subscription" checked> Subscription</label><label><input type="radio" name="picker-kind" value="api"> By usage (API)</label></fieldset><label class="field"><span>Plan or provider</span><select id="add-choice">${PLANS.map((p) => `<option value="${p.id}">${esc(p.name)}</option>`).join("")}</select></label><p class="inline-help">Subscriptions are per person. A shared server generally needs an API account.</p><div class="dialog-footer"><button class="btn primary" data-action="confirm-plan">Add plan</button></div>`;
-  localizeUI(d);
-  d.showModal();
-}
 function journeyAction(b) {
   const act = b.dataset.action;
-  if (recommendationAction(b)) return true;
-  if (act === "show-recommendation") {
-    state.tab = "calculator";
-    openDetails.add("recommend-alternative");
-    render();
-    focusPage();
-    return true;
-  }
-  if (act === "apply-setup") {
-    if (settingsErrors(settings()).length) {
-      state.tab = "team";
-      render();
-      focusPage();
-      toast("Check your team profile first.");
-      return true;
-    }
-    if (setupChoice === "custom") {
-      showAdd();
-      return true;
-    }
-    pendingUndo = clone(state);
-    const template = guidedSetup(settings(), setupChoice, setupBilling);
-    active().lines = template.lines;
-    active().settings = template.settings;
-    active().preset = template.preset;
+  if (plansAction(b) || recommendationAction(b)) return true;
+  if(act === "plan-edit-budget"){enterPlans("edit");render();focusPage();return true;}
+  if (act === "show-plans") {
+    enterPlans();
     render();
     focusPage();
     return true;
@@ -446,34 +386,6 @@ function journeyAction(b) {
     d.showModal();
     return true;
   }
-  if (act === "confirm-plan") {
-    if (active().lines.length >= 50) {
-      toast("A scenario can contain up to 50 plans.");
-      return true;
-    }
-    const k = $("#add-choice").value;
-    const kind =
-      k === "openrouter"
-        ? "openrouter"
-        : k.startsWith("api-")
-          ? "api"
-          : "subscription";
-    const line = newLine(
-      kind,
-      kind === "subscription" ? k : "glm-pro",
-      settings().team,
-    );
-    if (kind === "api") line.rows = [newRow(k.slice(4))];
-    setAudience(line, $("#add-audience").value, settings());
-    line.spareSeats = 0;
-    active().lines.push(line);
-    openDetails.add("plan-" + line.id);
-    state.tab = "calculator";
-    $("#add-dialog").close();
-    render();
-    document.querySelector(`[data-detail="plan-${line.id}"] summary`)?.focus();
-    return true;
-  }
   return false;
 }
 
@@ -496,13 +408,13 @@ function currentRecommendation() {
 function recommendationControls(o) {
   const recSelect=(key,title,value,choices)=>`<label class="field"><span>${title}</span><select data-rec="${key}">${choices.map(([v,t])=>`<option value="${v}" ${v===value?'selected':''}>${t}</option>`).join('')}</select></label>`;
   const recCheck=(key,title)=>`<label class="check-row"><input type="checkbox" data-rec="${key}" ${o[key]?'checked':''}><span>${title}</span></label>`;
-  return `<div class="recommend-billing">${recSelect('billing','Subscription commitment',o.billing,[['annual','Annual · lower monthly rate, paid upfront'],['monthly','Monthly · no annual commitment']])}</div>${detail('recommend-preferences','Adjust models & requirements',`<div class="grid">${recSelect('mix','Developer model mix',o.mix,Object.entries(RECOMMENDATION_MIXES).map(([id,m])=>[id,m.name]))}${recSelect('serverModel','Server model',o.serverModel,['dsflash','flash','sol','sonnet'].map(id=>[id,MODEL[id].name]))}<label class="field"><span>Expected cached input, %</span><input type="number" min="0" max="100" step="1" data-rec="cache" value="${esc(o.cache)}"></label></div>${recCheck('requireTeam','Require GLM Team seats for every developer')}${recCheck('keepCodex','Keep Codex Business for power + regular users (10% of their workload)')}${recCheck('allowFallback','Allow paid overage or switching to a separate API key after quota')}<p class="inline-help">The comparison uses your team profile and this model mix. It does not import existing custom allocations, negotiated prices or discounts.</p>`)}`;
+  return `<div class="recommend-billing">${recSelect('billing','Billing period',o.billing,[['annual','Annual · paid upfront'],['monthly','Monthly']])}</div>${detail('recommend-preferences','Adjust models & requirements',`<div class="grid">${recSelect('mix','Developer model mix',o.mix,Object.entries(RECOMMENDATION_MIXES).map(([id,m])=>[id,m.name]))}${recSelect('serverModel','Server model',o.serverModel,['dsflash','flash','sol','sonnet'].map(id=>[id,MODEL[id].name]))}<label class="field"><span>Expected cached input, %</span><input type="number" min="0" max="100" step="1" data-rec="cache" value="${esc(o.cache)}"></label></div>${recCheck('requireTeam','Require GLM Team seats for every developer')}${recCheck('keepCodex','Keep Codex Business for power + regular users (10% of their workload)')}${recCheck('allowFallback','Allow paid overage or switching to a separate API key after quota')}<p class="inline-help">The comparison uses your team profile and this model mix. It does not import existing custom allocations, negotiated prices or discounts.</p>`)}`;
 }
 function recommendationHTML() {
   const result=currentRecommendation(),o=result.options;
   if(!result.valid)return `<section class="recommendation"><h3>Let’s check the requirements.</h3><div class="callout warn" role="alert">${result.errors.map(esc).join('<br>')}</div>${recommendationControls(o)}<button class="btn" data-tab="team">Edit team profile</button></section>`;
   const f=result.forecast,r=f.regular,hasPlans=active().lines.length>0;
-  return `<section class="recommendation" aria-label="Recommended setup"><div class="recommend-header"><div><span class="eyebrow">Recommended for your profile</span><h3>${priceRange(r.low,r.high)} <small>/ month</small></h3><p class="recommend-rubles">${priceRange(r.low,r.high,'rub')}</p></div><div class="recommend-cash"><span>First month, including prepayment</span><strong>${priceRange(f.first.cashLow,f.first.cashHigh)}</strong></div></div><p class="recommend-assumptions">${esc(RECOMMENDATION_MIXES[o.mix].name)} · ${o.cache}% cached input${o.keepCodex?' · Codex reserved for active users':''}</p>${recommendationControls(o)}<div class="recommend-reasons">${result.reasons.map(reason=>`<article><div><h4>${esc(reason.name)}</h4><span class="small muted">${reason.count} ${reason.group==='technical'?'agent account'+(reason.count===1?'':'s'):'people'}</span></div><strong class="recommend-line-price">${priceRange(reason.low,reason.high)}</strong><p>${esc(reason.reason)}${reason.alternative!==undefined?` <span>${reason.name.includes('Direct API')?'Personal-plan comparison':'Same group via API'}: ${USD.format(reason.alternative)}/month.</span>`:''}</p></article>`).join('')}</div><div class="recommend-comparison"><span>${result.saving>.005?`Saves ${USD.format(result.saving)}/month vs ${result.baselineName.toLowerCase()}.`:o.requireTeam?'Team management is required; direct API may cost less.':'Direct API is already the lowest priced eligible option.'}</span><small>${result.compared} valid combinations checked · ${o.billing==='annual'?'annual monthly equivalents':'monthly billing'}</small></div>${r.range?'<p class="callout warn">Codex allowance is unknown. The range uses the existing $0.04/credit assumption, not a guaranteed spending cap.</p>':''}${result.unknownSubscriptions?'<p class="compact-note">OpenAI / Claude subscriptions may be cheaper if they cover your workload. Their included token allowances are unknown, so we do not rank them as guaranteed savings.</p>':''}<div class="recommend-actions">${hasPlans?'<button class="btn primary" data-action="use-recommendation">Save as a new scenario</button>':''}<span class="small muted">${hasPlans?'Your current scenario stays unchanged.':'No purchase. Everything stays editable.'}</span></div>${detail('recommend-method','How this recommendation is chosen',`<p class="inline-help">${result.scope} Compares GLM Lite/Pro/Max, Team Standard/Premium and direct API where compatible. Seat minima, one tier per GLM team, weekly and 5-hour quotas are enforced. Over-quota plans need the fallback option.</p><p class="inline-help">Other models are compared through their own API prices. Models are never swapped to claim savings. OpenRouter first-party routes add fees to the same rates; discounted alternative hosts are outside this comparison because quality, quantization and availability can differ. Claude/OpenAI included quotas are not treated as free unlimited tokens.</p><p class="inline-help">Uses your schedule, tax and FX, with the catalogue snapshot ${CHECKED}. No unconfirmed promotion, grant or negotiated discount is assumed. Quotas assume evenly spread usage; bursts, rate limits, coding quality and country/account eligibility still need checking. Infrastructure, tools and future search fees are not automatically included.</p><p class="inline-help"><a href="https://docs.z.ai/devpack/teamplan" target="_blank" rel="noopener noreferrer">GLM quota & seat rules</a> · <a href="https://docs.z.ai/guides/overview/pricing" target="_blank" rel="noopener noreferrer">GLM API prices</a> · <a href="https://api-docs.deepseek.com/quick_start/pricing/" target="_blank" rel="noopener noreferrer">DeepSeek rates & hours</a></p>`)}</section>`;
+  return `<section class="recommendation" aria-label="Recommended setup"><div class="recommend-header"><div><h3>${priceRange(r.low,r.high)} <small>/ month</small></h3><p class="recommend-rubles">${priceRange(r.low,r.high,'rub')}</p></div><div class="recommend-cash"><span>First month, including prepayment</span><strong>${priceRange(f.first.cashLow,f.first.cashHigh)}</strong></div></div><p class="recommend-assumptions">${esc(RECOMMENDATION_MIXES[o.mix].name)} · ${o.cache}% cached input${o.keepCodex?' · Codex reserved for active users':''}</p>${recommendationControls(o)}<div class="recommend-reasons">${result.reasons.map((reason,index)=>`<article><div><h4>${esc(reason.name)}</h4><span class="small muted">${reason.count} ${reason.group==='technical'?'agent account'+(reason.count===1?'':'s'):'people'}</span></div><strong class="recommend-line-price">${priceRange(reason.low,reason.high)}</strong><p>${shortRecommendationReason(result.forecast.regular.lines[index])}</p></article>`).join('')}</div><div class="recommend-comparison"><span>${result.saving>.005?`Saves ${USD.format(result.saving)}/month vs ${result.baselineName.toLowerCase()}.`:o.requireTeam?'Team management is required; direct API may cost less.':'Direct API is already the lowest priced eligible option.'}</span></div>${r.range?'<p class="callout warn">Codex allowance is unknown. The range uses the existing $0.04/credit assumption, not a guaranteed spending cap.</p>':''}${result.unknownSubscriptions?'<p class="compact-note">Subscription quotas for these models are unknown; API is used for comparison.</p>':''}${hasPlans?'<p class="compact-note">Saves as a new scenario.</p>':''}${detail('recommend-reasons','Why these plans?',result.reasons.map(reason=>`<h4>${esc(reason.name)}</h4><p class="inline-help">${esc(reason.reason)}${reason.alternative!==undefined?` <span>${reason.name.includes('Direct API')?'Personal-plan comparison':'Same group via API'}: ${USD.format(reason.alternative)}/month.</span>`:''}</p>`).join(''))}${detail('recommend-method','How this recommendation is chosen',`<p class="inline-help">${result.scope} Compares GLM Lite/Pro/Max, Team Standard/Premium and direct API where compatible. Seat minima, one tier per GLM team, weekly and 5-hour quotas are enforced. Over-quota plans need the fallback option.</p><p class="inline-help">Other models are compared through their own API prices. Models are never swapped to claim savings. OpenRouter first-party routes add fees to the same rates; discounted alternative hosts are outside this comparison because quality, quantization and availability can differ. Claude/OpenAI included quotas are not treated as free unlimited tokens.</p><p class="inline-help">Uses your schedule, tax and FX, with the catalogue snapshot ${CHECKED}. No unconfirmed promotion, grant or negotiated discount is assumed. Quotas assume evenly spread usage; bursts, rate limits, coding quality and country/account eligibility still need checking. Infrastructure, tools and future search fees are not automatically included.</p><p class="inline-help"><a href="https://docs.z.ai/devpack/teamplan" target="_blank" rel="noopener noreferrer">GLM quota & seat rules</a> · <a href="https://docs.z.ai/guides/overview/pricing" target="_blank" rel="noopener noreferrer">GLM API prices</a> · <a href="https://api-docs.deepseek.com/quick_start/pricing/" target="_blank" rel="noopener noreferrer">DeepSeek rates & hours</a></p>`)}</section>`;
 }
 function updateRecommendationOption(el) {
   const options={...currentRecommendationOptions()};
@@ -515,7 +427,7 @@ function recommendationAction(b) {
   const result=currentRecommendation();if(!result.valid){toast('Check your profile and requirements first.');return true;}
   if(active().lines.length&&state.scenarios.length>=30){toast('You can save up to 30 scenarios. Export or remove an alternative first.');return true;}
   pendingUndo=clone(state);const sc=clone(result.scenario);sc.id=uid();sc.recommendation={options:clone(result.options),catalogDate:CHECKED};
-  if(active().lines.length){sc.name=('Recommended · '+active().name).slice(0,120);state.scenarios.push(sc);state.active=sc.id;}
+  if(active().lines.length){sc.name=(tr('Recommended')+' · '+active().name).slice(0,120);state.scenarios.push(sc);state.active=sc.id;}
   else{const current=active();current.lines=sc.lines;current.settings=sc.settings;current.recommendation=sc.recommendation;delete current.preset;}
   state.tab='budget';openDetails.clear();render();focusPage();toast('Recommended setup added. Review the budget and assumptions.');return true;
 }
